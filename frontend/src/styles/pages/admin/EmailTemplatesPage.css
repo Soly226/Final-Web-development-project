@@ -1,0 +1,53 @@
+@reference "../../index.css";
+
+.email-templates-container {
+    @apply p-5 max-w-5xl mx-auto space-y-6;
+}
+
+/* Selector Header */
+.template-selector-card {
+    @apply flex flex-col md:flex-row gap-4 items-center;
+}
+
+.selector-label {
+    @apply text-xs font-black text-slate-500 mb-2 block uppercase tracking-[0.15em];
+}
+
+.template-select {
+    @apply w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none;
+}
+
+/* Editor */
+.editor-card {
+    @apply p-6 space-y-6 overflow-visible;
+}
+
+.editor-toolbar {
+    @apply p-2 border-b border-white/10 flex gap-2 bg-white/5;
+}
+
+.toolbar-btn {
+    @apply p-2 hover:bg-white/10 rounded-lg text-slate-400 hover:text-primary transition-all;
+}
+
+.editor-textarea {
+    @apply w-full h-80 bg-transparent p-6 text-sm outline-none resize-none font-medium leading-relaxed text-slate-900 dark:text-white;
+}
+
+/* Sidebar */
+.variables-card {
+    @apply bg-primary/5 border-primary/20 p-6;
+}
+
+.variable-badge {
+    @apply px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[10px] font-mono font-bold text-primary hover:border-primary hover:bg-primary/5 transition-all;
+}
+
+/* Modal */
+.template-modal-overlay {
+    @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm;
+}
+
+.template-modal-content {
+    @apply bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-xl border border-slate-200 dark:border-white/10 overflow-hidden;
+}

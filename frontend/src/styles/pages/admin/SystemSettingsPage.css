@@ -1,0 +1,49 @@
+@reference "../../index.css";
+
+.settings-container {
+    @apply p-5 max-w-4xl mx-auto space-y-8;
+}
+
+.settings-header {
+    @apply px-1;
+}
+
+.settings-section-card {
+    @apply p-0 overflow-hidden border-white/5;
+}
+
+.settings-section-header {
+    @apply px-6 py-4 bg-white/5 border-b border-white/10 flex items-center gap-3;
+}
+
+.settings-section-body {
+    @apply p-6;
+}
+
+.settings-input-group {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.settings-select {
+    @apply w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none;
+}
+
+.logo-upload-wrapper {
+    @apply flex items-center gap-4 p-4 border-2 border-dashed border-white/10 rounded-2xl bg-white/5;
+}
+
+.logo-preview-box {
+    @apply w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary;
+}
+
+.security-toggle-banner {
+    @apply flex items-center justify-between p-4 bg-primary/5 rounded-2xl border border-primary/10;
+}
+
+.toggle-track {
+    @apply w-11 h-6 bg-slate-700 rounded-full peer-checked:bg-primary after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full;
+}
+
+.settings-footer {
+    @apply flex justify-end gap-3 pt-4 pb-10;
+}

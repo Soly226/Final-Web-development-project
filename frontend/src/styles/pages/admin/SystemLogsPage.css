@@ -1,0 +1,82 @@
+@reference "../../index.css";
+
+.logs-container {
+    @apply p-5 max-w-6xl mx-auto space-y-6;
+}
+
+/* Filter Card */
+.filter-card-logs {
+    @apply flex flex-col md:flex-row gap-4 items-end;
+}
+
+.filter-input-group {
+    @apply flex-1 w-full;
+}
+
+.filter-label {
+    @apply text-xs font-bold text-slate-500 mb-2 block uppercase tracking-wider;
+}
+
+.filter-select {
+    @apply w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none;
+}
+
+/* Table */
+.logs-table-card {
+    @apply p-0 overflow-hidden border-white/5;
+}
+
+.logs-table {
+    @apply w-full text-left border-collapse;
+}
+
+.logs-th {
+    @apply px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500;
+}
+
+.logs-tr {
+    @apply hover:bg-primary/5 transition-colors;
+}
+
+.logs-td {
+    @apply px-6 py-4 whitespace-nowrap;
+}
+
+.timestamp-td {
+    @apply text-xs font-medium text-slate-400;
+}
+
+/* Level Badges */
+.level-badge {
+    @apply px-2.5 py-0.5 rounded-full text-[10px] font-bold border;
+}
+
+.level-error {
+    @apply bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 border-rose-200 dark:border-rose-800;
+}
+
+.level-warning {
+    @apply bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800;
+}
+
+.level-info {
+    @apply bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800;
+}
+
+/* Actor Badge */
+.actor-badge {
+    @apply text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-tight;
+}
+
+.actor-user {
+    @apply bg-primary/10 text-primary border border-primary/20;
+}
+
+.actor-system {
+    @apply bg-slate-500/10 text-slate-500 border border-slate-500/20 italic font-medium;
+}
+
+/* Pagination */
+.pagination-wrapper {
+    @apply px-6 py-4 bg-white/5 border-t border-white/10 flex items-center justify-between;
+}
