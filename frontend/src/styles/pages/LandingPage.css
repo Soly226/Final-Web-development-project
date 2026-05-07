@@ -1,0 +1,113 @@
+@reference "../index.css";
+
+/* Main Layout */
+.landing-container {
+    @apply bg-background-dark min-h-screen font-display text-white overflow-x-hidden;
+}
+
+/* Navbar */
+.navbar {
+    @apply fixed top-0 left-0 w-full z-50 transition-all duration-500 py-5 bg-transparent;
+}
+
+.navbar-scrolled {
+    @apply bg-slate-950/90 backdrop-blur-xl border-b border-white/10 py-3 shadow-2xl;
+}
+
+.navbar-content {
+    @apply max-w-7xl mx-auto px-6 flex items-center justify-between;
+}
+
+.logo-wrapper {
+    @apply w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/30;
+}
+
+.nav-link {
+    @apply text-sm font-medium text-slate-400 hover:text-white transition-colors;
+}
+
+.btn-primary {
+    @apply bg-gradient-to-br from-primary to-accent text-white text-sm font-bold py-2.5 px-5 rounded-xl shadow-lg shadow-primary/30 hover:brightness-110 transition-all active:scale-95;
+}
+
+/* Hero Section */
+.hero-section {
+    @apply relative min-h-screen flex items-center justify-center px-6 pt-24 pb-16 overflow-hidden;
+}
+
+.hero-orb-1 {
+    @apply absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 blur-[150px] rounded-full animate-pulse;
+}
+
+.hero-orb-2 {
+    @apply absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/20 blur-[130px] rounded-full animate-pulse;
+}
+
+.hero-orb-3 {
+    @apply absolute top-2/3 left-1/2 w-[300px] h-[300px] bg-cyan-500/10 blur-[100px] rounded-full animate-pulse;
+}
+
+.hero-badge {
+    @apply inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-8 backdrop-blur-sm;
+}
+
+.hero-title {
+    @apply text-5xl md:text-7xl font-extrabold tracking-tight leading-none mb-6;
+}
+
+.hero-subtitle {
+    @apply text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed;
+}
+
+.hero-btn-gradient {
+    @apply w-full sm:w-auto bg-gradient-to-br from-primary to-accent text-white font-bold py-4 px-8 rounded-2xl shadow-2xl shadow-primary/30 hover:shadow-primary/50 hover:brightness-110 transition-all active:scale-95 flex items-center justify-center gap-2;
+}
+
+.hero-btn-glass {
+    @apply w-full sm:w-auto glass border border-white/20 text-white font-bold py-4 px-8 rounded-2xl hover:bg-white/20 transition-all active:scale-95 flex items-center justify-center gap-2;
+}
+
+/* Feature Card */
+.feature-card {
+    @apply glass-card rounded-2xl p-6 flex flex-col gap-4 cursor-default;
+}
+
+.feature-icon-wrapper {
+    @apply w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3;
+}
+
+/* Stats */
+.stats-section {
+    @apply relative px-6 py-20 overflow-hidden;
+}
+
+.stats-bg-overlay {
+    @apply absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 backdrop-blur-sm;
+}
+
+.stat-value {
+    @apply text-4xl md:text-5xl font-extrabold text-white text-glow;
+}
+
+/* Testimonial Card */
+.testimonial-card {
+    @apply glass rounded-2xl p-6 flex flex-col gap-4 min-w-[300px] max-w-sm flex-shrink-0;
+}
+
+.testimonial-avatar {
+    @apply w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center text-white font-black text-lg shadow-md;
+}
+
+/* CTA Banner */
+.cta-banner {
+    @apply relative glass rounded-3xl p-10 md:p-16 overflow-hidden border border-white/10;
+}
+
+.cta-icon-wrapper {
+    @apply inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent shadow-xl shadow-primary/30 mb-6;
+}
+
+/* Footer */
+.footer {
+    @apply border-t border-white/10 px-6 py-8;
+}
