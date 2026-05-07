@@ -1,0 +1,52 @@
+@reference "../../index.css";
+
+.reports-container {
+    @apply p-5 max-w-6xl mx-auto space-y-6;
+}
+
+/* KPI Cards */
+.kpi-card {
+    @apply p-4 border-l-4;
+}
+
+.trend-indicator {
+    @apply text-[10px] font-bold flex items-center mt-1;
+}
+
+/* Enrollment Trends Chart */
+.analytics-grid {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+}
+
+.growth-chart-card {
+    @apply lg:col-span-2 p-6 overflow-visible;
+}
+
+.bar-wrapper {
+    @apply flex-1 flex flex-col items-center gap-3;
+}
+
+.chart-bar {
+    @apply w-full rounded-t-xl transition-all duration-500 group-hover:brightness-125;
+}
+
+.active-bar {
+    @apply bg-gradient-to-t from-primary to-accent shadow-lg shadow-primary/30;
+}
+
+.inactive-bar {
+    @apply bg-primary/20;
+}
+
+/* Side Panels */
+.module-list-card {
+    @apply p-6;
+}
+
+.module-item {
+    @apply flex items-center justify-between;
+}
+
+.module-icon-wrapper {
+    @apply p-2 bg-white/5 rounded-xl border border-white/10 text-primary;
+}
