@@ -1,0 +1,57 @@
+@reference "../../index.css";
+
+.admin-dashboard-container {
+    @apply p-5 flex flex-col gap-6 max-w-5xl mx-auto;
+}
+
+/* Stat Cards */
+.stat-card-premium {
+    @apply flex flex-col gap-1 border-b-2;
+}
+
+.stat-icon-bg {
+    @apply bg-primary/10 p-2 rounded-xl;
+}
+
+.trend-badge {
+    @apply flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold;
+}
+
+.trend-up {
+    @apply bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400;
+}
+
+.trend-down {
+    @apply bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400;
+}
+
+/* Chart */
+.chart-container {
+    @apply p-6 relative overflow-hidden;
+}
+
+.chart-glow-bg {
+    @apply absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl -mr-10 -mt-10 rounded-full;
+}
+
+.chart-value-glow {
+    @apply text-3xl font-extrabold text-slate-900 dark:text-white text-glow;
+}
+
+/* Action Buttons */
+.admin-action-btn-primary {
+    @apply flex flex-col items-center gap-3 bg-gradient-to-br from-primary to-accent rounded-2xl p-4 text-white shadow-lg shadow-primary/20 transition-all hover:scale-[1.03] active:scale-[0.98];
+}
+
+.admin-action-btn-glass {
+    @apply flex flex-col items-center gap-3 glass rounded-2xl p-4 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-white/10 transition-all hover:scale-[1.03] active:scale-[0.98];
+}
+
+/* Activity Logs */
+.activity-log-item {
+    @apply flex items-center gap-4 p-4 glass rounded-2xl cursor-pointer hover:border-primary/30 transition-all;
+}
+
+.activity-icon-wrapper {
+    @apply w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-md transition-transform group-hover:rotate-6;
+}
