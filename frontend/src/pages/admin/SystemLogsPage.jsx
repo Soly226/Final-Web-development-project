@@ -1,22 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { twMerge } from 'tailwind-merge';
+import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 const SystemLogsPage = () => {
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterLevel, setFilterLevel] = useState('All Levels');
   const [filterCategory, setFilterCategory] = useState('All Categories');
-  
-  const logs = [
-    { id: 1, time: '2023-10-24 14:22:10', level: 'Error', category: 'Auth', message: 'Failed login attempt: multiple incorrect passwords.', user: 'john.doe@edu.com' },
-    { id: 2, time: '2023-10-24 13:45:02', level: 'Warning', category: 'System', message: 'CPU spike detected: 85% usage for 5 mins.', user: 'System Process' },
-    { id: 3, time: '2023-10-24 13:12:55', level: 'Info', category: 'Course', message: "Course 'Advanced Physics' updated by instructor.", user: 's.miller@faculty.edu' },
-    { id: 4, time: '2023-10-24 12:58:30', level: 'Info', category: 'Auth', message: 'New student registration: Alice Brown.', user: 'a.brown@student.edu' },
-    { id: 5, time: '2023-10-24 12:45:12', level: 'Info', category: 'System', message: 'Daily database backup completed successfully.', user: 'System Process' },
-  ];
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${user.token}` }
+        };
+        const { data } = await axios.get('http://localhost:5000/api/admin/logs', config);
+        const mappedLogs = data.map(log => ({
+          id: log._id,
+          time: new Date(log.timestamp).toLocaleString(),
+          level: log.level.charAt(0).toUpperCase() + log.level.slice(1),
+          category: log.source,
+          message: log.message,
+          user: log.metadata?.user || 'System'
+        }));
+        setLogs(mappedLogs);
+      } catch (err) {
+        console.error('Error fetching logs:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) fetchLogs();
+  }, [user]);
 
   const getLevelBadge = (level) => {
     const styles = {
@@ -46,7 +69,6 @@ const SystemLogsPage = () => {
     <AdminLayout title="System Audit Logs">
       <div className="p-5 max-w-6xl mx-auto space-y-6">
         
-        {/* Filter Section */}
         <Card className="flex flex-col md:flex-row gap-4 items-end">
           <div className="flex-1 w-full">
             <label className="text-xs font-bold text-slate-500 mb-2 block uppercase tracking-wider">Search Events</label>
@@ -89,43 +111,45 @@ const SystemLogsPage = () => {
           <Button className="w-full md:w-auto px-8" onClick={() => alert(`Exporting ${filteredLogs.length} logs to CSV...`)}>Export CSV</Button>
         </Card>
 
-        {/* Logs Table */}
         <Card className="p-0 overflow-hidden border-white/5">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-white/5 border-b border-white/10">
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Timestamp</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Level</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Category</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Event Message</th>
-                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500 text-right">User / Process</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {filteredLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-primary/5 transition-colors group">
-                    <td className="px-6 py-4 whitespace-nowrap text-xs font-medium text-slate-400">{log.time}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{getLevelBadge(log.level)}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{log.category}</span>
-                    </td>
-                    <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 max-w-xs truncate">{log.message}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className={twMerge(
-                        "text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-tight",
-                        log.user.includes('@') ? "bg-primary/10 text-primary border border-primary/20" : "bg-slate-500/10 text-slate-500 border border-slate-500/20 italic font-medium"
-                      )}>
-                        {log.user}
-                      </span>
-                    </td>
+          {loading ? (
+            <div className="p-10 text-center text-slate-500">Loading system logs...</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-white/5 border-b border-white/10">
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Timestamp</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Level</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Category</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Event Message</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500 text-right">User / Process</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {filteredLogs.map((log) => (
+                    <tr key={log.id} className="hover:bg-primary/5 transition-colors group">
+                      <td className="px-6 py-4 whitespace-nowrap text-xs font-medium text-slate-400">{log.time}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{getLevelBadge(log.level)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{log.category}</span>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-slate-500 dark:text-slate-400 max-w-xs truncate">{log.message}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <span className={twMerge(
+                          "text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-tight",
+                          log.user.includes('@') ? "bg-primary/10 text-primary border border-primary/20" : "bg-slate-500/10 text-slate-500 border border-slate-500/20 italic font-medium"
+                        )}>
+                          {log.user}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
           
-          {/* Pagination */}
           <div className="px-6 py-4 bg-white/5 border-t border-white/10 flex items-center justify-between">
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Showing {filteredLogs.length} results</p>
             <div className="flex gap-2">
