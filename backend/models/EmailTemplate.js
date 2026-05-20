@@ -16,7 +16,7 @@ const emailTemplateSchema = new mongoose.Schema({
   variables: [String],
   updatedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Admin',
   },
   updatedAt: {
     type: Date,

@@ -1,5 +1,7 @@
 import SystemLog from '../models/SystemLog.js';
-import User from '../models/User.js';
+import Admin from '../models/Admin.js';
+import Instructor from '../models/Instructor.js';
+import Student from '../models/Student.js';
 import EmailTemplate from '../models/EmailTemplate.js';
 
 // @desc    Get system logs
@@ -19,9 +21,10 @@ export const getSystemLogs = async (req, res) => {
 // @access  Private/Admin
 export const getPlatformAnalytics = async (req, res) => {
   try {
-    const userCount = await User.countDocuments();
-    const instructorCount = await User.countDocuments({ role: 'instructor' });
-    const studentCount = await User.countDocuments({ role: 'student' });
+    const adminCount = await Admin.countDocuments();
+    const instructorCount = await Instructor.countDocuments();
+    const studentCount = await Student.countDocuments();
+    const userCount = adminCount + instructorCount + studentCount;
     
     // In a real app, we'd count courses, enrollments, etc.
     res.json({

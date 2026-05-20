@@ -1,8 +1,11 @@
-import User from '../models/User.js';
+import Admin from '../models/Admin.js';
+import Instructor from '../models/Instructor.js';
+import Student from '../models/Student.js';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
 };
@@ -11,29 +14,33 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 export const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, ...otherData } = req.body;
 
   try {
-    const userExists = await User.findOne({ email });
+    let userExists = null;
+    let user = null;
 
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+    if (role === 'admin') {
+      userExists = await Admin.findOne({ email });
+      if (userExists) return res.status(400).json({ message: 'User already exists' });
+      user = await Admin.create({ full_name: name, username: name, admin_id: `ADM${Date.now()}`, email, password, ...otherData });
+    } else if (role === 'instructor') {
+      userExists = await Instructor.findOne({ email });
+      if (userExists) return res.status(400).json({ message: 'User already exists' });
+      user = await Instructor.create({ full_name: name, username: name, instructor_id: `INST${Date.now()}`, email, password, role: 'instructor', ...otherData });
+    } else {
+      userExists = await Student.findOne({ email });
+      if (userExists) return res.status(400).json({ message: 'User already exists' });
+      user = await Student.create({ full_name: name, username: name, student_id: `ST${Date.now()}`, email, password, ...otherData });
     }
-
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role,
-    });
 
     if (user) {
       res.status(201).json({
         _id: user._id,
-        name: user.name,
+        name: user.full_name,
         email: user.email,
-        role: user.role,
-        token: generateToken(user._id),
+        role: role || 'student',
+        token: generateToken(user._id, role || 'student'),
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -50,15 +57,36 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    let user = await Admin.findOne({ email });
+    let role = 'admin';
 
-    if (user && (await user.comparePassword(password))) {
+    if (!user) {
+      user = await Instructor.findOne({ email });
+      role = 'instructor';
+    }
+
+    if (!user) {
+      user = await Student.findOne({ email });
+      role = 'student';
+    }
+
+    if (!user) {
+       return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Since we are using bcrypt, we need to compare the password manually if the compare method isn't on the new models.
+    // Wait, let's check if comparePassword is on the new models. It is NOT.
+    // So we use bcrypt.compare here.
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
       res.json({
         _id: user._id,
-        name: user.name,
+        name: user.full_name,
         email: user.email,
-        role: user.role,
-        token: generateToken(user._id),
+        role: role,
+        token: generateToken(user._id, role),
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
