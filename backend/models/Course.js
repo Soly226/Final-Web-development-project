@@ -1,16 +1,31 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema({
-  course_id: { type: String, unique: true, required: true },
-  course_code: { type: String, unique: true, required: true },
-  course_name: { type: String, required: true },
-  description: { type: String },
-  credit_hours: { type: Number, required: true },
-  department: { type: String, required: true },
-  prerequisite_course_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
-  assigned_instructors: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Instructor' }],
-  enrolled_students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }]
-});
+  title: { type: String, required: true },
+  description: String,
+  instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  lectures: [{
+    title: String,
+    content: String,
+    videoUrl: String,
+  }],
+  assignments: [{
+    title: String,
+    description: String,
+    dueDate: Date,
+    submissions: [{
+      student: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      submission: String,
+      grade: Number,
+    }],
+  }],
+  stream: [{
+    type: { type: String, enum: ['announcement', 'discussion'] },
+    content: String,
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now },
+  }],
+}, { timestamps: true });
 
-const Course = mongoose.model('Course', courseSchema);
-export default Course;
+module.exports = mongoose.model('Course', courseSchema);
