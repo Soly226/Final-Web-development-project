@@ -1,0 +1,109 @@
+@reference "../../index.css";
+
+.profile-container {
+    @apply p-5 flex flex-col gap-5 max-w-3xl mx-auto;
+}
+
+.profile-hero-banner {
+    @apply relative h-28 bg-gradient-to-br from-primary via-accent to-cyan-500 overflow-hidden;
+}
+
+.hero-radial-overlay {
+    @apply absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,0.15),transparent_60%)];
+}
+
+.hero-blur-circle {
+    @apply absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl;
+}
+
+.edit-toggle-btn {
+    @apply absolute top-3 right-3 w-8 h-8 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl flex items-center justify-center text-white transition-all border border-white/30;
+}
+
+.avatar-wrapper {
+    @apply relative z-10 -mt-10 mb-3 flex items-end justify-between;
+}
+
+.profile-avatar {
+    @apply w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent border-4 border-white dark:border-slate-900 flex items-center justify-center text-white text-2xl font-black shadow-xl;
+}
+
+.profile-name {
+    @apply text-xl font-extrabold text-slate-900 dark:text-white tracking-tight;
+}
+
+.profile-meta {
+    @apply text-primary text-sm font-semibold;
+}
+
+.profile-bio {
+    @apply text-slate-500 dark:text-slate-400 text-sm mt-2 leading-relaxed;
+}
+
+.stats-grid-profile {
+    @apply grid grid-cols-3 gap-3 mt-4;
+}
+
+.stat-item-profile {
+    @apply bg-slate-50 dark:bg-slate-800/60 rounded-xl py-3 text-center;
+}
+
+.badges-grid {
+    @apply grid grid-cols-3 sm:grid-cols-6 gap-3;
+}
+
+.badge-item {
+    @apply flex flex-col items-center gap-2 p-3 glass rounded-2xl border transition-all;
+}
+
+.badge-earned {
+    @apply border-white/20 dark:border-white/10;
+}
+
+.badge-locked {
+    @apply opacity-40 border-dashed border-slate-300 dark:border-slate-700;
+}
+
+.badge-icon-wrapper {
+    @apply w-11 h-11 rounded-xl bg-gradient-to-br flex items-center justify-center text-white shadow-md;
+}
+
+.course-list-profile {
+    @apply flex flex-col gap-2;
+}
+
+.course-item-profile {
+    @apply glass flex items-center gap-3 p-3.5 rounded-2xl border border-white/20 dark:border-white/10 hover:border-primary/30 transition-all;
+}
+
+.activity-list-profile {
+    @apply flex flex-col gap-2.5;
+}
+
+.activity-item-profile {
+    @apply glass flex items-center gap-3 p-3.5 rounded-2xl border border-white/20 dark:border-white/10;
+}
+
+.actions-list-profile {
+    @apply flex flex-col gap-2;
+}
+
+.action-btn-profile {
+    @apply glass flex items-center gap-3 p-4 rounded-2xl border border-white/20 dark:border-white/10 hover:border-primary/30 transition-all text-left w-full;
+}
+
+.logout-btn-profile {
+    @apply flex items-center gap-3 p-4 rounded-2xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 transition-all text-left w-full;
+}
+
+.input-label-profile {
+    @apply block text-slate-700 dark:text-slate-300 text-xs font-bold mb-1;
+}
+
+.profile-input {
+    @apply w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-slate-900 dark:text-white;
+}
+
+.profile-textarea {
+    @apply w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none text-slate-900 dark:text-white;
+}

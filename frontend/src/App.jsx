@@ -16,6 +16,7 @@ import SystemLogsPage from './pages/admin/SystemLogsPage';
 import SystemSettingsPage from './pages/admin/SystemSettingsPage';
 import EmailTemplatesPage from './pages/admin/EmailTemplatesPage';
 import AdminReportsPage from './pages/admin/AdminReportsPage';
+import CourseManagementPage from './pages/admin/CourseManagementPage';
 // import UserManagementPage from './pages/admin/UserManagementPage'; // Missing
 
 // Magdy's Student Pages (Commented out until migrated)
@@ -67,6 +68,7 @@ function App() {
           <Route path="/admin/settings" element={<SystemSettingsPage />} />
           <Route path="/admin/templates" element={<EmailTemplatesPage />} />
           <Route path="/admin/reports" element={<AdminReportsPage />} />
+          <Route path="/admin/courses" element={<CourseManagementPage />} />
         </Route>
 
         {/* Placeholder Routes for other colleagues */}

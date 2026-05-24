@@ -8,6 +8,8 @@ import adminRoutes from './routes/adminRoutes.js';
 import courseRoutes from './routes/courseRoutes.js';
 import instructorRoutes from './routes/instructorRoutes.js';
 
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+
 dotenv.config();
 
 const app = express();
@@ -27,6 +29,10 @@ app.use('/api/instructor', instructorRoutes);
 app.get('/', (req, res) => {
   res.send('EduCore LMS Backend API is running...');
 });
+
+// Error handling middleware
+app.use(notFound);
+app.use(errorHandler);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)

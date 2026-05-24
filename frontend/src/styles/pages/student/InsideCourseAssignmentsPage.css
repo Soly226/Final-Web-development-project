@@ -1,0 +1,85 @@
+@reference "../../index.css";
+
+.assignments-container {
+    @apply p-5 flex flex-col gap-5 max-w-3xl mx-auto;
+}
+
+.back-link {
+    @apply flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-primary transition-colors w-fit;
+}
+
+.back-icon {
+    @apply text-lg transition-transform;
+}
+
+.course-banner {
+    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br p-6 text-white shadow-xl shadow-primary/20;
+}
+
+.banner-blur {
+    @apply absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none;
+}
+
+.banner-content {
+    @apply relative z-10 flex items-center gap-4;
+}
+
+.banner-icon-wrapper {
+    @apply w-14 h-14 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center;
+}
+
+.banner-stats {
+    @apply relative z-10 grid grid-cols-3 gap-3 mt-5;
+}
+
+.banner-stat-item {
+    @apply bg-white/15 border border-white/20 rounded-xl px-3 py-2.5 text-center;
+}
+
+.tab-nav {
+    @apply flex items-center gap-2 border-b border-slate-200 dark:border-slate-700/50 overflow-x-auto scrollbar-hide;
+}
+
+.tab-link {
+    @apply flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-slate-500 hover:text-primary transition-colors;
+}
+
+.tab-link-active {
+    @apply flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 text-sm font-bold text-primary border-b-2 border-primary;
+}
+
+.filters-scroll {
+    @apply flex gap-2 overflow-x-auto scrollbar-hide;
+}
+
+.filter-btn-student {
+    @apply flex-shrink-0 text-xs font-bold px-4 py-2 rounded-xl transition-all;
+}
+
+.filter-btn-student-active {
+    @apply bg-gradient-to-br from-primary to-accent text-white shadow-md shadow-primary/20;
+}
+
+.filter-btn-student-inactive {
+    @apply glass text-slate-600 dark:text-slate-400 hover:text-primary border border-white/20 dark:border-white/10;
+}
+
+.assignment-list-inner {
+    @apply flex flex-col gap-3;
+}
+
+.assignment-card-student {
+    @apply glass flex items-center gap-4 p-4 rounded-2xl border border-white/20 dark:border-white/10 hover:border-primary/30 transition-all;
+}
+
+.status-icon-wrapper {
+    @apply w-10 h-10 flex-shrink-0 rounded-xl flex items-center justify-center;
+}
+
+.assignment-badge-type {
+    @apply text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full flex-shrink-0;
+}
+
+.no-assignments-empty {
+    @apply flex flex-col items-center gap-3 py-16 text-center;
+}

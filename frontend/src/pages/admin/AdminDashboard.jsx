@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
 import Card from '../../components/ui/Card';
@@ -30,46 +30,80 @@ const StatCard = ({ icon, label, value, trend, trendUp }) => (
   </Card>
 );
 
+const DashboardSkeleton = () => (
+  <div className="space-y-6 animate-pulse">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="h-28 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+      ))}
+    </div>
+    <div className="h-72 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="h-44 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+      <div className="lg:col-span-2 h-44 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+    </div>
+  </div>
+);
+
+const ErrorState = ({ message, onRetry }) => (
+  <div className="flex flex-col items-center justify-center p-12 text-center max-w-md mx-auto glass rounded-2xl border border-rose-500/20 bg-rose-500/5">
+    <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center mb-4">
+      <span className="material-symbols-outlined text-3xl">error_outline</span>
+    </div>
+    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Connection Error</h3>
+    <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">{message}</p>
+    {onRetry && (
+      <Button onClick={onRetry} className="gap-2 px-6 shadow-lg shadow-primary/20">
+        <span className="material-symbols-outlined text-sm">refresh</span>
+        Retry Connection
+      </Button>
+    )}
+  </div>
+);
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [analytics, setAnalytics] = useState(null);
   const [recentLogs, setRecentLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${user.token}` }
+      };
+      
+      const [analyticsRes, logsRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/admin/analytics', config),
+        axios.get('http://localhost:5000/api/admin/logs', config)
+      ]);
+
+      setAnalytics(analyticsRes.data);
+      
+      // Map recent logs
+      const mappedLogs = logsRes.data.slice(0, 3).map(log => ({
+        icon: log.level === 'error' ? 'warning' : log.level === 'warning' ? 'report_problem' : 'info',
+        color: log.level === 'error' ? 'bg-rose-500' : log.level === 'warning' ? 'bg-amber-500' : 'bg-blue-500',
+        label: log.source,
+        sub: log.message,
+        time: new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }));
+      setRecentLogs(mappedLogs);
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      setError('Failed to load system overview statistics. Please check your network connection.');
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const config = {
-          headers: { Authorization: `Bearer ${user.token}` }
-        };
-        
-        const [analyticsRes, logsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/admin/analytics', config),
-          axios.get('http://localhost:5000/api/admin/logs', config)
-        ]);
-
-        setAnalytics(analyticsRes.data);
-        
-        // Map recent logs
-        const mappedLogs = logsRes.data.slice(0, 3).map(log => ({
-          icon: log.level === 'error' ? 'warning' : log.level === 'warning' ? 'report_problem' : 'info',
-          color: log.level === 'error' ? 'bg-rose-500' : log.level === 'warning' ? 'bg-amber-500' : 'bg-blue-500',
-          label: log.source,
-          sub: log.message,
-          time: new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }));
-        setRecentLogs(mappedLogs);
-
-      } catch (err) {
-        console.error('Error fetching dashboard data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (user) fetchData();
-  }, [user]);
+  }, [user, fetchData]);
 
   const stats = [
     { icon: 'group', label: 'TOTAL USERS', value: analytics?.totalUsers || '0', trend: '12.5%', trendUp: true },
@@ -83,7 +117,9 @@ const AdminDashboard = () => {
       <div className="p-5 flex flex-col gap-6 max-w-5xl mx-auto">
         
         {loading ? (
-          <div className="text-center py-20 text-slate-500 font-bold uppercase tracking-widest animate-pulse">Loading Dashboard...</div>
+          <DashboardSkeleton />
+        ) : error ? (
+          <ErrorState message={error} onRetry={fetchData} />
         ) : (
           <>
             {/* Stat Cards Grid */}

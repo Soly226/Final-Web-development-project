@@ -2,8 +2,11 @@ import express from 'express';
 import { 
   getSystemLogs, 
   getPlatformAnalytics, 
+  getSystemSettings,
   updateSystemSettings,
-  getEmailTemplates, 
+  createSystemBroadcast,
+  getEmailTemplates,
+  createEmailTemplate,
   updateEmailTemplate, 
   getAdminReports 
 } from '../controllers/adminController.js';
@@ -17,6 +20,13 @@ import {
   deleteUser
 } from '../controllers/userManagementController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
+import {
+  updateSettingsValidationRules,
+  createBroadcastValidationRules,
+  createEmailTemplateValidationRules,
+  updateEmailTemplateValidationRules,
+  validateRequest
+} from '../middleware/validationMiddleware.js';
 
 const router = express.Router();
 
@@ -25,9 +35,12 @@ router.use(admin);
 
 router.get('/logs', getSystemLogs);
 router.get('/analytics', getPlatformAnalytics);
-router.put('/settings', updateSystemSettings);
+router.get('/settings', getSystemSettings);
+router.put('/settings', updateSettingsValidationRules, validateRequest, updateSystemSettings);
+router.post('/broadcast', createBroadcastValidationRules, validateRequest, createSystemBroadcast);
 router.get('/email-templates', getEmailTemplates);
-router.put('/email-templates/:id', updateEmailTemplate);
+router.post('/email-templates', createEmailTemplateValidationRules, validateRequest, createEmailTemplate);
+router.put('/email-templates/:id', updateEmailTemplateValidationRules, validateRequest, updateEmailTemplate);
 router.get('/reports', getAdminReports);
 
 // User Management Routes

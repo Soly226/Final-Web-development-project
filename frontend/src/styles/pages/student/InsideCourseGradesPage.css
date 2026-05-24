@@ -1,0 +1,101 @@
+@reference "../../index.css";
+
+.grades-container {
+    @apply p-5 flex flex-col gap-5 max-w-3xl mx-auto;
+}
+
+.back-link-grades {
+    @apply flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-primary transition-colors w-fit;
+}
+
+.course-header-grades {
+    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br p-6 text-white shadow-xl;
+}
+
+.header-blur-grades {
+    @apply absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none;
+}
+
+.header-content-grades {
+    @apply relative z-10 flex items-center gap-4;
+}
+
+.header-icon-wrapper-grades {
+    @apply w-14 h-14 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center;
+}
+
+.tab-nav-grades {
+    @apply flex items-center gap-2 border-b border-slate-200 dark:border-slate-700/50 overflow-x-auto scrollbar-hide;
+}
+
+.tab-link-grades {
+    @apply flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-slate-500 hover:text-primary transition-colors;
+}
+
+.tab-link-grades-active {
+    @apply flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 text-sm font-bold text-primary border-b-2 border-primary;
+}
+
+.overall-grade-card {
+    @apply flex items-center gap-6 p-6;
+}
+
+.svg-ring-wrapper {
+    @apply relative w-24 h-24 flex-shrink-0;
+}
+
+.svg-ring {
+    @apply w-24 h-24 -rotate-90;
+}
+
+.ring-bg {
+    @apply text-slate-200 dark:text-slate-700;
+}
+
+.ring-progress {
+    @apply transition-all duration-1000;
+}
+
+.grade-center-text {
+    @apply absolute inset-0 flex flex-col items-center justify-center;
+}
+
+.standing-letter {
+    @apply text-5xl font-extrabold;
+}
+
+.breakdown-card {
+    @apply p-5;
+}
+
+.breakdown-title {
+    @apply text-slate-900 dark:text-white font-bold text-sm mb-4 flex items-center gap-2;
+}
+
+.breakdown-item {
+    @apply mb-4 last:mb-0;
+}
+
+.breakdown-progress-bg {
+    @apply w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden;
+}
+
+.breakdown-progress-bar {
+    @apply h-full rounded-full bg-gradient-to-r transition-all duration-700;
+}
+
+.assignments-list-card {
+    @apply p-5;
+}
+
+.assignment-grade-row {
+    @apply flex items-center gap-4 py-3.5 border-b border-white/10 dark:border-white/5 last:border-0;
+}
+
+.assignment-grade-row-alt {
+    @apply bg-slate-50/30 dark:bg-slate-800/20 -mx-3 px-3 rounded-xl;
+}
+
+.policy-note {
+    @apply glass rounded-2xl border border-primary/20 p-4 flex items-start gap-3;
+}

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduCore - Admin Reports</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5048e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex min-h-screen w-full flex-col pb-20 lg:pb-0">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center bg-white dark:bg-slate-900 p-4 border-b border-slate-200 dark:border-slate-800 justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 p-2 rounded-lg text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<h1 class="text-lg font-bold leading-tight tracking-tight">System Reports</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</header>
+<main class="flex-1 p-4 lg:max-w-5xl lg:mx-auto w-full">
+<!-- Date Range Selector -->
+<div class="flex flex-col gap-4 mb-6">
+<div class="flex items-center justify-between bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 font-medium uppercase tracking-wider">Report Period</span>
+<span class="text-sm font-semibold">Oct 1, 2023 - Oct 31, 2023</span>
+</div>
+<button class="text-primary text-sm font-bold flex items-center gap-1">
+                        Change <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+</div>
+<!-- KPI Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-500 text-xs font-medium">Total Enrollments</p>
+<p class="text-xl font-bold">12,450</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm">trending_up</span>12%
+                    </p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-500 text-xs font-medium">Completion Rate</p>
+<p class="text-xl font-bold">84.2%</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm">trending_up</span>3%
+                    </p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-500 text-xs font-medium">Avg. Grade</p>
+<p class="text-xl font-bold">B+</p>
+<p class="text-rose-600 dark:text-rose-400 text-xs font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm">trending_down</span>1%
+                    </p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<p class="text-slate-500 text-xs font-medium">Instructors</p>
+<p class="text-xl font-bold">428</p>
+<p class="text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm">trending_up</span>5%
+                    </p>
+</div>
+</div>
+<!-- Enrollment Trends Chart Mock -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 mb-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold text-base">Enrollment Trends</h3>
+<span class="text-xs text-slate-500">Last 6 Months</span>
+</div>
+<div class="h-40 flex items-end justify-between gap-2 px-2">
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/20 dark:bg-primary/10 rounded-t-lg h-12"></div>
+<span class="text-[10px] text-slate-400">May</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/20 dark:bg-primary/10 rounded-t-lg h-24"></div>
+<span class="text-[10px] text-slate-400">Jun</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/20 dark:bg-primary/10 rounded-t-lg h-16"></div>
+<span class="text-[10px] text-slate-400">Jul</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/20 dark:bg-primary/10 rounded-t-lg h-32"></div>
+<span class="text-[10px] text-slate-400">Aug</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/40 dark:bg-primary/20 rounded-t-lg h-28"></div>
+<span class="text-[10px] text-slate-400">Sep</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary rounded-t-lg h-36"></div>
+<span class="text-[10px] text-slate-900 dark:text-slate-100 font-bold">Oct</span>
+</div>
+</div>
+</div>
+<!-- Two Column Layout for Tablet+ -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+<!-- Popular Courses -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+<h3 class="font-bold text-base mb-4">Popular Courses</h3>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">terminal</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Intro to Python</p>
+<p class="text-xs text-slate-500">2,400 students</p>
+</div>
+</div>
+<span class="text-xs font-bold text-emerald-600">+12%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">brush</span>
+</div>
+<div>
+<p class="text-sm font-semibold">UI Design Basics</p>
+<p class="text-xs text-slate-500">1,850 students</p>
+</div>
+</div>
+<span class="text-xs font-bold text-emerald-600">+8%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">data_usage</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Data Science 101</p>
+<p class="text-xs text-slate-500">1,200 students</p>
+</div>
+</div>
+<span class="text-xs font-bold text-rose-600">-2%</span>
+</div>
+</div>
+</div>
+<!-- Grade Distribution -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800">
+<h3 class="font-bold text-base mb-4">Grade Distribution</h3>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-xs font-medium mb-1">
+<span>A Grade (90-100)</span>
+<span>32%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 32%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-medium mb-1">
+<span>B Grade (80-89)</span>
+<span>45%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-primary/70 h-2 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-medium mb-1">
+<span>C Grade (70-79)</span>
+<span>15%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-primary/40 h-2 rounded-full" style="width: 15%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-medium mb-1">
+<span>Other</span>
+<span>8%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2">
+<div class="bg-slate-300 dark:bg-slate-600 h-2 rounded-full" style="width: 8%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Export Action -->
+<div class="flex flex-col gap-3 mb-8">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">download</span>
+                    Download Full Report (PDF/CSV)
+                </button>
+<p class="text-center text-xs text-slate-500">Last updated: Today at 08:45 AM</p>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="fixed bottom-0 left-0 right-0 z-20 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex lg:hidden">
+<a class="flex flex-1 flex-col items-center justify-center py-2 text-slate-400" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center py-2 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">analytics</span>
+<span class="text-[10px] font-bold">Reports</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center py-2 text-slate-400" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="text-[10px] font-medium">Courses</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center py-2 text-slate-400" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[10px] font-medium">Users</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center py-2 text-slate-400" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</a>
+</nav>
+</div>
+</body></html>

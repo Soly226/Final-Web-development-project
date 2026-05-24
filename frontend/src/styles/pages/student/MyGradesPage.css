@@ -1,0 +1,73 @@
+@reference "../../index.css";
+
+.grades-all-container {
+    @apply p-5 flex flex-col gap-5 max-w-3xl mx-auto;
+}
+
+.gpa-banner {
+    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-accent p-6 text-white shadow-xl shadow-primary/20;
+}
+
+.gpa-banner-blur {
+    @apply absolute -top-10 -right-10 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none;
+}
+
+.gpa-banner-content {
+    @apply relative z-10 flex items-center justify-between gap-6;
+}
+
+.gpa-value-wrapper {
+    @apply flex items-end gap-2 mt-2;
+}
+
+.gpa-courses-list {
+    @apply flex flex-col gap-2 text-right;
+}
+
+.courses-grades-list {
+    @apply flex flex-col gap-4;
+}
+
+.course-grade-card {
+    @apply flex flex-col gap-0 overflow-hidden p-0;
+}
+
+.course-grade-toggle {
+    @apply w-full flex items-center gap-4 p-5 text-left hover:bg-white/30 dark:hover:bg-white/5 transition-colors;
+}
+
+.course-icon-wrapper-small {
+    @apply w-12 h-12 flex-shrink-0 rounded-xl bg-gradient-to-br flex items-center justify-center text-white shadow-md;
+}
+
+.gpa-ring-wrapper {
+    @apply relative w-20 h-20 flex-shrink-0;
+}
+
+.gpa-ring-svg {
+    @apply w-20 h-20 -rotate-90;
+}
+
+.ring-text-overlay {
+    @apply absolute inset-0 flex flex-col items-center justify-center;
+}
+
+.letter-grade-large {
+    @apply text-2xl font-extrabold;
+}
+
+.assignments-expanded-list {
+    @apply border-t border-white/10 dark:border-white/5;
+}
+
+.assignment-grade-item {
+    @apply flex items-start gap-4 p-4 border-b border-white/5 last:border-0;
+}
+
+.assignment-type-icon-box {
+    @apply w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center text-[10px] font-black mt-0.5;
+}
+
+.assignment-feedback-student {
+    @apply text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 italic leading-relaxed border-l-2 border-primary/30 pl-2;
+}

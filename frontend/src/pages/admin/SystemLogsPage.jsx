@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
@@ -7,39 +7,104 @@ import { twMerge } from 'tailwind-merge';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 
+const Toast = ({ message, type, onClose }) => {
+  useEffect(() => {
+    const t = setTimeout(onClose, 3500);
+    return () => clearTimeout(t);
+  }, [onClose]);
+
+  return (
+    <div
+      className={twMerge(
+        'fixed bottom-32 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all animate-fade-in-up',
+        type === 'success'
+          ? 'bg-emerald-500/90 border-emerald-400/30 text-white'
+          : 'bg-rose-500/90 border-rose-400/30 text-white'
+      )}
+    >
+      <span className="material-symbols-outlined text-xl">
+        {type === 'success' ? 'check_circle' : 'error'}
+      </span>
+      <span className="text-sm font-bold">{message}</span>
+      <button onClick={onClose} className="ml-2 opacity-70 hover:opacity-100 transition-opacity">
+        <span className="material-symbols-outlined text-base">close</span>
+      </button>
+    </div>
+  );
+};
+
+const ErrorState = ({ message, onRetry }) => (
+  <div className="flex flex-col items-center justify-center p-12 text-center max-w-md mx-auto">
+    <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center mb-4">
+      <span className="material-symbols-outlined text-3xl">error_outline</span>
+    </div>
+    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Connection Error</h3>
+    <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">{message}</p>
+    {onRetry && (
+      <Button onClick={onRetry} className="gap-2 px-6">
+        <span className="material-symbols-outlined text-sm">refresh</span>
+        Retry Connection
+      </Button>
+    )}
+  </div>
+);
+
+const LogsSkeleton = () => (
+  <div className="divide-y divide-white/5 animate-pulse">
+    {[...Array(6)].map((_, i) => (
+      <div key={i} className="px-6 py-4 flex justify-between items-center gap-4">
+        <div className="h-4 w-24 bg-slate-200 dark:bg-slate-800 rounded-lg" />
+        <div className="h-5 w-16 bg-slate-200 dark:bg-slate-800 rounded-full" />
+        <div className="h-4 w-20 bg-slate-200 dark:bg-slate-800 rounded-lg" />
+        <div className="flex-1 h-4 bg-slate-200 dark:bg-slate-800 rounded-lg max-w-sm" />
+        <div className="h-4 w-28 bg-slate-200 dark:bg-slate-800 rounded-lg" />
+      </div>
+    ))}
+  </div>
+);
+
 const SystemLogsPage = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
   const [filterLevel, setFilterLevel] = useState('All Levels');
   const [filterCategory, setFilterCategory] = useState('All Categories');
+  const [toast, setToast] = useState(null);
   const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchLogs = async () => {
-      try {
-        const config = {
-          headers: { Authorization: `Bearer ${user.token}` }
-        };
-        const { data } = await axios.get('http://localhost:5000/api/admin/logs', config);
-        const mappedLogs = data.map(log => ({
-          id: log._id,
-          time: new Date(log.timestamp).toLocaleString(),
-          level: log.level.charAt(0).toUpperCase() + log.level.slice(1),
-          category: log.source,
-          message: log.message,
-          user: log.metadata?.user || 'System'
-        }));
-        setLogs(mappedLogs);
-      } catch (err) {
-        console.error('Error fetching logs:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const showToast = useCallback((message, type = 'success') => setToast({ message, type }), []);
+  const closeToast = useCallback(() => setToast(null), []);
 
+  const fetchLogs = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${user.token}` }
+      };
+      const { data } = await axios.get('http://localhost:5000/api/admin/logs', config);
+      const mappedLogs = data.map(log => ({
+        id: log._id,
+        time: new Date(log.timestamp).toLocaleString(),
+        level: log.level.charAt(0).toUpperCase() + log.level.slice(1),
+        category: log.source,
+        message: log.message,
+        user: log.metadata?.user || 'System'
+      }));
+      setLogs(mappedLogs);
+    } catch (err) {
+      console.error('Error fetching logs:', err);
+      setError('Failed to load system logs. Please ensure the backend is active.');
+      showToast('Failed to load system logs.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [user, showToast]);
+
+  useEffect(() => {
     if (user) fetchLogs();
-  }, [user]);
+  }, [user, fetchLogs]);
 
   const getLevelBadge = (level) => {
     const styles = {
@@ -67,6 +132,7 @@ const SystemLogsPage = () => {
 
   return (
     <AdminLayout title="System Audit Logs">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
       <div className="p-5 max-w-6xl mx-auto space-y-6">
         
         <Card className="flex flex-col md:flex-row gap-4 items-end">
@@ -108,12 +174,18 @@ const SystemLogsPage = () => {
               </select>
             </div>
           </div>
-          <Button className="w-full md:w-auto px-8" onClick={() => alert(`Exporting ${filteredLogs.length} logs to CSV...`)}>Export CSV</Button>
+          <Button className="w-full md:w-auto px-8" onClick={() => showToast(`Exported ${filteredLogs.length} logs to CSV!`, 'success')}>Export CSV</Button>
         </Card>
 
         <Card className="p-0 overflow-hidden border-white/5">
           {loading ? (
-            <div className="p-10 text-center text-slate-500">Loading system logs...</div>
+            <div className="p-6">
+              <LogsSkeleton />
+            </div>
+          ) : error ? (
+            <ErrorState message={error} onRetry={fetchLogs} />
+          ) : filteredLogs.length === 0 ? (
+            <div className="p-12 text-center text-slate-500 font-medium italic">No events match your criteria.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
@@ -154,7 +226,7 @@ const SystemLogsPage = () => {
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Showing {filteredLogs.length} results</p>
             <div className="flex gap-2">
               <Button variant="secondary" className="py-2 px-4 text-xs" disabled>Previous</Button>
-              <Button onClick={() => alert("No more pages available.")} className="py-2 px-4 text-xs">Next</Button>
+              <Button onClick={() => showToast("No more pages available.", "info")} className="py-2 px-4 text-xs">Next</Button>
             </div>
           </div>
         </Card>

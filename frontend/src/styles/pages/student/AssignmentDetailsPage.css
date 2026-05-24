@@ -1,0 +1,118 @@
+@reference "../../index.css";
+
+.assignment-details-container {
+    @apply p-5 flex flex-col gap-5 max-w-3xl mx-auto;
+}
+
+.back-link {
+    @apply flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-primary transition-colors w-fit;
+}
+
+.back-icon {
+    @apply material-symbols-outlined text-lg transition-transform;
+}
+
+.assignment-header {
+    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br p-6 text-white shadow-xl;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.header-blur {
+    @apply absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none;
+}
+
+.header-content {
+    @apply relative z-10 flex items-start gap-4;
+}
+
+.header-icon-wrapper {
+    @apply w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0 border border-white/30;
+}
+
+.header-badge-container {
+    @apply flex items-center gap-2 flex-wrap mb-1;
+}
+
+.course-badge {
+    @apply text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-white/20 border border-white/30;
+}
+
+.type-badge {
+    @apply text-[10px] font-black uppercase px-2 py-0.5 rounded-full;
+}
+
+.header-title {
+    @apply text-xl font-extrabold tracking-tight;
+}
+
+.header-meta {
+    @apply flex items-center gap-4 mt-3 text-white/80 text-xs font-semibold flex-wrap;
+}
+
+.status-badge {
+    @apply mt-4 relative z-10 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-sm font-bold;
+}
+
+.section-title {
+    @apply text-slate-900 dark:text-white font-bold text-sm mb-3 flex items-center gap-2;
+}
+
+.description-text {
+    @apply text-slate-600 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-line;
+}
+
+.requirements-list {
+    @apply flex flex-col gap-2;
+}
+
+.requirement-item {
+    @apply flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300;
+}
+
+.requirement-number {
+    @apply w-5 h-5 flex-shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center text-[11px] font-black mt-0.5;
+}
+
+.rubric-container {
+    @apply flex flex-col gap-2;
+}
+
+.rubric-row {
+    @apply flex items-center justify-between py-2 border-b border-white/10 dark:border-white/5 last:border-0;
+}
+
+.total-row {
+    @apply flex items-center justify-between pt-2 font-black;
+}
+
+.attachment-item {
+    @apply flex items-center gap-3 p-3 glass rounded-xl border border-white/20 dark:border-white/10 hover:border-primary/30 transition-all cursor-pointer;
+}
+
+.submission-input {
+    @apply w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none;
+}
+
+.submission-textarea {
+    @apply w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none;
+}
+
+.success-panel {
+    @apply flex flex-col items-center gap-4 py-8 glass rounded-2xl border border-emerald-500/20 bg-emerald-500/5 text-center;
+}
+
+.link-display {
+    @apply text-[11px] text-slate-400 font-mono bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg truncate max-w-xs;
+}
+
+/* Status Config Styles */
+.status-pending { @apply bg-amber-500/10 text-amber-600 border-amber-500/20; }
+.status-submitted { @apply bg-emerald-500/10 text-emerald-600 border-emerald-500/20; }
+.status-graded { @apply bg-primary/10 text-primary border-primary/20; }
+.status-late { @apply bg-rose-500/10 text-rose-600 border-rose-500/20; }
+
+/* Type Config Styles */
+.type-lab { @apply bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400; }
+.type-quiz { @apply bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400; }
+.type-assignment { @apply bg-primary/10 text-primary; }
+.type-exam { @apply bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400; }

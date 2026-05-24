@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Courses - LMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5048e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between px-4 py-3 md:px-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">school</span>
+<h1 class="text-xl font-bold tracking-tight">LMS Dashboard</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary text-xl">person</span>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 py-6 md:px-6 pb-24">
+<div class="flex flex-col gap-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<h2 class="text-2xl font-bold">My Courses</h2>
+<div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+<div class="relative flex-grow md:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Search your courses" type="text"/>
+</div>
+<button class="flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-xl">tune</span>
+                        Filters
+                    </button>
+</div>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-primary text-white font-medium text-sm">All Courses</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">In Progress</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">Completed</button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">Archived</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Course Card 1 -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+<div class="h-48 w-full bg-gradient-to-br from-indigo-500 to-primary flex items-center justify-center relative" data-alt="Indigo and purple geometric abstract pattern for web development course">
+<span class="material-symbols-outlined text-white text-6xl opacity-40">code</span>
+<div class="absolute top-3 left-3 bg-white/20 backdrop-blur-md px-2 py-1 rounded text-white text-xs font-semibold uppercase tracking-wider">In Progress</div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<h3 class="text-lg font-bold line-clamp-1">Web Development Boot Camp</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Dr. Ahmed Khalifa</p>
+</div>
+<div class="flex flex-col gap-1.5 text-xs text-slate-600 dark:text-slate-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">groups</span>
+<span>45 Students</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>Last active: 2 hours ago</span>
+</div>
+</div>
+<div class="mt-2">
+<div class="flex justify-between text-xs mb-1 font-medium">
+<span>Progress</span>
+<span>65%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[65%]"></div>
+</div>
+</div>
+<button class="w-full py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                            Enter Course
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+<div class="h-48 w-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center relative" data-alt="Teal and emerald green abstract waves for psychology course">
+<span class="material-symbols-outlined text-white text-6xl opacity-40">psychology</span>
+<div class="absolute top-3 left-3 bg-white/20 backdrop-blur-md px-2 py-1 rounded text-white text-xs font-semibold uppercase tracking-wider">Featured</div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<h3 class="text-lg font-bold line-clamp-1">Intro to Psychology</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Prof. Sarah Jenkins</p>
+</div>
+<div class="flex flex-col gap-1.5 text-xs text-slate-600 dark:text-slate-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">groups</span>
+<span>128 Students</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>Last active: 1 day ago</span>
+</div>
+</div>
+<div class="mt-2">
+<div class="flex justify-between text-xs mb-1 font-medium text-slate-400">
+<span>Not started</span>
+<span>0%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[0%]"></div>
+</div>
+</div>
+<button class="w-full py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                            Enter Course
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+<div class="h-48 w-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center relative" data-alt="Orange and red energetic gradient pattern for design course">
+<span class="material-symbols-outlined text-white text-6xl opacity-40">palette</span>
+<div class="absolute top-3 left-3 bg-white/20 backdrop-blur-md px-2 py-1 rounded text-white text-xs font-semibold uppercase tracking-wider">Popular</div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<h3 class="text-lg font-bold line-clamp-1">UI/UX Design Fundamentals</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Marco Verratti</p>
+</div>
+<div class="flex flex-col gap-1.5 text-xs text-slate-600 dark:text-slate-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">groups</span>
+<span>312 Students</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>Last active: 5 hours ago</span>
+</div>
+</div>
+<div class="mt-2">
+<div class="flex justify-between text-xs mb-1 font-medium">
+<span>Progress</span>
+<span>12%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[12%]"></div>
+</div>
+</div>
+<button class="w-full py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                            Enter Course
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Course Card 4 -->
+<div class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
+<div class="h-48 w-full bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center relative" data-alt="Blue and cyan technical pattern for data science course">
+<span class="material-symbols-outlined text-white text-6xl opacity-40">database</span>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<h3 class="text-lg font-bold line-clamp-1">Data Science with Python</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Dr. Elena Rodriguez</p>
+</div>
+<div class="flex flex-col gap-1.5 text-xs text-slate-600 dark:text-slate-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">groups</span>
+<span>89 Students</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span>Last active: 3 days ago</span>
+</div>
+</div>
+<div class="mt-2">
+<div class="flex justify-between text-xs mb-1 font-medium">
+<span>Progress</span>
+<span>88%</span>
+</div>
+<div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[88%]"></div>
+</div>
+</div>
+<button class="w-full py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                            Enter Course
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Mobile Tab Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 pb-4 pt-2 flex justify-around items-center md:hidden">
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined font-fill">book</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">My Courses</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Messages</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-medium uppercase tracking-wider">Profile</span>
+</a>
+</nav>
+<!-- Desktop Sidebar Suggestion (Optional but good for layout consistency) -->
+<div class="hidden md:flex fixed left-0 top-0 bottom-0 w-20 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col items-center py-8 gap-10">
+<span class="material-symbols-outlined text-primary text-4xl">school</span>
+<div class="flex flex-col gap-6">
+<a class="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+</a>
+<a class="p-3 rounded-xl bg-primary/10 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined font-fill">book</span>
+</a>
+<a class="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 transition-colors" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+</a>
+<a class="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+</a>
+<a class="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+</a>
+</div>
+</div>
+<!-- Adjust main content for desktop sidebar -->
+<style>
+        @media (min-width: 768px) {
+            body { padding-left: 5rem; }
+        }
+        .font-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

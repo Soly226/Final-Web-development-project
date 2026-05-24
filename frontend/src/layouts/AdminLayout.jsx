@@ -10,6 +10,7 @@ const AdminLayout = ({ children, title }) => {
   const navItems = [
     { icon: 'dashboard', label: 'Home', path: '/admin', active: location.pathname === '/admin' },
     { icon: 'group', label: 'Users', path: '/admin/users', active: location.pathname === '/admin/users' },
+    { icon: 'menu_book', label: 'Courses', path: '/admin/courses', active: location.pathname === '/admin/courses' },
     { icon: 'analytics', label: 'Reports', path: '/admin/reports', active: location.pathname === '/admin/reports' },
     { icon: 'mail', label: 'Templates', path: '/admin/templates', active: location.pathname === '/admin/templates' },
     { icon: 'description', label: 'Logs', path: '/admin/logs', active: location.pathname === '/admin/logs' },

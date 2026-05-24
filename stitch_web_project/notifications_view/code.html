@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notifications - EduCore LMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5048e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative mx-auto flex h-screen max-w-md flex-col bg-background-light dark:bg-background-dark overflow-hidden">
+<!-- Header Section -->
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shrink-0">
+<div class="flex items-center justify-between p-4">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight">Notifications</h1>
+<button class="text-sm font-semibold text-primary hover:opacity-80 transition-opacity">
+                    Mark all as read
+                </button>
+</div>
+<!-- Category Tabs -->
+<div class="flex px-4 gap-6">
+<a class="border-b-2 border-primary pb-3 pt-2" href="#">
+<span class="text-sm font-bold text-primary">All</span>
+</a>
+<a class="border-b-2 border-transparent pb-3 pt-2 hover:border-slate-300 dark:hover:border-slate-700" href="#">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">Unread</span>
+</a>
+<a class="border-b-2 border-transparent pb-3 pt-2 hover:border-slate-300 dark:hover:border-slate-700" href="#">
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400">Mentions</span>
+</a>
+</div>
+</header>
+<!-- Notification List -->
+<main class="flex-1 overflow-y-auto p-4 space-y-3">
+<!-- Unread Notification Item -->
+<div class="group relative flex items-start gap-4 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between gap-2">
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">New Grade Posted</p>
+<span class="text-[11px] font-medium text-slate-400">2 mins ago</span>
+</div>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Instructor Ahmed graded your React Final Project. You scored 94/100.</p>
+</div>
+<div class="absolute right-3 top-1/2 -translate-y-1/2">
+<div class="size-2 rounded-full bg-primary shadow-[0_0_8px_rgba(80,72,229,0.5)]"></div>
+</div>
+</div>
+<!-- Read Notification Item -->
+<div class="group flex items-start gap-4 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-100 dark:border-slate-800 opacity-90">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">assignment</span>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between gap-2">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Assignment Reminder</p>
+<span class="text-[11px] font-medium text-slate-400">1 hour ago</span>
+</div>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Submit your 'UI Design Fundamentals' task by midnight.</p>
+</div>
+</div>
+<!-- Unread Notification Item -->
+<div class="group relative flex items-start gap-4 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">campaign</span>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between gap-2">
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">Course Announcement</p>
+<span class="text-[11px] font-medium text-slate-400">3 hours ago</span>
+</div>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">The live session for Advanced CSS has been rescheduled to Friday at 6 PM.</p>
+</div>
+<div class="absolute right-3 top-1/2 -translate-y-1/2">
+<div class="size-2 rounded-full bg-primary shadow-[0_0_8px_rgba(80,72,229,0.5)]"></div>
+</div>
+</div>
+<div class="pt-4 pb-2 px-1">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Yesterday</h3>
+</div>
+<!-- Read Notification Item -->
+<div class="group flex items-start gap-4 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-100 dark:border-slate-800 opacity-90">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">chat_bubble</span>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between gap-2">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">New Reply in Forum</p>
+<span class="text-[11px] font-medium text-slate-400">Yesterday</span>
+</div>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Sarah Miller replied to your question in "React Hook Patterns".</p>
+</div>
+</div>
+<!-- Read Notification Item -->
+<div class="group flex items-start gap-4 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-100 dark:border-slate-800 opacity-90">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="flex flex-1 flex-col">
+<div class="flex items-center justify-between gap-2">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Material Uploaded</p>
+<span class="text-[11px] font-medium text-slate-400">Yesterday</span>
+</div>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">New reading material: "The History of Typography" PDF has been added.</p>
+</div>
+</div>
+</main>
+<!-- Bottom Navbar -->
+<nav class="shrink-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 pb-6 pt-2">
+<div class="flex items-center justify-between">
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-semibold">Home</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">book</span>
+<span class="text-[10px] font-semibold">Courses</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-[10px] font-semibold">Calendar</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="text-[10px] font-semibold">Messages</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="text-[10px] font-bold">Alerts</span>
+</a>
+<a class="flex flex-1 flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-semibold">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

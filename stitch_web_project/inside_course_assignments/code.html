@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduCore LMS - Course Assignments</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5048e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex min-h-screen flex-col bg-background-light dark:bg-background-dark">
+<!-- Header / Navigation Bar -->
+<header class="sticky top-0 z-50 bg-white dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center p-4 justify-between max-w-5xl mx-auto w-full">
+<div class="flex items-center gap-3">
+<div class="text-primary flex size-10 items-center justify-center rounded-lg bg-primary/10">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold tracking-tight">Course Details</h2>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex size-10 items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+</button>
+<button class="flex size-10 items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">more_vert</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1 max-w-5xl mx-auto w-full p-4 md:p-6 space-y-6">
+<!-- Course Hero Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl p-4 md:p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+<div class="flex gap-5 items-center">
+<div class="size-20 md:size-24 rounded-xl bg-primary/10 flex items-center justify-center text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Abstract coding and web development symbols on dark screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvbt_bGUrpfZsEF7l_NjwU-6lrQApvS8HB8UkXSJA1hMYFmaUGeTRanRhQKO6GvGr60pShj21SPztBQpFW8fWT-J5TKBXVVZKHrWpmYz5EE0e2DAL4dPBt0ThVWgdDbw9N3XGV5srfsnwmABmavCUvjyz27QWbmJXYW7FNxo__JmXzwNAB0YCWWCji3vTC0B2RYUe-8rmMc0SRU9cXp6v8EmpcsUYh0ab-7XM71r2Q0CSybZj_l96ziprCatkEtH5dBP8Ied2dRoQ"/>
+</div>
+<div class="space-y-1">
+<h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Web Development</h1>
+<p class="text-slate-500 dark:text-slate-400 font-medium">Dr. Ahmed Khalifa</p>
+<div class="flex items-center gap-2 text-sm text-slate-400">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span>Semester: Spring 2026</span>
+</div>
+</div>
+</div>
+<button class="w-full md:w-auto bg-primary hover:bg-primary/90 text-white font-bold py-3 px-8 rounded-lg transition-all shadow-lg shadow-primary/20">
+                        Join Class
+                    </button>
+</div>
+</div>
+<!-- Tab Navigation -->
+<div class="border-b border-slate-200 dark:border-slate-800">
+<nav class="flex gap-4 md:gap-8 overflow-x-auto no-scrollbar">
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2 hover:text-primary transition-colors whitespace-nowrap" href="#">
+<span class="text-sm font-semibold">Stream</span>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2 hover:text-primary transition-colors whitespace-nowrap" href="#">
+<span class="text-sm font-semibold">Lectures</span>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-primary text-primary pb-3 pt-2 whitespace-nowrap" href="#">
+<span class="text-sm font-bold">Assignments</span>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2 hover:text-primary transition-colors whitespace-nowrap" href="#">
+<span class="text-sm font-semibold">Students</span>
+</a>
+<a class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2 hover:text-primary transition-colors whitespace-nowrap" href="#">
+<span class="text-sm font-semibold">Grades</span>
+</a>
+</nav>
+</div>
+<!-- Assignments Content Area -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        Active Assignments
+                        <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full">3</span>
+</h3>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Assignment Cards List -->
+<div class="grid gap-4">
+<!-- Assignment Item 1 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-green-50 dark:bg-green-950/30 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined">assignment_turned_in</span>
+</div>
+<div class="space-y-1">
+<h4 class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">HW1 - Responsive Grid System</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Due: 10 Mar 2026 • 11:59 PM</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">
+                                Submitted
+                            </span>
+</div>
+</div>
+<!-- Assignment Item 2 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined">quiz</span>
+</div>
+<div class="space-y-1">
+<h4 class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Quiz: Cognitive Bias in UI/UX</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Due: 15 Mar 2026 • 2:00 PM</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                                Pending
+                            </span>
+</div>
+</div>
+<!-- Assignment Item 3 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-orange-50 dark:bg-orange-950/30 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div class="space-y-1">
+<h4 class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Project Proposal: Final Web App</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Due: 05 Mar 2026 • 11:59 PM</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400">
+                                Late
+                            </span>
+</div>
+</div>
+<!-- Assignment Item 4 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="size-12 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center text-indigo-600">
+<span class="material-symbols-outlined">draw</span>
+</div>
+<div class="space-y-1">
+<h4 class="font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Lab 4: JavaScript DOM Manipulation</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400">Due: 22 Mar 2026 • 11:59 PM</p>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                                Pending
+                            </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 px-4 pb-4 pt-2 z-50">
+<div class="flex justify-around max-w-lg mx-auto">
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">book_2</span>
+<span class="text-[10px] font-medium">Courses</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-[10px] font-medium">Calendar</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+<div class="h-20 w-full"></div> <!-- Spacer for fixed nav -->
+</div>
+</body></html>

@@ -1,0 +1,77 @@
+@reference "../../index.css";
+
+.profile-container {
+    @apply p-5 flex flex-col gap-6 max-w-4xl mx-auto;
+}
+
+.profile-header {
+    @apply relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-8 text-white shadow-xl shadow-amber-500/20 text-center;
+}
+
+.profile-header-overlay {
+    @apply absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden opacity-30;
+}
+
+.profile-header-blur {
+    @apply absolute top-[-50%] left-[-10%] w-[50%] h-[150%] bg-white blur-[100px] rotate-12;
+}
+
+.profile-avatar {
+    @apply w-24 h-24 rounded-2xl bg-white/20 border-4 border-white/30 backdrop-blur-md flex items-center justify-center text-4xl font-extrabold shadow-lg mb-4;
+}
+
+.profile-name {
+    @apply text-3xl font-extrabold tracking-tight;
+}
+
+.profile-badge {
+    @apply text-white/80 font-semibold uppercase tracking-widest text-xs mt-1 bg-white/10 px-3 py-1 rounded-full border border-white/20;
+}
+
+.profile-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+.profile-sidebar {
+    @apply md:col-span-1 flex flex-col gap-6;
+}
+
+.profile-main-content {
+    @apply md:col-span-2;
+}
+
+.profile-section-title {
+    @apply font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2;
+}
+
+.profile-info-label {
+    @apply text-[10px] uppercase font-bold text-slate-400 tracking-wider;
+}
+
+.profile-info-value {
+    @apply text-sm font-semibold text-slate-800 dark:text-slate-200;
+}
+
+.logout-button {
+    @apply w-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white font-bold py-3 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 border border-rose-500/20 shadow-sm active:scale-95;
+}
+
+.profile-form-container {
+    @apply flex flex-col gap-5;
+}
+
+.profile-input-group {
+    @apply block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2;
+}
+
+.profile-input {
+    @apply w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition-colors;
+}
+
+.profile-textarea {
+    @apply w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition-colors resize-none;
+}
+
+.save-button {
+    @apply bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-amber-500/30 transition-all active:scale-95 flex items-center gap-2;
+}

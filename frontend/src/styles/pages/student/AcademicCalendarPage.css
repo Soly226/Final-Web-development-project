@@ -1,0 +1,113 @@
+@reference "../../index.css";
+
+.calendar-container {
+    @apply p-5 flex flex-col gap-5 max-w-5xl mx-auto;
+}
+
+.calendar-header {
+    @apply flex items-center justify-between;
+}
+
+.calendar-title {
+    @apply text-slate-900 dark:text-white font-extrabold text-2xl tracking-tight;
+}
+
+.calendar-subtitle {
+    @apply text-slate-500 text-sm mt-0.5;
+}
+
+.legend-container {
+    @apply hidden sm:flex items-center gap-3;
+}
+
+.legend-item {
+    @apply flex items-center gap-1.5;
+}
+
+.legend-dot {
+    @apply w-2.5 h-2.5 rounded-full;
+}
+
+.legend-text {
+    @apply text-[10px] font-semibold text-slate-500 capitalize;
+}
+
+.calendar-main-grid {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-5;
+}
+
+.calendar-card {
+    @apply glass rounded-2xl border border-white/20 dark:border-white/10 p-5;
+}
+
+.month-nav {
+    @apply flex items-center justify-between mb-5;
+}
+
+.month-nav-btn {
+    @apply w-9 h-9 flex items-center justify-center rounded-xl hover:bg-primary/10 text-slate-500 hover:text-primary transition-all;
+}
+
+.current-month-title {
+    @apply text-slate-900 dark:text-white font-extrabold text-lg;
+}
+
+.day-labels-grid {
+    @apply grid grid-cols-7 mb-2;
+}
+
+.day-label {
+    @apply text-center text-[10px] font-black uppercase tracking-wider text-slate-400 py-1;
+}
+
+.days-grid {
+    @apply grid grid-cols-7 gap-1;
+}
+
+.day-btn {
+    @apply relative flex flex-col items-center gap-0.5 py-1.5 px-1 rounded-xl transition-all;
+}
+
+.day-btn-today {
+    @apply bg-gradient-to-br from-primary to-accent text-white shadow-md shadow-primary/20;
+}
+
+.day-btn-selected {
+    @apply bg-primary/15 text-primary ring-2 ring-primary/40;
+}
+
+.day-btn-normal {
+    @apply hover:bg-primary/5 text-slate-700 dark:text-slate-300;
+}
+
+.event-dots-container {
+    @apply flex gap-0.5 flex-wrap justify-center;
+}
+
+.event-dot {
+    @apply w-1.5 h-1.5 rounded-full;
+}
+
+.selected-day-details {
+    @apply mt-5 pt-5 border-t border-white/10 dark:border-white/5;
+}
+
+.selected-day-title {
+    @apply text-sm font-black text-slate-900 dark:text-white mb-3;
+}
+
+.sidebar-container {
+    @apply flex flex-col gap-3;
+}
+
+.sidebar-title {
+    @apply text-slate-900 dark:text-white font-bold text-sm tracking-tight px-1;
+}
+
+.deadline-card {
+    @apply flex items-start gap-3 p-4 glass rounded-2xl border transition-all hover:border-primary/30;
+}
+
+.deadline-icon-wrapper {
+    @apply w-10 h-10 flex-shrink-0 rounded-xl flex items-center justify-center;
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduCore LMS Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4F46E5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden pb-20">
+<!-- Header -->
+<header class="flex items-center justify-between bg-white dark:bg-slate-900 p-4 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">menu</span>
+</button>
+<h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Admin Dashboard</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white overflow-hidden border-2 border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Admin profile photo of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKwegGGT1HdkJEDMLLVJ-in96iY8m4OCFTMpwOF9oRBiwUKBFjz1lrtPsifXvjG5UgenxKZvasMKHgTRKMGureWkS80cUd5jNr2vrTIE7gK8Nb5Bsc6IrwjATOar2adeoOmR8XxW4GbpjS4_Hs4M8LiPBVpybpd_M8OvZtHmJ-e7m3VGZBFRXpJ1Nb-DQfabrUrM0us4a7RS9WZ06pYU8yHw4fpDg9VBbP_kRzX8IG3TvHZxI3-b_kTqmJPlcVCt9ARd-DNW_xK0Q"/>
+</div>
+</div>
+</header>
+<!-- Stat Cards -->
+<div class="p-4 grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg text-xl">group</span>
+<span class="text-emerald-600 text-xs font-semibold">+12%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-2">Total Users</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">12,840</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg text-xl">book_4</span>
+<span class="text-rose-600 text-xs font-semibold">-2%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-2">Active Courses</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">452</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg text-xl">database</span>
+<span class="text-emerald-600 text-xs font-semibold">+5%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-2">Storage</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">78%</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg text-xl">confirmation_number</span>
+<span class="text-emerald-600 text-xs font-semibold">+8%</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-2">Tickets</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">24</p>
+</div>
+</div>
+<!-- Activity Overview -->
+<section class="px-4 py-2">
+<div class="rounded-xl bg-white dark:bg-slate-900 p-4 shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-slate-900 dark:text-white font-bold">User Activity</h2>
+<select class="text-xs border-none bg-slate-100 dark:bg-slate-800 rounded-lg py-1 px-2 focus:ring-0">
+<option>Last 7 days</option>
+<option>Last 30 days</option>
+</select>
+</div>
+<div class="flex items-baseline gap-2 mb-4">
+<p class="text-2xl font-bold text-slate-900 dark:text-white">8.4k</p>
+<p class="text-emerald-600 text-sm font-medium">Daily Average</p>
+</div>
+<div class="h-40 w-full">
+<svg fill="none" height="100%" preserveaspectratio="none" viewbox="0 0 400 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 100 Q 50 20 100 80 T 200 60 T 300 120 T 400 40" fill="none" stroke="#4F46E5" stroke-linecap="round" stroke-width="3"></path>
+<path d="M0 100 Q 50 20 100 80 T 200 60 T 300 120 T 400 40 V 150 H 0 Z" fill="url(#chartGradient)" opacity="0.1"></path>
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4F46E5"></stop>
+<stop offset="100%" stop-color="#4F46E5" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<div class="flex justify-between mt-2 px-1">
+<span class="text-[10px] text-slate-400 font-medium uppercase">Mon</span>
+<span class="text-[10px] text-slate-400 font-medium uppercase">Tue</span>
+<span class="text-[10px] text-slate-400 font-medium uppercase">Wed</span>
+<span class="text-[10px] text-slate-400 font-medium uppercase">Thu</span>
+<span class="text-[10px] text-slate-400 font-medium uppercase">Fri</span>
+<span class="text-[10px] text-slate-400 font-medium uppercase">Sat</span>
+<span class="text-[10px] text-slate-400 font-medium uppercase">Sun</span>
+</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="px-4 py-4">
+<h2 class="text-slate-900 dark:text-white font-bold mb-3 px-1">Quick Actions</h2>
+<div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+<button class="flex flex-col items-center gap-2 min-w-[100px] bg-primary rounded-xl p-4 text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">person_add</span>
+<span class="text-xs font-semibold whitespace-nowrap">Create User</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[100px] bg-white dark:bg-slate-900 rounded-xl p-4 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined text-primary">assessment</span>
+<span class="text-xs font-semibold whitespace-nowrap">Reports</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[100px] bg-white dark:bg-slate-900 rounded-xl p-4 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined text-primary">settings</span>
+<span class="text-xs font-semibold whitespace-nowrap">Settings</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[100px] bg-white dark:bg-slate-900 rounded-xl p-4 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800">
+<span class="material-symbols-outlined text-primary">mail</span>
+<span class="text-xs font-semibold whitespace-nowrap">Broadcast</span>
+</button>
+</div>
+</section>
+<!-- Recent Logs -->
+<section class="px-4 py-2">
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="text-slate-900 dark:text-white font-bold">System Events</h2>
+<button class="text-primary text-xs font-semibold">View All</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Log Item -->
+<div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-600 text-xl">login</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">New User Registration</p>
+<p class="text-[11px] text-slate-500 dark:text-slate-400">Student "Sarah J." joined the platform</p>
+</div>
+<span class="text-[10px] text-slate-400 font-medium">2m ago</span>
+</div>
+<!-- Log Item -->
+<div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-amber-600 text-xl">warning</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">High Storage Alert</p>
+<p class="text-[11px] text-slate-500 dark:text-slate-400">Server instance "Region-A" reached 85%</p>
+</div>
+<span class="text-[10px] text-slate-400 font-medium">15m ago</span>
+</div>
+<!-- Log Item -->
+<div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-blue-600 text-xl">edit_document</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-white line-clamp-1">Course Published</p>
+<p class="text-[11px] text-slate-500 dark:text-slate-400">"Advanced React 2024" by Prof. Mike</p>
+</div>
+<span class="text-[10px] text-slate-400 font-medium">1h ago</span>
+</div>
+</div>
+</section>
+<!-- Bottom Navbar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800 px-6 py-3 z-20">
+<div class="flex items-center justify-between">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined text-2xl font-variation-fill">dashboard</span>
+<span class="text-[10px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">group</span>
+<span class="text-[10px] font-medium">Users</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">book_5</span>
+<span class="text-[10px] font-medium">Courses</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">memory</span>
+<span class="text-[10px] font-medium">System</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">person_2</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

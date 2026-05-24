@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduCore LMS - My Grades</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5048e5",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#121121",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<nav class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3">
+<div class="max-w-5xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary text-white p-1.5 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">school</span>
+</div>
+<h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">EduCore LMS</h1>
+</div>
+<div class="flex items-center gap-2 md:gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="Close up portrait of a male student" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYUaTSDJPC_9FZ3nlwBw_8oQVzpztP3dl5Qrd_AgF62nWfQNrXnVsyz7Tz3rJtisUZhFq3vgqLLu2HInKkRoYP2t0fvmF6zG8oyVFFVWz35_4e7DKJ5oYQ6wG9OyhaUfz9XqOk0fXS5syI6VGCkEP2DeHU3IhxGY-X2C8jByPfn5vWfz17TGb3aEJR-tae7gKAeSP-AGiTDuIe5N90Kz-N3IcdreFHBxSDIVY1H3ScArXRAyC6ico-b_rj-wgLsDZU44ln2KbE5Lc"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="max-w-5xl mx-auto px-4 py-6 mb-24">
+<!-- Page Header -->
+<div class="mb-8">
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">My Grades</h2>
+<p class="text-slate-500 dark:text-slate-400">Semester Spring 2024 • Computer Science Department</p>
+</div>
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Current GPA</p>
+<p class="text-3xl font-bold text-primary">3.82</p>
+</div>
+<div class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">trending_up</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Completed Credits</p>
+<p class="text-3xl font-bold text-slate-900 dark:text-white">120 <span class="text-sm font-normal text-slate-400">/ 144</span></p>
+</div>
+<div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">verified</span>
+</div>
+</div>
+</div>
+<!-- Grades List Section -->
+<div class="space-y-4">
+<div class="flex items-center justify-between px-1">
+<h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200">Recent Assignments</h3>
+<button class="text-sm font-semibold text-primary hover:underline">View All</button>
+</div>
+<!-- Grade Entry Card 1 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:border-primary/30">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Graded</span>
+<span class="text-xs text-slate-400">• UI/UX Design Fundamentals</span>
+</div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white mb-2">HW1 - Responsive Grid System</h4>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border-l-4 border-primary/40">
+<p class="text-sm text-slate-600 dark:text-slate-400 italic">
+                                "Excellent implementation of the grid system. Layout is very clean and the responsive breakpoints are well-defined."
+                            </p>
+<p class="text-xs font-medium text-slate-500 mt-2">— Prof. Sarah Jenkins</p>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-start gap-1">
+<div class="text-right">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">95</span>
+<span class="text-slate-400">/ 100</span>
+</div>
+<div class="px-3 py-1 bg-primary/5 text-primary text-sm font-bold rounded-lg border border-primary/10">
+                            Grade: A
+                        </div>
+</div>
+</div>
+</div>
+<!-- Grade Entry Card 2 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:border-primary/30">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Graded</span>
+<span class="text-xs text-slate-400">• Web Development II</span>
+</div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white mb-2">Midterm Project: Portfolio Site</h4>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border-l-4 border-primary/40">
+<p class="text-sm text-slate-600 dark:text-slate-400 italic">
+                                "Impressive use of modern CSS techniques. The accessibility score was 100%. Great attention to detail."
+                            </p>
+<p class="text-xs font-medium text-slate-500 mt-2">— Dr. Marcus Thorne</p>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-start gap-1">
+<div class="text-right">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">88</span>
+<span class="text-slate-400">/ 100</span>
+</div>
+<div class="px-3 py-1 bg-primary/5 text-primary text-sm font-bold rounded-lg border border-primary/10">
+                            Grade: B+
+                        </div>
+</div>
+</div>
+</div>
+<!-- Grade Entry Card 3 -->
+<div class="bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:border-primary/30">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">Graded</span>
+<span class="text-xs text-slate-400">• Advanced Algorithms</span>
+</div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white mb-2">Quiz 3: Dynamic Programming</h4>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border-l-4 border-primary/40">
+<p class="text-sm text-slate-600 dark:text-slate-400 italic">
+                                "The complexity analysis of the knapsack problem variant was spot on."
+                            </p>
+<p class="text-xs font-medium text-slate-500 mt-2">— Prof. Elena Rodriguez</p>
+</div>
+</div>
+<div class="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-start gap-1">
+<div class="text-right">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">10</span>
+<span class="text-slate-400">/ 10</span>
+</div>
+<div class="px-3 py-1 bg-primary/5 text-primary text-sm font-bold rounded-lg border border-primary/10">
+                            Grade: A+
+                        </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pb-safe">
+<div class="max-w-md mx-auto flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="text-[10px] font-semibold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">book_2</span>
+<span class="text-[10px] font-semibold">Courses</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-primary relative" href="#">
+<span class="material-symbols-outlined text-[24px] fill-[1]">assignment</span>
+<span class="text-[10px] font-bold">Grades</span>
+<div class="absolute -top-1 w-1 h-1 bg-primary rounded-full"></div>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">account_circle</span>
+<span class="text-[10px] font-semibold">Profile</span>
+</a>
+</div>
+</div>
+</body></html>
