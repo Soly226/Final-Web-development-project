@@ -7,9 +7,13 @@ import {
   createSystemBroadcast,
   getEmailTemplates,
   createEmailTemplate,
-  updateEmailTemplate, 
-  getAdminReports 
+  updateEmailTemplate,
+  deleteEmailTemplate,
+  getAdminReports,
+  uploadLogoFile,
+  getLogoUrl
 } from '../controllers/adminController.js';
+import { uploadLogo } from '../middleware/uploadMiddleware.js';
 import {
   getStudents,
   createStudent,
@@ -25,6 +29,9 @@ import {
   createBroadcastValidationRules,
   createEmailTemplateValidationRules,
   updateEmailTemplateValidationRules,
+  createStudentValidationRules,
+  createInstructorValidationRules,
+  createAdminValidationRules,
   validateRequest
 } from '../middleware/validationMiddleware.js';
 
@@ -41,15 +48,21 @@ router.post('/broadcast', createBroadcastValidationRules, validateRequest, creat
 router.get('/email-templates', getEmailTemplates);
 router.post('/email-templates', createEmailTemplateValidationRules, validateRequest, createEmailTemplate);
 router.put('/email-templates/:id', updateEmailTemplateValidationRules, validateRequest, updateEmailTemplate);
+router.delete('/email-templates/:id', deleteEmailTemplate);
 router.get('/reports', getAdminReports);
+
+// File Upload Routes
+router.post('/upload/logo', uploadLogo, uploadLogoFile);
+router.get('/logo', getLogoUrl);
 
 // User Management Routes
 router.get('/users/students', getStudents);
-router.post('/users/students', createStudent);
+router.post('/users/students', createStudentValidationRules, validateRequest, createStudent);
 router.get('/users/instructors', getInstructors);
-router.post('/users/instructors', createInstructor);
+router.post('/users/instructors', createInstructorValidationRules, validateRequest, createInstructor);
 router.get('/users/admins', getAdmins);
-router.post('/users/admins', createAdmin);
+router.post('/users/admins', createAdminValidationRules, validateRequest, createAdmin);
 router.delete('/users/:type/:id', deleteUser);
+
 
 export default router;

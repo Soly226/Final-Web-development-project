@@ -4,10 +4,10 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import apiClient from '../../lib/apiClient';
 import { twMerge } from 'tailwind-merge';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 // ─── Toast ─────────────────────────────────────────────────────────────────
 
@@ -42,23 +42,35 @@ const Toast = ({ message, type, onClose }) => {
 const BroadcastModal = ({ onClose, onSuccess, authHeaders }) => {
   const [form, setForm]     = useState({ title: '', content: '', targetRole: 'all' });
   const [sending, setSending] = useState(false);
-  const [error,   setError]   = useState('');
+  const [errors,  setErrors]  = useState({});
 
-  const handleChange = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
+  const handleChange = (field, value) => {
+    const updated = { ...form, [field]: value };
+    setForm(updated);
+    // Live validation
+    const e = {};
+    if (updated.title.trim().length < 3)    e.title   = 'Title must be at least 3 characters.';
+    if (updated.content.trim().length < 10) e.content = 'Message must be at least 10 characters.';
+    setErrors(e);
+  };
+
+  const isInvalid = form.title.trim().length < 3 || form.content.trim().length < 10;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title.trim() || !form.content.trim()) {
-      setError('Title and content are required.');
-      return;
-    }
+    const e2 = {};
+    if (form.title.trim().length < 3)    e2.title   = 'Title must be at least 3 characters.';
+    if (form.content.trim().length < 10) e2.content = 'Message must be at least 10 characters.';
+    setErrors(e2);
+    if (Object.keys(e2).length > 0) return;
+
     setSending(true);
     try {
-      await axios.post(`${API_BASE}/admin/broadcast`, form, authHeaders);
+      await apiClient.post(`${API_BASE}/admin/broadcast`, form);
       onSuccess('System broadcast sent successfully!');
       onClose();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send broadcast.');
+      setErrors({ submit: err.response?.data?.message || 'Failed to send broadcast.' });
     } finally {
       setSending(false);
     }
@@ -89,8 +101,13 @@ const BroadcastModal = ({ onClose, onSuccess, authHeaders }) => {
             placeholder="e.g. Scheduled Maintenance Notice"
             value={form.title}
             onChange={e => handleChange('title', e.target.value)}
-            required
           />
+          {errors.title && (
+            <p className="text-xs text-rose-500 font-semibold -mt-3 flex items-center gap-1">
+              <span className="material-symbols-outlined text-sm">error</span>
+              {errors.title}
+            </p>
+          )}
 
           <div className="space-y-1.5">
             <label className="block text-slate-700 dark:text-slate-300 text-sm font-medium">
@@ -102,8 +119,21 @@ const BroadcastModal = ({ onClose, onSuccess, authHeaders }) => {
               value={form.content}
               onChange={e => handleChange('content', e.target.value)}
               className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary/20 resize-none"
-              required
             />
+            <div className="flex justify-between items-center mt-1">
+              {errors.content ? (
+                <p className="text-xs text-rose-500 font-semibold flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">error</span>
+                  {errors.content}
+                </p>
+              ) : <span />}
+              <span className={twMerge(
+                'text-[10px] font-semibold',
+                form.content.length < 10 ? 'text-rose-400' : 'text-slate-400'
+              )}>
+                {form.content.length} / 1000
+              </span>
+            </div>
           </div>
 
           <div className="space-y-1.5">
@@ -121,9 +151,9 @@ const BroadcastModal = ({ onClose, onSuccess, authHeaders }) => {
             </select>
           </div>
 
-          {error && (
+          {errors.submit && (
             <p className="text-xs text-rose-500 font-semibold bg-rose-50 dark:bg-rose-900/20 px-3 py-2 rounded-lg">
-              {error}
+              {errors.submit}
             </p>
           )}
 
@@ -131,7 +161,7 @@ const BroadcastModal = ({ onClose, onSuccess, authHeaders }) => {
             <Button type="button" variant="secondary" onClick={onClose} disabled={sending}>
               Cancel
             </Button>
-            <Button type="submit" className="gap-2" disabled={sending}>
+            <Button type="submit" className="gap-2" disabled={sending || isInvalid}>
               {sending ? (
                 <>
                   <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
@@ -160,18 +190,21 @@ const NewTemplateModal = ({ onClose, onCreate, authHeaders }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    const trimmed = name.trim();
+    if (!trimmed || trimmed.length < 2) {
+      setError('Template name must be at least 2 characters.');
+      return;
+    }
     setSaving(true);
     setError('');
     try {
-      const defaultSubject = `New Subject for ${name.trim()}`;
-      const defaultBody    = `Hi {{student_name}},\n\nWelcome to ${name.trim()}!\n\nBest regards,\nThe EduCore Team`;
-      const { data } = await axios.post(
+      const defaultSubject = `New Subject for ${trimmed}`;
+      const defaultBody    = `Hi {{student_name}},\n\nWelcome to ${trimmed}!\n\nBest regards,\nThe EduCore Team`;
+      const { data } = await apiClient.post(
         `${API_BASE}/admin/email-templates`,
-        { name: name.trim(), subject: defaultSubject, body: defaultBody },
-        authHeaders
+        { name: trimmed, subject: defaultSubject, body: defaultBody }
       );
-      onCreate(data);   // pass the full DB object back
+      onCreate(data);
       onClose();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create template.');
@@ -286,7 +319,7 @@ const EmailTemplatesPage = () => {
   const [showBroadcast,    setShowBroadcast]    = useState(false);
   const [toast,            setToast]            = useState(null);
 
-  const authHeaders = { headers: { Authorization: `Bearer ${user?.token}` } };
+  const authHeaders = {}; // kept for prop compatibility, apiClient handles auth via cookie
 
   // ── Helpers ──────────────────────────────────────────────────────────────
   const showToast = useCallback((message, type = 'success') => setToast({ message, type }), []);
@@ -299,7 +332,7 @@ const EmailTemplatesPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await axios.get(`${API_BASE}/admin/email-templates`, authHeaders);
+      const { data } = await apiClient.get(`${API_BASE}/admin/email-templates`);
       setTemplates(data);
       if (data.length > 0) setActiveId(data[0]._id);
     } catch (err) {
@@ -324,12 +357,22 @@ const EmailTemplatesPage = () => {
   // ── Commit to DB ──────────────────────────────────────────────────────────
   const handleCommit = async () => {
     if (!activeTemplate) return;
+
+    // Validate before committing
+    if (!activeTemplate.subject?.trim()) {
+      showToast('Subject cannot be empty before committing.', 'error');
+      return;
+    }
+    if (!activeTemplate.body?.trim() || activeTemplate.body.trim().length < 5) {
+      showToast('Body must have at least 5 characters before committing.', 'error');
+      return;
+    }
+
     setCommitting(true);
     try {
-      await axios.put(
+      await apiClient.put(
         `${API_BASE}/admin/email-templates/${activeTemplate._id}`,
-        { subject: activeTemplate.subject, body: activeTemplate.body },
-        authHeaders
+        { subject: activeTemplate.subject, body: activeTemplate.body }
       );
       showToast(`"${activeTemplate.name}" committed successfully!`, 'success');
     } catch (err) {

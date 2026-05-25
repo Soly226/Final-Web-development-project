@@ -7,6 +7,8 @@ const enrollmentSchema = new mongoose.Schema({
   semester: { type: String, required: true },
   status: { type: String, enum: ['active', 'completed', 'dropped'], default: 'active' },
   final_grade: { type: String }
+}, {
+  timestamps: true  // Adds createdAt and updatedAt automatically
 });
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);

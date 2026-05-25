@@ -5,13 +5,24 @@ import bcrypt from 'bcryptjs';
 
 // --- Student Management ---
 
-// @desc    Get all students
-// @route   GET /api/admin/users/students
+// @desc    Get all students (paginated)
+// @route   GET /api/admin/users/students?page=1&limit=20
 // @access  Private/Admin
 export const getStudents = async (req, res) => {
   try {
-    const students = await Student.find({}).select('-password');
-    res.json(students);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const [students, total] = await Promise.all([
+      Student.find({}).select('-password').skip(skip).limit(limit),
+      Student.countDocuments()
+    ]);
+
+    res.json({
+      data: students,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -54,13 +65,24 @@ export const createStudent = async (req, res) => {
 
 // --- Instructor Management ---
 
-// @desc    Get all instructors
-// @route   GET /api/admin/users/instructors
+// @desc    Get all instructors (paginated)
+// @route   GET /api/admin/users/instructors?page=1&limit=20
 // @access  Private/Admin
 export const getInstructors = async (req, res) => {
   try {
-    const instructors = await Instructor.find({}).select('-password');
-    res.json(instructors);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const [instructors, total] = await Promise.all([
+      Instructor.find({}).select('-password').skip(skip).limit(limit),
+      Instructor.countDocuments()
+    ]);
+
+    res.json({
+      data: instructors,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -103,13 +125,24 @@ export const createInstructor = async (req, res) => {
 
 // --- Admin Management ---
 
-// @desc    Get all admins
-// @route   GET /api/admin/users/admins
+// @desc    Get all admins (paginated)
+// @route   GET /api/admin/users/admins?page=1&limit=20
 // @access  Private/Admin
 export const getAdmins = async (req, res) => {
   try {
-    const admins = await Admin.find({}).select('-password');
-    res.json(admins);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const [admins, total] = await Promise.all([
+      Admin.find({}).select('-password').skip(skip).limit(limit),
+      Admin.countDocuments()
+    ]);
+
+    res.json({
+      data: admins,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

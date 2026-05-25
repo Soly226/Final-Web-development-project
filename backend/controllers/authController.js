@@ -6,7 +6,17 @@ import bcrypt from 'bcryptjs';
 
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
+    expiresIn: '1d',
+  });
+};
+
+// Helper: set the JWT in a secure httpOnly cookie
+const setCookieToken = (res, token) => {
+  res.cookie('jwt', token, {
+    httpOnly: true,          // Not accessible via document.cookie — blocks XSS
+    sameSite: 'strict',      // Only sent for same-site requests — blocks CSRF
+    secure: process.env.NODE_ENV === 'production', // HTTPS-only in production
+    maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
   });
 };
 
@@ -35,12 +45,15 @@ export const registerUser = async (req, res) => {
     }
 
     if (user) {
+      const token = generateToken(user._id, role || 'student');
+      setCookieToken(res, token);
+
+      // Return only non-sensitive user data — token stays in httpOnly cookie
       res.status(201).json({
         _id: user._id,
         name: user.full_name,
         email: user.email,
         role: role || 'student',
-        token: generateToken(user._id, role || 'student'),
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -74,19 +87,18 @@ export const loginUser = async (req, res) => {
        return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Since we are using bcrypt, we need to compare the password manually if the compare method isn't on the new models.
-    // Wait, let's check if comparePassword is on the new models. It is NOT.
-    // So we use bcrypt.compare here.
-
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (isMatch) {
+      const token = generateToken(user._id, role);
+      setCookieToken(res, token);
+
+      // Return only non-sensitive user data — token stays in httpOnly cookie
       res.json({
         _id: user._id,
         name: user.full_name,
         email: user.email,
         role: role,
-        token: generateToken(user._id, role),
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
@@ -95,3 +107,16 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Logout user — clears httpOnly JWT cookie server-side
+// @route   POST /api/auth/logout
+// @access  Public
+export const logoutUser = (req, res) => {
+  res.clearCookie('jwt', {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+  });
+  res.json({ message: 'Logged out successfully' });
+};
+

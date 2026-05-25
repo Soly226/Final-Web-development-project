@@ -6,38 +6,44 @@ import Student from '../models/Student.js';
 export const protect = async (req, res, next) => {
   let token;
 
-  if (
+  // 1. Prefer httpOnly cookie (XSS-safe)
+  if (req.cookies && req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+  // 2. Fall back to Authorization: Bearer header (backward-compatible)
+  else if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
-    try {
-      token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      let user = null;
-      if (decoded.role === 'admin') {
-        user = await Admin.findById(decoded.id).select('-password');
-      } else if (decoded.role === 'instructor') {
-        user = await Instructor.findById(decoded.id).select('-password');
-      } else {
-        user = await Student.findById(decoded.id).select('-password');
-      }
-
-      if (!user) {
-        return res.status(401).json({ message: 'Not authorized, user not found' });
-      }
-
-      req.user = user;
-      req.user.role = decoded.role; // ensure role is accessible
-      next();
-    } catch (error) {
-      console.error(error);
-      res.status(401).json({ message: 'Not authorized, token failed' });
-    }
+    token = req.headers.authorization.split(' ')[1];
   }
 
   if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
+    return res.status(401).json({ message: 'Not authorized, no token' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    let user = null;
+    if (decoded.role === 'admin') {
+      user = await Admin.findById(decoded.id).select('-password');
+    } else if (decoded.role === 'instructor') {
+      user = await Instructor.findById(decoded.id).select('-password');
+    } else {
+      user = await Student.findById(decoded.id).select('-password');
+    }
+
+    if (!user) {
+      return res.status(401).json({ message: 'Not authorized, user not found' });
+    }
+
+    req.user = user;
+    req.user.role = decoded.role;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
 
@@ -48,3 +54,4 @@ export const admin = (req, res, next) => {
     res.status(401).json({ message: 'Not authorized as an admin' });
   }
 };
+

@@ -4,13 +4,24 @@ import Enrollment from '../models/Enrollment.js';
 import Student from '../models/Student.js';
 import Instructor from '../models/Instructor.js';
 
-// @desc    Get all courses
-// @route   GET /api/courses
+// @desc    Get all courses (paginated)
+// @route   GET /api/courses?page=1&limit=20
 // @access  Private
 export const getCourses = async (req, res) => {
   try {
-    const courses = await Course.find({}).populate('assigned_instructors', 'full_name email');
-    res.json(courses);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const [courses, total] = await Promise.all([
+      Course.find({}).populate('assigned_instructors', 'full_name email').skip(skip).limit(limit),
+      Course.countDocuments()
+    ]);
+
+    res.json({
+      data: courses,
+      pagination: { total, page, limit, totalPages: Math.ceil(total / limit) }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

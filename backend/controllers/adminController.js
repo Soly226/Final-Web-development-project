@@ -9,13 +9,29 @@ import Announcement from '../models/Announcement.js';
 import Enrollment from '../models/Enrollment.js';
 import Course from '../models/Course.js';
 
-// @desc    Get system logs
-// @route   GET /api/admin/logs
+// @desc    Get system logs (paginated)
+// @route   GET /api/admin/logs?page=1&limit=50
 // @access  Private/Admin
 export const getSystemLogs = async (req, res) => {
   try {
-    const logs = await SystemLog.find({}).sort({ timestamp: -1 }).limit(100);
-    res.json(logs);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const skip = (page - 1) * limit;
+
+    const [logs, total] = await Promise.all([
+      SystemLog.find({}).sort({ timestamp: -1 }).skip(skip).limit(limit),
+      SystemLog.countDocuments()
+    ]);
+
+    res.json({
+      data: logs,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -211,6 +227,22 @@ export const updateEmailTemplate = async (req, res) => {
   }
 };
 
+// @desc    Delete an email template
+// @route   DELETE /api/admin/email-templates/:id
+// @access  Private/Admin
+export const deleteEmailTemplate = async (req, res) => {
+  try {
+    const template = await EmailTemplate.findById(req.params.id);
+    if (!template) {
+      return res.status(404).json({ message: 'Template not found' });
+    }
+    await EmailTemplate.deleteOne({ _id: template._id });
+    res.json({ message: 'Email template deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // @desc    Get advanced admin reports
 // @route   GET /api/admin/reports
 // @access  Private/Admin
@@ -280,6 +312,49 @@ export const getAdminReports = async (req, res) => {
       trends,
       popularCourses
     });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Upload platform logo
+// @route   POST /api/admin/upload/logo
+// @access  Private/Admin
+export const uploadLogoFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded. Please attach an image.' });
+    }
+
+    // Build a publicly accessible URL path
+    const logoUrl = `/uploads/${req.file.filename}`;
+
+    // Persist to SystemSetting
+    let settings = await SystemSetting.findOne({});
+    if (!settings) settings = new SystemSetting({});
+    settings.logoUrl = logoUrl;
+    await settings.save();
+
+    await SystemLog.create({
+      level: 'info',
+      message: `Platform logo updated by ${req.user?.full_name || 'Admin'}`,
+      source: 'Admin Module',
+      metadata: { logoUrl }
+    });
+
+    res.json({ logoUrl, message: 'Logo uploaded successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get the current logo URL from settings
+// @route   GET /api/admin/logo
+// @access  Private/Admin
+export const getLogoUrl = async (req, res) => {
+  try {
+    const settings = await SystemSetting.findOne({});
+    res.json({ logoUrl: settings?.logoUrl || '' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import AdminLayout from '../../layouts/AdminLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import apiClient from '../../lib/apiClient';
 import { twMerge } from 'tailwind-merge';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 // ─── Reusable sub-components ───────────────────────────────────────────────
 
@@ -71,6 +71,16 @@ const Toast = ({ message, type, onClose }) => {
   );
 };
 
+// ─── Inline Field Error ─────────────────────────────────────────────────────
+
+const FieldError = ({ message }) =>
+  message ? (
+    <p className="text-xs text-rose-500 font-semibold mt-1 flex items-center gap-1">
+      <span className="material-symbols-outlined text-sm">error</span>
+      {message}
+    </p>
+  ) : null;
+
 // ─── Error State ────────────────────────────────────────────────────────────
 
 const ErrorState = ({ message, onRetry }) => (
@@ -89,16 +99,37 @@ const ErrorState = ({ message, onRetry }) => (
   </div>
 );
 
+// ─── Validation helpers ─────────────────────────────────────────────────────
+
+const validate = (form) => {
+  const errs = {};
+  if (!form.platformName.trim()) {
+    errs.platformName = 'Platform name is required.';
+  }
+  if (form.maxLoginAttempts < 1 || form.maxLoginAttempts > 20) {
+    errs.maxLoginAttempts = 'Must be between 1 and 20.';
+  }
+  if (form.smtpPort < 1 || form.smtpPort > 65535) {
+    errs.smtpPort = 'Must be a valid port (1 – 65535).';
+  }
+  return errs;
+};
+
 // ─── Main Page ─────────────────────────────────────────────────────────────
 
 const SystemSettingsPage = () => {
   const { user } = useAuth();
-  const logoInputRef = React.useRef(null);
+  const logoInputRef = useRef(null);
 
   const [loading, setLoading]   = useState(true);
   const [error,   setError]     = useState(null);
   const [saving,  setSaving]    = useState(false);
-  const [toast,   setToast]     = useState(null); // { message, type }
+  const [toast,   setToast]     = useState(null);
+
+  // Logo state
+  const [logoFile,     setLogoFile]     = useState(null);  // File object chosen by user
+  const [logoPreview,  setLogoPreview]  = useState(null);  // Local object URL for preview
+  const [savedLogoUrl, setSavedLogoUrl] = useState('');    // URL returned from server
 
   // Form state — mirrors SystemSetting model
   const [form, setForm] = useState({
@@ -111,7 +142,8 @@ const SystemSettingsPage = () => {
     smtpPort:              587,
   });
 
-  const authHeaders = { headers: { Authorization: `Bearer ${user?.token}` } };
+  // Inline validation errors
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const showToast = useCallback((message, type = 'success') => setToast({ message, type }), []);
   const closeToast = useCallback(() => setToast(null), []);
@@ -121,7 +153,7 @@ const SystemSettingsPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await axios.get(`${API_BASE}/admin/settings`, authHeaders);
+      const { data } = await apiClient.get(`${API_BASE}/admin/settings`);
       setForm({
         platformName:          data.platformName          ?? 'EduCore LMS',
         primaryLanguage:       data.primaryLanguage       ?? 'English (US)',
@@ -131,6 +163,7 @@ const SystemSettingsPage = () => {
         smtpHost:              data.smtpHost              ?? '',
         smtpPort:              data.smtpPort              ?? 587,
       });
+      if (data.logoUrl) setSavedLogoUrl(data.logoUrl);
     } catch (err) {
       setError('Failed to fetch system settings. Please verify the backend service is running.');
       showToast('Failed to load settings from server.', 'error');
@@ -143,15 +176,63 @@ const SystemSettingsPage = () => {
     if (user) fetchSettings();
   }, [user, fetchSettings]);
 
-  const handleChange = (field, value) =>
-    setForm(prev => ({ ...prev, [field]: value }));
+  // Real-time validation on every change
+  const handleChange = (field, value) => {
+    const updated = { ...form, [field]: value };
+    setForm(updated);
+    setFieldErrors(validate(updated));
+  };
+
+  // ── Logo file selection ─────────────────────────────────────────────────
+  const handleLogoSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast('Please select an image file (PNG, JPG, SVG…).', 'error');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('Logo must be smaller than 2 MB.', 'error');
+      return;
+    }
+
+    setLogoFile(file);
+    // Revoke previous preview URL to avoid memory leaks
+    if (logoPreview) URL.revokeObjectURL(logoPreview);
+    setLogoPreview(URL.createObjectURL(file));
+  };
 
   // ── Save ─────────────────────────────────────────────────────────────────
   const handleSave = async (e) => {
     e.preventDefault();
+
+    // Run final validation before submitting
+    const errs = validate(form);
+    setFieldErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      showToast('Please fix the validation errors before saving.', 'error');
+      return;
+    }
+
     setSaving(true);
     try {
-      await axios.put(`${API_BASE}/admin/settings`, form, authHeaders);
+      // 1. Save text settings
+      await apiClient.put(`${API_BASE}/admin/settings`, form);
+
+      // 2. Upload logo if one was selected
+      if (logoFile) {
+        const fd = new FormData();
+        fd.append('logo', logoFile);
+        const { data: logoData } = await apiClient.post(
+          `${API_BASE}/admin/upload/logo`,
+          fd,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        );
+        setSavedLogoUrl(logoData.logoUrl);
+        setLogoFile(null);
+      }
+
       showToast('Configuration saved successfully!', 'success');
     } catch (err) {
       showToast(err.response?.data?.message || 'Failed to save settings.', 'error');
@@ -162,8 +243,11 @@ const SystemSettingsPage = () => {
 
   const handleCancel = async () => {
     setLoading(true);
+    setLogoFile(null);
+    setLogoPreview(null);
+    setFieldErrors({});
     try {
-      const { data } = await axios.get(`${API_BASE}/admin/settings`, authHeaders);
+      const { data } = await apiClient.get(`${API_BASE}/admin/settings`);
       setForm({
         platformName:          data.platformName,
         primaryLanguage:       data.primaryLanguage,
@@ -173,6 +257,7 @@ const SystemSettingsPage = () => {
         smtpHost:              data.smtpHost,
         smtpPort:              data.smtpPort,
       });
+      if (data.logoUrl) setSavedLogoUrl(data.logoUrl);
       showToast('Changes discarded.', 'success');
     } catch {
       showToast('Could not revert changes.', 'error');
@@ -180,6 +265,8 @@ const SystemSettingsPage = () => {
       setLoading(false);
     }
   };
+
+  const isFormInvalid = Object.keys(validate(form)).length > 0;
 
   // ── Skeleton ─────────────────────────────────────────────────────────────
   if (loading) {
@@ -226,14 +313,17 @@ const SystemSettingsPage = () => {
           {/* ── General Branding ────────────────────────────────────── */}
           <SettingsSection title="General Branding" icon="public">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Input
-                label="Platform Name"
-                id="platformName"
-                value={form.platformName}
-                onChange={e => handleChange('platformName', e.target.value)}
-                placeholder="EduCore LMS"
-                className="bg-white/5 border-white/10"
-              />
+              <div>
+                <Input
+                  label="Platform Name"
+                  id="platformName"
+                  value={form.platformName}
+                  onChange={e => handleChange('platformName', e.target.value)}
+                  placeholder="EduCore LMS"
+                  className={twMerge('bg-white/5 border-white/10', fieldErrors.platformName && 'border-rose-500')}
+                />
+                <FieldError message={fieldErrors.platformName} />
+              </div>
 
               <div className="space-y-1.5">
                 <label className="block text-slate-700 dark:text-slate-300 text-sm font-medium">
@@ -251,23 +341,37 @@ const SystemSettingsPage = () => {
                 </select>
               </div>
 
+              {/* ── Logo Upload ──────────────────────────────────────── */}
               <div className="md:col-span-2">
                 <label className="block text-slate-700 dark:text-slate-300 text-sm font-medium mb-2">
                   Platform Logo
                 </label>
                 <div className="flex items-center gap-4 p-4 border-2 border-dashed border-white/10 rounded-2xl bg-white/5">
-                  <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
-                    <span className="material-symbols-outlined">school</span>
+                  {/* Preview: show selected file preview, or saved logo, or placeholder */}
+                  <div className="w-14 h-14 rounded-xl overflow-hidden flex items-center justify-center bg-primary/20 shrink-0">
+                    {logoPreview ? (
+                      <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
+                    ) : savedLogoUrl ? (
+                      <img src={`http://localhost:5000${savedLogoUrl}`} alt="Current logo" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="material-symbols-outlined text-primary">school</span>
+                    )}
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">
-                      Upload New Logo
+                      {logoFile ? logoFile.name : 'Upload New Logo'}
                     </p>
+                    {logoFile && (
+                      <p className="text-[10px] text-emerald-500 font-semibold mb-2">
+                        ✓ Ready to upload — will be saved when you click Save Configuration
+                      </p>
+                    )}
                     <input
                       type="file"
                       className="hidden"
                       ref={logoInputRef}
                       accept="image/*"
+                      onChange={handleLogoSelect}
                     />
                     <Button
                       type="button"
@@ -275,7 +379,7 @@ const SystemSettingsPage = () => {
                       className="py-2 px-4 text-xs font-black"
                       onClick={() => logoInputRef.current?.click()}
                     >
-                      Replace Asset
+                      {logoFile ? 'Change File' : 'Replace Asset'}
                     </Button>
                   </div>
                 </div>
@@ -310,16 +414,19 @@ const SystemSettingsPage = () => {
                   </select>
                 </div>
 
-                <Input
-                  label="Max Login Attempts"
-                  id="maxLoginAttempts"
-                  type="number"
-                  min={1}
-                  max={20}
-                  value={form.maxLoginAttempts}
-                  onChange={e => handleChange('maxLoginAttempts', Number(e.target.value))}
-                  className="bg-white/5 border-white/10"
-                />
+                <div>
+                  <Input
+                    label="Max Login Attempts"
+                    id="maxLoginAttempts"
+                    type="number"
+                    min={1}
+                    max={20}
+                    value={form.maxLoginAttempts}
+                    onChange={e => handleChange('maxLoginAttempts', Number(e.target.value))}
+                    className={twMerge('bg-white/5 border-white/10', fieldErrors.maxLoginAttempts && 'border-rose-500')}
+                  />
+                  <FieldError message={fieldErrors.maxLoginAttempts} />
+                </div>
               </div>
             </div>
           </SettingsSection>
@@ -335,14 +442,17 @@ const SystemSettingsPage = () => {
                 onChange={e => handleChange('smtpHost', e.target.value)}
                 className="md:col-span-2 bg-white/5 border-white/10"
               />
-              <Input
-                label="Port"
-                id="smtpPort"
-                type="number"
-                value={form.smtpPort}
-                onChange={e => handleChange('smtpPort', Number(e.target.value))}
-                className="bg-white/5 border-white/10"
-              />
+              <div>
+                <Input
+                  label="Port"
+                  id="smtpPort"
+                  type="number"
+                  value={form.smtpPort}
+                  onChange={e => handleChange('smtpPort', Number(e.target.value))}
+                  className={twMerge('bg-white/5 border-white/10', fieldErrors.smtpPort && 'border-rose-500')}
+                />
+                <FieldError message={fieldErrors.smtpPort} />
+              </div>
             </div>
           </SettingsSection>
 
@@ -360,7 +470,8 @@ const SystemSettingsPage = () => {
             <Button
               type="submit"
               className="px-12 shadow-xl shadow-primary/30 gap-2"
-              disabled={saving}
+              disabled={saving || isFormInvalid}
+              title={isFormInvalid ? 'Fix validation errors before saving' : ''}
             >
               {saving ? (
                 <>

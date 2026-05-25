@@ -7,7 +7,8 @@ const systemSettingSchema = new mongoose.Schema({
   sessionTimeoutMinutes: { type: Number, default: 30 },
   maxLoginAttempts: { type: Number, default: 5 },
   smtpHost: { type: String, default: '' },
-  smtpPort: { type: Number, default: 587 }
+  smtpPort: { type: Number, default: 587 },
+  logoUrl:  { type: String, default: '' }
 }, {
   timestamps: true
 });

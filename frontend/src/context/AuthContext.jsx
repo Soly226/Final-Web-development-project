@@ -1,11 +1,10 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { createContext, useContext, useState } from 'react';
+import apiClient from '../lib/apiClient';
 
 const AuthContext = createContext();
 
-const API_URL = 'http://localhost:5000/api/auth';
-
 export const AuthProvider = ({ children }) => {
+  // Only store non-sensitive user info — token lives in httpOnly cookie
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('user');
     return saved ? JSON.parse(saved) : null;
@@ -17,7 +16,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await axios.post(`${API_URL}/login`, { email, password });
+      const { data } = await apiClient.post('/api/auth/login', { email, password });
+      // data contains: { _id, name, email, role } — NO token field
+      // The JWT httpOnly cookie is set automatically by the browser from Set-Cookie header
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
       return data;
@@ -33,7 +34,8 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await axios.post(`${API_URL}/register`, { name, email, password, role });
+      const { data } = await apiClient.post('/api/auth/register', { name, email, password, role });
+      // Same as login — only safe user info is returned; JWT is in the cookie
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
       return data;
@@ -45,9 +47,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const logout = async () => {
+    try {
+      // Tell the server to clear the httpOnly cookie
+      await apiClient.post('/api/auth/logout');
+    } catch {
+      // Even if the server call fails, still clear local state
+    } finally {
+      setUser(null);
+      localStorage.removeItem('user');
+    }
   };
 
   return (
@@ -58,3 +67,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+

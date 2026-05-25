@@ -128,3 +128,81 @@ export const updateEmailTemplateValidationRules = [
     .notEmpty().withMessage('Body cannot be empty if provided')
     .isString().withMessage('Body must be a string')
 ];
+
+// User Management Validations
+export const createStudentValidationRules = [
+  body('full_name')
+    .trim()
+    .notEmpty().withMessage('Full name is required')
+    .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
+  body('username')
+    .trim()
+    .notEmpty().withMessage('Username is required')
+    .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters'),
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Must be a valid email address')
+    .normalizeEmail(),
+  body('password')
+    .notEmpty().withMessage('Password is required')
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('department')
+    .optional()
+    .trim()
+    .isString().withMessage('Department must be a string'),
+  body('level')
+    .optional()
+    .trim()
+    .isString().withMessage('Level must be a string')
+];
+
+export const createInstructorValidationRules = [
+  body('full_name')
+    .trim()
+    .notEmpty().withMessage('Full name is required')
+    .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
+  body('username')
+    .trim()
+    .notEmpty().withMessage('Username is required')
+    .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters'),
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Must be a valid email address')
+    .normalizeEmail(),
+  body('password')
+    .notEmpty().withMessage('Password is required')
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('department')
+    .optional()
+    .trim()
+    .isString().withMessage('Department must be a string'),
+  body('role')
+    .optional()
+    .trim()
+    .isIn(['instructor', 'head_of_department']).withMessage('Role must be instructor or head_of_department')
+];
+
+export const createAdminValidationRules = [
+  body('full_name')
+    .trim()
+    .notEmpty().withMessage('Full name is required')
+    .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
+  body('username')
+    .trim()
+    .notEmpty().withMessage('Username is required')
+    .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters'),
+  body('email')
+    .trim()
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Must be a valid email address')
+    .normalizeEmail(),
+  body('password')
+    .notEmpty().withMessage('Password is required')
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('permissions')
+    .optional()
+    .isArray().withMessage('Permissions must be an array of strings')
+];
+
