@@ -4,10 +4,10 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import axios from '../../lib/apiClient';
 import { twMerge } from 'tailwind-merge';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 // ─── Toast ─────────────────────────────────────────────────────────────────
 
@@ -865,7 +865,7 @@ const CourseManagementPage = () => {
     setError(null);
     try {
       const { data } = await axios.get(`${API_BASE}/courses`, authHeaders);
-      setCourses(data);
+      setCourses(Array.isArray(data) ? data : (data.data || []));
     } catch (err) {
       setError('Failed to fetch courses. Please verify that the backend is active.');
       showToast('Failed to load courses.', 'error');
@@ -881,10 +881,11 @@ const CourseManagementPage = () => {
   // ── Refresh helper (refetches + updates detail drawer if open) ────────────
   const refreshCourses = useCallback(async () => {
     const { data } = await axios.get(`${API_BASE}/courses`, authHeaders);
-    setCourses(data);
+    const coursesArray = Array.isArray(data) ? data : (data.data || []);
+    setCourses(coursesArray);
     // If the detail drawer is open, update it with fresh data
     if (detailCourse) {
-      const updated = data.find(c => c._id === detailCourse._id);
+      const updated = coursesArray.find(c => c._id === detailCourse._id);
       if (updated) setDetailCourse(updated);
     }
   }, [user, detailCourse]);

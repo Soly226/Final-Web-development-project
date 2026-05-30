@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../layouts/AdminLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
-import axios from 'axios';
+import apiClient from '../../lib/apiClient';
 import { useAuth } from '../../context/AuthContext';
 import { twMerge } from 'tailwind-merge';
 
@@ -73,25 +73,21 @@ const AdminDashboard = () => {
     setLoading(true);
     setError(null);
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${user.token}` }
-      };
-      
       const [analyticsRes, logsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/analytics', config),
-        axios.get('http://localhost:5000/api/admin/logs', config)
+        apiClient.get('/api/admin/analytics'),
+        apiClient.get('/api/admin/logs')
       ]);
 
       setAnalytics(analyticsRes.data);
       
       // Map recent logs
-      const mappedLogs = logsRes.data.slice(0, 3).map(log => ({
+      const mappedLogs = logsRes.data.data ? logsRes.data.data.slice(0, 3).map(log => ({
         icon: log.level === 'error' ? 'warning' : log.level === 'warning' ? 'report_problem' : 'info',
         color: log.level === 'error' ? 'bg-rose-500' : log.level === 'warning' ? 'bg-amber-500' : 'bg-blue-500',
         label: log.source,
         sub: log.message,
         time: new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }));
+      })) : [];
       setRecentLogs(mappedLogs);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);

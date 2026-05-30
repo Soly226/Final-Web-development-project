@@ -4,7 +4,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { twMerge } from 'tailwind-merge';
-import axios from 'axios';
+import apiClient from '../../lib/apiClient';
 import { useAuth } from '../../context/AuthContext';
 
 const Toast = ({ message, type, onClose }) => {
@@ -80,11 +80,10 @@ const SystemLogsPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${user.token}` }
-      };
-      const { data } = await axios.get('http://localhost:5000/api/admin/logs', config);
-      const mappedLogs = data.map(log => ({
+      const { data } = await apiClient.get('/api/admin/logs');
+      // Backend returns { data: [...], pagination: {...} }
+      const logsArray = Array.isArray(data) ? data : (data.data || []);
+      const mappedLogs = logsArray.map(log => ({
         id: log._id,
         time: new Date(log.timestamp).toLocaleString(),
         level: log.level.charAt(0).toUpperCase() + log.level.slice(1),
@@ -100,7 +99,7 @@ const SystemLogsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [user, showToast]);
+  }, [showToast]);
 
   useEffect(() => {
     if (user) fetchLogs();

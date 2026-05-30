@@ -3,7 +3,7 @@ import AdminLayout from '../../layouts/AdminLayout';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import apiClient from '../../lib/apiClient';
 import { twMerge } from 'tailwind-merge';
 
 const StatBox = ({ label, value, icon, borderLeftColor }) => (
@@ -61,10 +61,7 @@ const AdminReportsPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${user.token}` }
-      };
-      const { data } = await axios.get('http://localhost:5000/api/admin/reports', config);
+      const { data } = await apiClient.get('/api/admin/reports');
       setReportData(data);
     } catch (err) {
       console.error('Error fetching reports:', err);
@@ -72,7 +69,7 @@ const AdminReportsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     if (user) fetchReports();

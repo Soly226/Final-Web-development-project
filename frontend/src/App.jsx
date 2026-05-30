@@ -6,9 +6,9 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import LandingPage from './pages/LandingPage';
 
-// Basel's Pages (Commented out until migrated)
-// import MessagesInboxPage from './pages/messages/MessagesInboxPage';
-// import NotificationsPage from './pages/notifications/NotificationsPage';
+// Basel's Pages
+import MessagesInboxPage from './pages/messages/MessagesInboxPage';
+import NotificationsPage from './pages/notifications/NotificationsPage';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -69,6 +69,12 @@ function App() {
           <Route path="/admin/templates" element={<EmailTemplatesPage />} />
           <Route path="/admin/reports" element={<AdminReportsPage />} />
           <Route path="/admin/courses" element={<CourseManagementPage />} />
+        </Route>
+
+        {/* Shared Communication Routes — Students and Instructors only; Admins have no peer chat */}
+        <Route element={<ProtectedRoute allowedRoles={['student', 'instructor']} />}>
+          <Route path="/messages" element={<MessagesInboxPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
         </Route>
 
         {/* Placeholder Routes for other colleagues */}

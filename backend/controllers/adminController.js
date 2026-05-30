@@ -8,6 +8,7 @@ import SystemSetting from '../models/SystemSetting.js';
 import Announcement from '../models/Announcement.js';
 import Enrollment from '../models/Enrollment.js';
 import Course from '../models/Course.js';
+import Notification from '../models/Notification.js';
 
 // @desc    Get system logs (paginated)
 // @route   GET /api/admin/logs?page=1&limit=50
@@ -155,6 +156,29 @@ export const createSystemBroadcast = async (req, res) => {
       source: 'Admin Module',
       metadata: { targetRole }
     });
+
+    // Notify targeted users
+    const usersToNotify = [];
+    const role = targetRole || 'all';
+    if (role === 'all' || role === 'student') {
+      const students = await Student.find({}).select('_id');
+      usersToNotify.push(...students.map((s) => ({ id: s._id, model: 'Student' })));
+    }
+    if (role === 'all' || role === 'instructor') {
+      const instructors = await Instructor.find({}).select('_id');
+      usersToNotify.push(...instructors.map((i) => ({ id: i._id, model: 'Instructor' })));
+    }
+
+    if (usersToNotify.length > 0) {
+      const notifications = usersToNotify.map((u) => ({
+        user: u.id,
+        userModel: u.model,
+        type: 'announcement',
+        title: 'New Announcement',
+        message: title,
+      }));
+      await Notification.insertMany(notifications);
+    }
 
     res.status(201).json(announcement);
   } catch (error) {

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Anatomy & Architecture Guide</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Mermaid JS -->
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#e0e7ff', primaryTextColor: '#1e293b', primaryBorderColor: '#4f46e5', lineColor: '#4f46e5' } });
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .role-section { background: white; border-radius: 16px; padding: 32px; margin-bottom: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { font-weight: 800; color: #0f172a; }
+        h2 { font-weight: 800; border-bottom: 3px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 24px; display: inline-block; }
+        .file-card { background: #f1f5f9; border-radius: 12px; padding: 16px; margin-bottom: 16px; border-left: 5px solid #4f46e5; }
+        .read-badge { background: #e0e7ff; color: #4338ca; padding: 4px 12px; border-radius: 9999px; font-size: 13px; font-weight: 600; font-family: monospace; }
+        .ui-badge { background: #fce7f3; color: #be185d; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+    </style>
+</head>
+<body class="p-6 md:p-12 max-w-6xl mx-auto">
+
+    <div class="text-center mb-16 bg-gradient-to-r from-slate-900 to-indigo-900 text-white p-12 rounded-3xl shadow-xl">
+        <h1 class="text-5xl mb-4 text-white">React Architecture & Component Guide</h1>
+        <p class="text-xl text-indigo-200">A detailed breakdown of all folders, components, visual representations, and their internal read/state functions.</p>
+    </div>
+
+    <!-- 1. AUTH ROLE -->
+    <div class="role-section border-t-[8px] border-emerald-500">
+        <h2 class="text-emerald-600 text-3xl">1. Auth Module</h2>
+        <p class="text-slate-500 mb-6 font-medium">Location: <code>src/pages/auth/</code></p>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h3 class="font-bold text-xl mb-4">Architecture & Data Flow</h3>
+                <div class="mermaid bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    graph TD
+                    A[Visitor] --> B[LoginPage.jsx]
+                    A --> C[RegisterPage.jsx]
+                    B --> D{State: email, password}
+                    C --> E{State: formData}
+                    D --> F[validate() Function]
+                    E --> F
+                    F --> G((AuthContext: login))
+                </div>
+
+                <h3 class="font-bold text-xl mt-8 mb-4">Files & Read Functions</h3>
+                
+                <div class="file-card border-l-emerald-500">
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold text-lg">LoginPage.jsx</span>
+                    </div>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">UI Dependencies:</p>
+                    <div class="flex gap-2 flex-wrap mb-3">
+                        <span class="ui-badge">Button</span>
+                        <span class="ui-badge">Input</span>
+                        <span class="ui-badge">Card</span>
+                    </div>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">email</span>
+                        <span class="read-badge">password</span>
+                        <span class="read-badge">errors</span>
+                        <span class="read-badge">showPassword</span>
+                    </div>
+                </div>
+
+                <div class="file-card border-l-emerald-500">
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold text-lg">RegisterPage.jsx</span>
+                    </div>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">UI Dependencies:</p>
+                    <div class="flex gap-2 flex-wrap mb-3">
+                        <span class="ui-badge">Button</span>
+                        <span class="ui-badge">Input</span>
+                        <span class="ui-badge">Card</span>
+                    </div>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">formData</span>
+                        <span class="read-badge">errors</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-xl mb-4">Visual Anatomy (How it looks)</h3>
+                <div class="bg-slate-100 p-8 rounded-2xl border-2 border-slate-200 shadow-inner flex items-center justify-center">
+                    <!-- Auth Mockup -->
+                    <div class="bg-white/80 backdrop-blur-md p-8 rounded-2xl w-full max-w-sm shadow-xl border border-white">
+                        <h4 class="text-2xl font-black text-center mb-6 text-slate-800">Welcome Back</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Email Component</label>
+                                <div class="bg-slate-50 border border-slate-200 mt-1 h-10 rounded-lg w-full"></div>
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-slate-500 uppercase">Password Component</label>
+                                <div class="bg-slate-50 border border-slate-200 mt-1 h-10 rounded-lg w-full"></div>
+                            </div>
+                            <div class="bg-emerald-600 rounded-lg h-12 w-full mt-6 shadow-lg flex items-center justify-center">
+                                <span class="text-white font-bold text-sm">Button Component</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-slate-500 text-sm p-4 text-center">The Auth layout is centralized and utilizes the Card wrapper for a high-end glassmorphic login interface.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 2. ADMIN ROLE -->
+    <div class="role-section border-t-[8px] border-purple-500">
+        <h2 class="text-purple-600 text-3xl">2. Admin Module</h2>
+        <p class="text-slate-500 mb-6 font-medium">Location: <code>src/pages/admin/</code></p>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h3 class="font-bold text-xl mb-4">Architecture & Data Flow</h3>
+                <div class="mermaid bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    graph TD
+                    A[AdminLayout] --> B(AdminDashboard.jsx)
+                    A --> C(UserManagementPage.jsx)
+                    A --> D(SystemLogsPage.jsx)
+                    C --> E{State: users, filterRole}
+                    D --> F{State: search, filterLevel}
+                    E --> G[Data Table Rendering]
+                </div>
+
+                <h3 class="font-bold text-xl mt-8 mb-4">Files & Read Functions</h3>
+                
+                <div class="file-card border-l-purple-500">
+                    <span class="font-bold text-lg block">UserManagementPage.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">users</span>
+                        <span class="read-badge">searchTerm</span>
+                        <span class="read-badge">filterRole</span>
+                        <span class="read-badge">isModalOpen</span>
+                        <span class="read-badge">editingUser</span>
+                    </div>
+                </div>
+
+                <div class="file-card border-l-purple-500">
+                    <span class="font-bold text-lg block">SystemLogsPage.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">search</span>
+                        <span class="read-badge">filterLevel</span>
+                        <span class="read-badge">filterCategory</span>
+                    </div>
+                </div>
+
+                <div class="file-card border-l-purple-500">
+                    <span class="font-bold text-lg block">EmailTemplatesPage.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">templates</span>
+                        <span class="read-badge">activeId</span>
+                        <span class="read-badge">isModalOpen</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-xl mb-4">Visual Anatomy (How it looks)</h3>
+                <div class="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-100 shadow-inner">
+                    <!-- Admin Table Layout Mockup -->
+                    <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                        <div class="bg-slate-900 p-4 flex justify-between items-center text-white">
+                            <span class="font-bold text-sm tracking-widest">AdminLayout (Sidebar)</span>
+                        </div>
+                        <div class="p-6 bg-slate-50">
+                            <div class="flex justify-between items-center mb-6">
+                                <h4 class="text-xl font-bold">User Management</h4>
+                                <div class="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-purple-500/30">Add New User</div>
+                            </div>
+                            
+                            <!-- Search Bar Mockup -->
+                            <div class="bg-white p-3 border border-slate-200 rounded-lg mb-4 flex gap-4">
+                                <div class="h-8 bg-slate-100 rounded flex-1"></div>
+                                <div class="h-8 bg-slate-100 rounded w-32 px-2 flex items-center text-xs text-slate-400">All Roles</div>
+                            </div>
+
+                            <!-- Table Mockup -->
+                            <div class="bg-white border text-sm border-slate-200 rounded-xl overflow-hidden">
+                                <div class="bg-slate-100 flex p-3 font-bold text-slate-500 border-b">
+                                    <div class="flex-1">User</div>
+                                    <div class="w-32">Role</div>
+                                    <div class="w-16">Actions</div>
+                                </div>
+                                <div class="flex p-3 border-b items-center">
+                                    <div class="flex-1 flex gap-3"><div class="w-6 h-6 rounded-full bg-purple-200"></div><span class="text-slate-700">Alice Johnson</span></div>
+                                    <div class="w-32"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Student</span></div>
+                                    <div class="w-16 flex gap-2"><span class="w-4 h-4 bg-slate-200 rounded"></span></div>
+                                </div>
+                                <div class="flex p-3 items-center">
+                                    <div class="flex-1 flex gap-3"><div class="w-6 h-6 rounded-full bg-amber-200"></div><span class="text-slate-700">Prof. M Chen</span></div>
+                                    <div class="w-32"><span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs">Instructor</span></div>
+                                    <div class="w-16 flex gap-2"><span class="w-4 h-4 bg-slate-200 rounded"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 3. INSTRUCTOR ROLE -->
+    <div class="role-section border-t-[8px] border-amber-500">
+        <h2 class="text-amber-600 text-3xl">3. Instructor Module</h2>
+        <p class="text-slate-500 mb-6 font-medium">Location: <code>src/pages/instructor/</code></p>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h3 class="font-bold text-xl mb-4">Architecture & Data Flow</h3>
+                <div class="mermaid bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    graph TD
+                    A[InstructorLayout] --> B(InstructorDashboard.jsx)
+                    A --> C(InstructorProfilePage)
+                    A --> D(Course Creation Flow)
+                    D --> E(CreateCourseStep1)
+                    D --> F(CreateCourseStep2)
+                    F --> G{State: modules array}
+                </div>
+
+                <h3 class="font-bold text-xl mt-8 mb-4">Files & Read Functions</h3>
+                
+                <div class="file-card border-l-amber-500">
+                    <span class="font-bold text-lg block">InstructorAssignmentPanel.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">filter</span>
+                    </div>
+                </div>
+
+                <div class="file-card border-l-amber-500">
+                    <span class="font-bold text-lg block">CreateCourseStep2.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">modules (Array of objects)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-xl mb-4">Visual Anatomy (How it looks)</h3>
+                <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-100 shadow-inner">
+                    <!-- Instructor Dashboard Cards Layout -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-lg overflow-hidden">
+                        <div class="flex gap-4 mb-4">
+                            <!-- Sidebar -->
+                            <div class="w-16 bg-slate-800 rounded-lg flex flex-col gap-2 p-2 items-center">
+                                <div class="w-8 h-8 rounded bg-amber-500/20 text-amber-400 flex justify-center items-center">📊</div>
+                                <div class="w-8 h-8 rounded bg-slate-700"></div>
+                            </div>
+                            
+                            <!-- Main Content -->
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-800 text-lg mb-4">Instructor Dashboard</h4>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-white p-4 border border-slate-200 rounded-xl shadow-sm text-center">
+                                        <p class="text-xs uppercase text-slate-400 font-bold">Total Students</p>
+                                        <p class="text-2xl font-black text-slate-800">1,240</p>
+                                    </div>
+                                    <div class="bg-white p-4 border border-slate-200 rounded-xl shadow-sm text-center">
+                                        <p class="text-xs uppercase text-slate-400 font-bold">Assignments to Grade</p>
+                                        <p class="text-2xl font-black text-rose-500">24</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white p-4 border border-slate-200 rounded-xl flex items-center justify-between shadow-[0_4px_10px_rgba(245,158,11,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded bg-indigo-100"></div>
+                                        <div>
+                                            <p class="font-bold text-sm text-slate-800">Advanced React Patterns</p>
+                                            <p class="text-xs text-slate-500">Course • 150 Students active</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Manage</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 4. STUDENT ROLE -->
+    <div class="role-section border-t-[8px] border-blue-500">
+        <h2 class="text-blue-600 text-3xl">4. Student Module</h2>
+        <p class="text-slate-500 mb-6 font-medium">Location: <code>src/pages/student/</code></p>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h3 class="font-bold text-xl mb-4">Architecture & Data Flow</h3>
+                <div class="mermaid bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    graph TD
+                    A[StudentLayout] --> B(StudentDashboard.jsx)
+                    A --> C(MyCoursesPage.jsx)
+                    A --> D(AcademicCalendarPage)
+                    A --> E(MyGradesPage)
+                    C --> F{State: filter, category, view}
+                    D --> G{State: currentYear, month}
+                    E --> H{State: expanded}
+                </div>
+
+                <h3 class="font-bold text-xl mt-8 mb-4">Files & Read Functions</h3>
+                
+                <div class="file-card border-l-blue-500">
+                    <span class="font-bold text-lg block">AcademicCalendarPage.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">currentYear</span>
+                        <span class="read-badge">currentMonth</span>
+                        <span class="read-badge">selectedDate</span>
+                    </div>
+                    <p class="text-sm mt-2 text-slate-600">Uses custom <code>prevMonth()</code> and <code>nextMonth()</code> logic to navigate the UI matrix.</p>
+                </div>
+
+                <div class="file-card border-l-blue-500">
+                    <span class="font-bold text-lg block">AssignmentDetailsPage.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">submitted</span>
+                        <span class="read-badge">link</span>
+                        <span class="read-badge">note</span>
+                    </div>
+                </div>
+
+                <div class="file-card border-l-blue-500">
+                    <span class="font-bold text-lg block">StudentProfilePage.jsx</span>
+                    <p class="text-sm mt-3 mb-2 font-bold text-slate-700">Read & State Variables (Memory):</p>
+                    <div class="flex gap-2 flex-wrap">
+                        <span class="read-badge">isEditing</span>
+                        <span class="read-badge">name</span>
+                        <span class="read-badge">bio</span>
+                        <span class="read-badge">major</span>
+                        <span class="read-badge">year</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-xl mb-4">Visual Anatomy (How it looks)</h3>
+                <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-100 shadow-inner">
+                    <!-- Student Grid Mockup -->
+                    <div class="bg-white/80 backdrop-blur rounded-xl p-4 shadow-md border border-white">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold">My Courses</h4>
+                            <div class="flex gap-2">
+                                <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded">Grid View</span>
+                                <span class="bg-slate-200 text-slate-500 text-xs px-2 py-1 rounded">List View</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Course Card 1 -->
+                            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <div class="h-20 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+                                <div class="p-4">
+                                    <p class="text-[10px] uppercase font-bold text-indigo-500">Computer Science</p>
+                                    <p class="font-bold text-sm leading-tight mt-1 mb-2">CS101: Introduction to Programming</p>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                        <div class="w-[60%] bg-blue-500 h-full"></div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1">60% Completed</p>
+                                </div>
+                            </div>
+                            <!-- Course Card 2 -->
+                            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                                <div class="h-20 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+                                <div class="p-4">
+                                    <p class="text-[10px] uppercase font-bold text-teal-500">Mathematics</p>
+                                    <p class="font-bold text-sm leading-tight mt-1 mb-2">MATH201: Calculus Basics</p>
+                                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                        <div class="w-[30%] bg-teal-500 h-full"></div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1">30% Completed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

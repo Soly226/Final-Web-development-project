@@ -4,6 +4,8 @@ import AssignmentSubmission from '../models/AssignmentSubmission.js';
 import Quiz from '../models/Quiz.js';
 import QuizSubmission from '../models/QuizSubmission.js';
 import Material from '../models/Material.js';
+import Enrollment from '../models/Enrollment.js';
+import Notification from '../models/Notification.js';
 
 // --- Course Management for Instructors ---
 
@@ -44,6 +46,19 @@ export const createAssignment = async (req, res) => {
       total_marks
     });
 
+    // Find active student enrollments for this course and notify them
+    const enrollments = await Enrollment.find({ course_id, status: 'active' });
+    if (enrollments.length > 0) {
+      const notifications = enrollments.map((e) => ({
+        user: e.student_id,
+        userModel: 'Student',
+        type: 'assignment',
+        title: 'New Assignment Published',
+        message: `A new assignment "${title}" has been published in course ${course.course_name || 'your course'}.`,
+      }));
+      await Notification.insertMany(notifications);
+    }
+
     res.status(201).json(assignment);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -83,6 +98,15 @@ export const gradeSubmission = async (req, res) => {
     submission.grade = grade;
     submission.feedback = feedback;
     const updatedSubmission = await submission.save();
+
+    // Create a notification for the student
+    await Notification.create({
+      user: submission.student_id,
+      userModel: 'Student',
+      type: 'grade',
+      title: 'Assignment Graded',
+      message: `Your submission for "${submission.assignment_id.title}" has been graded: ${grade}/${submission.assignment_id.total_marks || ''} marks.`,
+    });
 
     res.json(updatedSubmission);
   } catch (error) {
