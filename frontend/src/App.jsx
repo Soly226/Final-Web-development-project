@@ -23,6 +23,13 @@ import CourseManagementPage from './pages/admin/CourseManagementPage';
 import AcademicCalendarPage from './pages/student/AcademicCalendarPage';
 import StudentDashboard from './pages/student/StudentDashboard';
 import StudentProfilePage from './pages/student/StudentProfilePage';
+import MyCoursesPage from './pages/student/MyCoursesPage';
+import MyGradesPage from './pages/student/MyGradesPage';
+import AssignmentDetailsPage from './pages/student/AssignmentDetailsPage';
+import InsideCourseAssignmentsPage from './pages/student/InsideCourseAssignmentsPage';
+import InsideCourseGradesPage from './pages/student/InsideCourseGradesPage';
+import InsideCourseLecturesPage from './pages/student/InsideCourseLecturesPage';
+import InsideCourseStreamPage from './pages/student/InsideCourseStreamPage';
 
 // Seliem's Instructor Pages (Commented out until migrated)
 /*
@@ -77,6 +84,13 @@ function App() {
           <Route path="/student" element={<StudentDashboard />} />
           <Route path="/student/profile" element={<StudentProfilePage />} />
           <Route path="/student/calendar" element={<AcademicCalendarPage />} />
+          <Route path="/student/courses" element={<MyCoursesPage />} />
+          <Route path="/student/grades" element={<MyGradesPage />} />
+          <Route path="/student/assignments/:id" element={<AssignmentDetailsPage />} />
+          <Route path="/student/course/:id/lectures" element={<InsideCourseLecturesPage />} />
+          <Route path="/student/course/:id/stream" element={<InsideCourseStreamPage />} />
+          <Route path="/student/course/:id/assignments" element={<InsideCourseAssignmentsPage />} />
+          <Route path="/student/course/:id/grades" element={<InsideCourseGradesPage />} />
         </Route>
 
         <Route path="/unauthorized" element={<Unauthorized />} />
