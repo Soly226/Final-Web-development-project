@@ -19,19 +19,10 @@ import AdminReportsPage from './pages/admin/AdminReportsPage';
 import CourseManagementPage from './pages/admin/CourseManagementPage';
 // import UserManagementPage from './pages/admin/UserManagementPage'; // Missing
 
-// Magdy's Student Pages (Commented out until migrated)
-/*
-import StudentDashboard from './pages/student/StudentDashboard';
-import MyCoursesPage from './pages/student/MyCoursesPage';
-import MyGradesPage from './pages/student/MyGradesPage';
+// Magdy's Student Pages (loaded)
 import AcademicCalendarPage from './pages/student/AcademicCalendarPage';
-import AssignmentDetailsPage from './pages/student/AssignmentDetailsPage';
-import InsideCourseAssignmentsPage from './pages/student/InsideCourseAssignmentsPage';
-import InsideCourseGradesPage from './pages/student/InsideCourseGradesPage';
+import StudentDashboard from './pages/student/StudentDashboard';
 import StudentProfilePage from './pages/student/StudentProfilePage';
-import InsideCourseLecturesPage from './pages/student/InsideCourseLecturesPage';
-import InsideCourseStreamPage from './pages/student/InsideCourseStreamPage';
-*/
 
 // Seliem's Instructor Pages (Commented out until migrated)
 /*
@@ -83,7 +74,9 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={['student']} />}>
-          <Route path="/student" element={<Placeholder name="Student Dashboard" />} />
+          <Route path="/student" element={<StudentDashboard />} />
+          <Route path="/student/profile" element={<StudentProfilePage />} />
+          <Route path="/student/calendar" element={<AcademicCalendarPage />} />
         </Route>
 
         <Route path="/unauthorized" element={<Unauthorized />} />
