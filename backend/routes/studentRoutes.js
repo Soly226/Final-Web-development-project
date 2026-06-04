@@ -1,4 +1,5 @@
 import express from 'express';
+import { protect } from '../middleware/authMiddleware.js';
 import {
   getMyProfile,
   getMyCourses,
@@ -11,6 +12,9 @@ import {
 } from '../controllers/studentController.js';
 
 const router = express.Router();
+
+// Protect all student routes (requires authentication)
+router.use(protect);
 
 // Student profile and dashboard data
 router.get('/me', getMyProfile);
