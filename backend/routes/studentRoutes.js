@@ -1,0 +1,29 @@
+import express from 'express';
+import {
+  getMyProfile,
+  getMyCourses,
+  getMyGrades,
+  getMyCalendar,
+  getCourseAssignments,
+  getCourseLectures,
+  getCourseStream,
+  getAssignmentSubmission,
+} from '../controllers/studentController.js';
+
+const router = express.Router();
+
+// Student profile and dashboard data
+router.get('/me', getMyProfile);
+router.get('/me/courses', getMyCourses);
+router.get('/me/grades', getMyGrades);
+router.get('/me/calendar', getMyCalendar);
+
+// Course content for enrolled students
+router.get('/courses/:id/assignments', getCourseAssignments);
+router.get('/courses/:id/lectures', getCourseLectures);
+router.get('/courses/:id/stream', getCourseStream);
+
+// Assignment details for the current student
+router.get('/assignments/:id/submission', getAssignmentSubmission);
+
+export default router;
