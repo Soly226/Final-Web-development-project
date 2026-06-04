@@ -5,6 +5,7 @@ import AssignmentSubmission from '../models/AssignmentSubmission.js';
 import Material from '../models/Material.js';
 import Announcement from '../models/Announcement.js';
 import Enrollment from '../models/Enrollment.js';
+import { ensureStudentEnrolled } from '../utils/studentHelpers.js';
 
 export const getMyProfile = async (req, res) => {
   try {
@@ -68,8 +69,7 @@ export const getCourseAssignments = async (req, res) => {
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: 'Course not found' });
 
-    // Verify enrollment
-    const enrolled = await Enrollment.findOne({ course_id: courseId, student_id: req.user._id, status: 'active' });
+    const enrolled = await ensureStudentEnrolled(courseId, req.user._id);
     if (!enrolled) return res.status(403).json({ message: 'Not enrolled in this course' });
 
     const assignments = await Assignment.find({ course_id: courseId }).sort({ deadline: 1 });
@@ -102,8 +102,7 @@ export const getCourseLectures = async (req, res) => {
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: 'Course not found' });
 
-    // Verify enrollment
-    const enrolled = await Enrollment.findOne({ course_id: courseId, student_id: req.user._id, status: 'active' });
+    const enrolled = await ensureStudentEnrolled(courseId, req.user._id);
     if (!enrolled) return res.status(403).json({ message: 'Not enrolled in this course' });
 
     const materials = await Material.find({ course_id: courseId }).sort({ upload_date: -1 });
@@ -122,8 +121,7 @@ export const getCourseStream = async (req, res) => {
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: 'Course not found' });
 
-    // Verify enrollment
-    const enrolled = await Enrollment.findOne({ course_id: courseId, student_id: req.user._id, status: 'active' });
+    const enrolled = await ensureStudentEnrolled(courseId, req.user._id);
     if (!enrolled) return res.status(403).json({ message: 'Not enrolled in this course' });
 
     const announcements = await Announcement.find({ targetRole: { $in: ['student', 'all'] } })
@@ -220,7 +218,7 @@ export const getAssignmentSubmission = async (req, res) => {
     if (!assignment) return res.status(404).json({ message: 'Assignment not found' });
 
     // Verify enrollment
-    const enrolled = await Enrollment.findOne({ course_id: assignment.course_id, student_id: req.user._id, status: 'active' });
+    const enrolled = await ensureStudentEnrolled(assignment.course_id, req.user._id);
     if (!enrolled) return res.status(403).json({ message: 'Not enrolled in this course' });
 
     const submission = await AssignmentSubmission.findOne({ assignment_id: assignment._id, student_id: req.user._id });

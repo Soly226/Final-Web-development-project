@@ -130,4 +130,21 @@ Details:
 Why:
 - These endpoints provide the academic data needed by `MyGradesPage`, `AcademicCalendarPage`, and `AssignmentDetailsPage` so the frontend can present real, student-specific information.
 
-Next: run integration/manual tests against these endpoints, and optionally add pagination/filters and small performance indexes if needed.
+---
+
+## Step 7 — Add student-only enrollment validation and helper reuse
+
+What was done:
+- Added `backend/utils/studentHelpers.js` with `ensureStudentEnrolled(courseId, studentId)`.
+- Replaced repeated enrollment verification logic in `backend/controllers/studentController.js` with the shared helper.
+- Kept route security consistent by ensuring protected student endpoints use `req.user._id` and student enrollment checks before returning course-specific data.
+
+Modified:
+- `backend/utils/studentHelpers.js` — created the helper that checks for an active `Enrollment` document matching the student and course.
+- `backend/controllers/studentController.js` — updated `getCourseAssignments`, `getCourseLectures`, `getCourseStream`, and `getAssignmentSubmission` to call `ensureStudentEnrolled(...)` instead of repeating the same `Enrollment.findOne(...)` query.
+
+Why:
+- Centralized enrollment validation reduces duplicated code and makes the student authorization path easier to maintain.
+- This ensures only enrolled students can access course-specific assignments, lectures, stream data, and assignment submission details.
+
+

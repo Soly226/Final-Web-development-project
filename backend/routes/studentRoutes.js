@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect, studentOnly } from '../middleware/authMiddleware.js';
 import {
   getMyProfile,
   getMyCourses,
@@ -13,8 +13,9 @@ import {
 
 const router = express.Router();
 
-// Protect all student routes (requires authentication)
+// Protect all student routes and ensure only students may access them
 router.use(protect);
+router.use(studentOnly);
 
 // Student profile and dashboard data
 router.get('/me', getMyProfile);
