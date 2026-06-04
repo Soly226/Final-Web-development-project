@@ -69,3 +69,42 @@ Why:
 - Secure endpoints ensure only authenticated students can fetch their own data. Returning populated course info lets frontend pages show course names/code without additional requests.
 
 Next: implement `getMyCourses` and then course content endpoints (assignments, lectures, stream).
+
+---
+
+## Step 4 — Implement enrolled courses (`getMyCourses`)
+
+What was done:
+- Implemented `getMyCourses` in `backend/controllers/studentController.js`.
+- The handler reads `req.user._id`, loads the student, populates `enrolled_courses` and their `assigned_instructors`, and returns a concise course list.
+
+Modified:
+- `backend/controllers/studentController.js` — added `getMyCourses` implementation that returns `[{ id, course_name, course_code, department, instructors }]`.
+
+Why:
+- Provide the frontend with the student's enrolled courses so `MyCoursesPage` can display course names and instructor info without additional requests.
+
+Next: implement course content endpoints (`/courses/:id/assignments`, `/courses/:id/lectures`, `/courses/:id/stream`).
+
+---
+
+## Step 5 — Implement course content endpoints
+
+What was done:
+- Implemented `getCourseAssignments`, `getCourseLectures`, and `getCourseStream` in `backend/controllers/studentController.js`.
+
+Details:
+- `getCourseAssignments`:
+  - Verifies the student is enrolled in the requested course.
+  - Returns the course assignments sorted by deadline, and for each assignment includes the current student's submission (if any) with grade and submission date.
+
+- `getCourseLectures`:
+  - Verifies enrollment and returns course materials (lectures) with title, file URL and upload date.
+
+- `getCourseStream`:
+  - Verifies enrollment and returns a combined feed consisting of recent `Announcement` entries (targeted at students/all) and recent assignments for the course.
+
+Why:
+- These endpoints power `InsideCourseAssignmentsPage`, `InsideCourseLecturesPage`, and `InsideCourseStreamPage` in the frontend and ensure only enrolled students can access course content.
+
+Next: implement `getAssignmentSubmission`, `getMyGrades`, and `getMyCalendar`.
