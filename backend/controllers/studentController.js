@@ -141,14 +141,95 @@ export const getCourseStream = async (req, res) => {
 
 
 export const getMyGrades = async (req, res) => {
-  res.status(501).json({ message: 'Student grades endpoint not implemented yet' });
+  try {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+
+    // Load enrollments for the student to get course context and final_grade
+    const enrollments = await Enrollment.find({ student_id: req.user._id }).populate('course_id', 'course_name course_code');
+
+    // Load all submissions by the student and populate assignment -> course
+    const submissions = await AssignmentSubmission.find({ student_id: req.user._id }).populate({
+      path: 'assignment_id',
+      select: 'title course_id total_marks',
+      populate: { path: 'course_id', select: 'course_name course_code' }
+    });
+
+    // Group submissions by course
+    const courseMap = {};
+    submissions.forEach((s) => {
+      const courseId = s.assignment_id.course_id._id.toString();
+      if (!courseMap[courseId]) courseMap[courseId] = [];
+      courseMap[courseId].push({
+        assignment_title: s.assignment_id.title,
+        grade: s.grade,
+        max: s.assignment_id.total_marks,
+        feedback: s.feedback,
+        submitted_at: s.submission_date,
+      });
+    });
+
+    const results = enrollments.map((e) => {
+      const cid = e.course_id._id.toString();
+      return {
+        course: { id: e.course_id._id, course_name: e.course_id.course_name, course_code: e.course_id.course_code },
+        final_grade: e.final_grade || null,
+        assignments: courseMap[cid] || [],
+      };
+    });
+
+    res.json({ data: results });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export const getMyCalendar = async (req, res) => {
-  res.status(501).json({ message: 'Student calendar endpoint not implemented yet' });
+  try {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+
+    const enrollments = await Enrollment.find({ student_id: req.user._id, status: 'active' });
+    const courseIds = enrollments.map(e => e.course_id);
+
+    // Upcoming assignment deadlines
+    const now = new Date();
+    const assignments = await Assignment.find({ course_id: { $in: courseIds }, deadline: { $gte: now } })
+      .select('title course_id deadline')
+      .sort({ deadline: 1 })
+      .limit(100);
+
+    const events = assignments.map(a => ({
+      type: 'assignment',
+      title: a.title,
+      course_id: a.course_id,
+      when: a.deadline,
+    }));
+
+    res.json({ data: events });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 
 export const getAssignmentSubmission = async (req, res) => {
-  res.status(501).json({ message: 'Assignment submission endpoint not implemented yet' });
+  try {
+    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
+
+    const assignmentId = req.params.id;
+    const assignment = await Assignment.findById(assignmentId);
+    if (!assignment) return res.status(404).json({ message: 'Assignment not found' });
+
+    // Verify enrollment
+    const enrolled = await Enrollment.findOne({ course_id: assignment.course_id, student_id: req.user._id, status: 'active' });
+    if (!enrolled) return res.status(403).json({ message: 'Not enrolled in this course' });
+
+    const submission = await AssignmentSubmission.findOne({ assignment_id: assignment._id, student_id: req.user._id });
+
+    res.json({
+      assignment: { id: assignment._id, title: assignment.title, deadline: assignment.deadline, total_marks: assignment.total_marks },
+      submission: submission ? { id: submission._id, grade: submission.grade, feedback: submission.feedback, submitted_at: submission.submission_date, file: submission.uploaded_file } : null,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

@@ -108,3 +108,26 @@ Why:
 - These endpoints power `InsideCourseAssignmentsPage`, `InsideCourseLecturesPage`, and `InsideCourseStreamPage` in the frontend and ensure only enrolled students can access course content.
 
 Next: implement `getAssignmentSubmission`, `getMyGrades`, and `getMyCalendar`.
+
+---
+
+## Step 6 — Implement academic data endpoints
+
+What was done:
+- Implemented `getMyGrades`, `getMyCalendar`, and `getAssignmentSubmission` in `backend/controllers/studentController.js`.
+
+Details:
+- `getMyGrades`:
+  - Loads the student's `Enrollment` documents to get course context and `final_grade`.
+  - Loads the student's `AssignmentSubmission` records and groups them by course, returning per-course assignment-level grades and feedback.
+
+- `getMyCalendar`:
+  - Collects upcoming assignment deadlines across the student's active enrollments and returns them as calendar events (type, title, course_id, when).
+
+- `getAssignmentSubmission`:
+  - Given an assignment ID, verifies the student is enrolled in the assignment's course and returns the assignment details plus the student's submission (if any).
+
+Why:
+- These endpoints provide the academic data needed by `MyGradesPage`, `AcademicCalendarPage`, and `AssignmentDetailsPage` so the frontend can present real, student-specific information.
+
+Next: run integration/manual tests against these endpoints, and optionally add pagination/filters and small performance indexes if needed.
