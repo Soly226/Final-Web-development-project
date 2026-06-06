@@ -1,13 +1,14 @@
-import Course from '../models/Course.js';
-import CoursePrerequisite from '../models/CoursePrerequisite.js';
-import Enrollment from '../models/Enrollment.js';
-import Student from '../models/Student.js';
-import Instructor from '../models/Instructor.js';
+const mongoose = require('mongoose');
+const Course = require('../models/Course');
+const CoursePrerequisite = require('../models/CoursePrerequisite');
+const Enrollment = require('../models/Enrollment');
+const Student = require('../models/Student');
+const Instructor = require('../models/Instructor');
 
 // @desc    Get all courses (paginated)
 // @route   GET /api/courses?page=1&limit=20
 // @access  Private
-export const getCourses = async (req, res) => {
+const getCourses = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
@@ -30,9 +31,13 @@ export const getCourses = async (req, res) => {
 // @desc    Get single course by ID
 // @route   GET /api/courses/:id
 // @access  Private
-export const getCourseById = async (req, res) => {
+const getCourseById = async (req, res) => {
   try {
-    const course = await Course.findById(req.params.id)
+    const courseId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+    const course = await Course.findById(courseId)
       .populate('assigned_instructors', 'full_name email')
       .populate('enrolled_students', 'full_name student_id');
     
@@ -49,7 +54,7 @@ export const getCourseById = async (req, res) => {
 // @desc    Create a new course
 // @route   POST /api/courses
 // @access  Private/Admin
-export const createCourse = async (req, res) => {
+const createCourse = async (req, res) => {
   const { course_id, course_code, course_name, description, credit_hours, department } = req.body;
 
   try {
@@ -77,7 +82,7 @@ export const createCourse = async (req, res) => {
 // @desc    Update a course
 // @route   PUT /api/courses/:id
 // @access  Private/Admin
-export const updateCourse = async (req, res) => {
+const updateCourse = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
 
@@ -100,7 +105,7 @@ export const updateCourse = async (req, res) => {
 // @desc    Delete a course
 // @route   DELETE /api/courses/:id
 // @access  Private/Admin
-export const deleteCourse = async (req, res) => {
+const deleteCourse = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
 
@@ -120,7 +125,7 @@ export const deleteCourse = async (req, res) => {
 // @desc    Add course prerequisite
 // @route   POST /api/courses/:id/prerequisites
 // @access  Private/Admin
-export const addPrerequisite = async (req, res) => {
+const addPrerequisite = async (req, res) => {
   const { required_course_id } = req.body;
   const course_id = req.params.id;
 
@@ -160,7 +165,7 @@ export const addPrerequisite = async (req, res) => {
 // @desc    Enroll student in course
 // @route   POST /api/courses/:id/enroll
 // @access  Private/Admin
-export const enrollStudent = async (req, res) => {
+const enrollStudent = async (req, res) => {
   const { student_id, semester } = req.body;
   const course_id = req.params.id;
 
@@ -211,7 +216,7 @@ export const enrollStudent = async (req, res) => {
 // @desc    Assign instructor to course
 // @route   POST /api/courses/:id/assign-instructor
 // @access  Private/Admin
-export const assignInstructor = async (req, res) => {
+const assignInstructor = async (req, res) => {
   const { instructor_id } = req.body;
   const course_id = req.params.id;
 
@@ -230,4 +235,15 @@ export const assignInstructor = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+module.exports = {
+  getCourses,
+  getCourseById,
+  createCourse,
+  updateCourse,
+  deleteCourse,
+  addPrerequisite,
+  enrollStudent,
+  assignInstructor
 };

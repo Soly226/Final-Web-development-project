@@ -28,9 +28,9 @@ PORT=5000
 MONGODB_URI=mongodb://localhost:27017/educore
 JWT_SECRET=your_super_secret_jwt_key_here
 NODE_ENV=development
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=https://localhost:5173
 
-# 4. Generate SSL Certificates (for HTTPS Support)
+# 4. Generate SSL Certificates (Optional manual step, done automatically at boot)
 node certs/generate-certs.js
 
 # 5. Seed the database with core accounts and data
@@ -42,7 +42,7 @@ npm run seed
 # In the backend directory:
 npm run dev
 ```
-*The server will start on HTTP port `5000` and secure HTTPS port `5443` simultaneously.*
+*The server will start on secure HTTPS port `5000` by default. SSL certificates are auto-generated on startup if missing.*
 
 ### 3. Start the Frontend Application
 ```bash
@@ -55,7 +55,13 @@ npm install
 # 3. Launch the development server
 npm run dev
 ```
-*Open your browser and navigate to the local URL (typically `http://localhost:5173`).*
+*Open your browser and navigate to `https://localhost:5173`.*
+
+> [!IMPORTANT]
+> **Trusting local self-signed certificates**:
+> Since these certificates are self-signed for `localhost`, you will see a security connection warning.
+> 1. Visit `https://localhost:5173` in your browser. Click **Advanced** and choose **Proceed to localhost (unsafe)**.
+> 2. Visit `https://localhost:5000` in your browser. Click **Advanced** and choose **Proceed to localhost (unsafe)**. **If you skip this step, your browser will silently block all API requests from the frontend to the backend.**
 
 ---
 
@@ -102,5 +108,5 @@ The following accounts are created by the seeder script. Use them to log in:
 - **Global Error Handler**: Middleware intercepts throw statements, standardizes the JSON structure (`{ message: "..." }`), and prevents developer stack-traces from exposing vulnerability points in production.
 
 ### 5. HTTPS Support
-- **TLS Generation**: Uses the `selfsigned` library to dynamically generate localhost certificate (`cert.pem`) and private key (`key.pem`) files.
-- **Dual Server Bootstrapping**: Starts Express over HTTPS on port `5443` when certs are detected, while maintaining HTTP on `5000` for fallback compatibility.
+- **TLS Generation**: Uses the `selfsigned` library to dynamically generate localhost certificate (`cert.pem`) and private key (`key.pem`) files on backend server startup.
+- **HTTPS Enforcement**: Runs the primary Express server over HTTPS on port `5000` by default. The Vite dev server also loads these certificates to run over HTTPS on port `5173`.

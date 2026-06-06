@@ -1,14 +1,5 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-/**
- * Message Model
- *
- * Uses Mongoose's `refPath` dynamic referencing to support sender/receiver
- * being any of the three user types (Student, Instructor, Admin),
- * without requiring a single unified User model.
- *
- * Author integration: adapted from Basel's baselbranch implementation.
- */
 const messageSchema = new mongoose.Schema(
   {
     sender: {
@@ -48,4 +39,4 @@ const messageSchema = new mongoose.Schema(
 );
 
 const Message = mongoose.model('Message', messageSchema);
-export default Message;
+module.exports = Message;

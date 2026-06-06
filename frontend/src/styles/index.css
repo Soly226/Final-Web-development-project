@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Design System Tokens - Upgraded for Premium Look */
   --font-display: "Outfit", sans-serif;

@@ -1,5 +1,5 @@
-import express from 'express';
-import { 
+const express = require('express');
+const { 
   getSystemLogs, 
   getPlatformAnalytics, 
   getSystemSettings,
@@ -12,19 +12,21 @@ import {
   getAdminReports,
   uploadLogoFile,
   getLogoUrl
-} from '../controllers/adminController.js';
-import { uploadLogo } from '../middleware/uploadMiddleware.js';
-import {
+} = require('../controllers/adminController');
+const { uploadLogo } = require('../middleware/uploadMiddleware');
+const {
   getStudents,
   createStudent,
   getInstructors,
   createInstructor,
   getAdmins,
   createAdmin,
-  deleteUser
-} from '../controllers/userManagementController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
-import {
+  deleteUser,
+  getAllUsers,
+  updateUser
+} = require('../controllers/userManagementController');
+const { protect, admin } = require('../middleware/authMiddleware');
+const {
   updateSettingsValidationRules,
   createBroadcastValidationRules,
   createEmailTemplateValidationRules,
@@ -33,7 +35,7 @@ import {
   createInstructorValidationRules,
   createAdminValidationRules,
   validateRequest
-} from '../middleware/validationMiddleware.js';
+} = require('../middleware/validationMiddleware');
 
 const router = express.Router();
 
@@ -56,13 +58,14 @@ router.post('/upload/logo', uploadLogo, uploadLogoFile);
 router.get('/logo', getLogoUrl);
 
 // User Management Routes
+router.get('/users', getAllUsers);
 router.get('/users/students', getStudents);
 router.post('/users/students', createStudentValidationRules, validateRequest, createStudent);
 router.get('/users/instructors', getInstructors);
 router.post('/users/instructors', createInstructorValidationRules, validateRequest, createInstructor);
 router.get('/users/admins', getAdmins);
 router.post('/users/admins', createAdminValidationRules, validateRequest, createAdmin);
+router.put('/users/:type/:id', updateUser);
 router.delete('/users/:type/:id', deleteUser);
 
-
-export default router;
+module.exports = router;

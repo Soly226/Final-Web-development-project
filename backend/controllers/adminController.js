@@ -1,19 +1,19 @@
-import mongoose from 'mongoose';
-import SystemLog from '../models/SystemLog.js';
-import Admin from '../models/Admin.js';
-import Instructor from '../models/Instructor.js';
-import Student from '../models/Student.js';
-import EmailTemplate from '../models/EmailTemplate.js';
-import SystemSetting from '../models/SystemSetting.js';
-import Announcement from '../models/Announcement.js';
-import Enrollment from '../models/Enrollment.js';
-import Course from '../models/Course.js';
-import Notification from '../models/Notification.js';
+const mongoose = require('mongoose');
+const SystemLog = require('../models/SystemLog');
+const Admin = require('../models/Admin');
+const Instructor = require('../models/Instructor');
+const Student = require('../models/Student');
+const EmailTemplate = require('../models/EmailTemplate');
+const SystemSetting = require('../models/SystemSetting');
+const Announcement = require('../models/Announcement');
+const Enrollment = require('../models/Enrollment');
+const Course = require('../models/Course');
+const Notification = require('../models/Notification');
 
 // @desc    Get system logs (paginated)
 // @route   GET /api/admin/logs?page=1&limit=50
 // @access  Private/Admin
-export const getSystemLogs = async (req, res) => {
+const getSystemLogs = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 50;
@@ -41,7 +41,7 @@ export const getSystemLogs = async (req, res) => {
 // @desc    Get platform analytics (summary)
 // @route   GET /api/admin/analytics
 // @access  Private/Admin
-export const getPlatformAnalytics = async (req, res) => {
+const getPlatformAnalytics = async (req, res) => {
   try {
     const adminCount = await Admin.countDocuments();
     const instructorCount = await Instructor.countDocuments();
@@ -88,7 +88,7 @@ export const getPlatformAnalytics = async (req, res) => {
 // @desc    Get system settings
 // @route   GET /api/admin/settings
 // @access  Private/Admin
-export const getSystemSettings = async (req, res) => {
+const getSystemSettings = async (req, res) => {
   try {
     let settings = await SystemSetting.findOne({});
     if (!settings) {
@@ -103,7 +103,7 @@ export const getSystemSettings = async (req, res) => {
 // @desc    Update system settings
 // @route   PUT /api/admin/settings
 // @access  Private/Admin
-export const updateSystemSettings = async (req, res) => {
+const updateSystemSettings = async (req, res) => {
   const { platformName, primaryLanguage, twoFactorEnabled, sessionTimeoutMinutes, maxLoginAttempts, smtpHost, smtpPort } = req.body;
   
   try {
@@ -139,7 +139,7 @@ export const updateSystemSettings = async (req, res) => {
 // @desc    Create a system broadcast announcement
 // @route   POST /api/admin/broadcast
 // @access  Private/Admin
-export const createSystemBroadcast = async (req, res) => {
+const createSystemBroadcast = async (req, res) => {
   const { title, content, targetRole } = req.body;
   
   try {
@@ -189,7 +189,7 @@ export const createSystemBroadcast = async (req, res) => {
 // @desc    Get all email templates
 // @route   GET /api/admin/email-templates
 // @access  Private/Admin
-export const getEmailTemplates = async (req, res) => {
+const getEmailTemplates = async (req, res) => {
   try {
     const templates = await EmailTemplate.find({});
     res.json(templates);
@@ -201,7 +201,7 @@ export const getEmailTemplates = async (req, res) => {
 // @desc    Create a new email template
 // @route   POST /api/admin/email-templates
 // @access  Private/Admin
-export const createEmailTemplate = async (req, res) => {
+const createEmailTemplate = async (req, res) => {
   const { name, subject, body, variables } = req.body;
 
   if (!name || !subject || !body) {
@@ -231,7 +231,7 @@ export const createEmailTemplate = async (req, res) => {
 // @desc    Update an email template
 // @route   PUT /api/admin/email-templates/:id
 // @access  Private/Admin
-export const updateEmailTemplate = async (req, res) => {
+const updateEmailTemplate = async (req, res) => {
   const { subject, body } = req.body;
   try {
     const template = await EmailTemplate.findById(req.params.id);
@@ -254,7 +254,7 @@ export const updateEmailTemplate = async (req, res) => {
 // @desc    Delete an email template
 // @route   DELETE /api/admin/email-templates/:id
 // @access  Private/Admin
-export const deleteEmailTemplate = async (req, res) => {
+const deleteEmailTemplate = async (req, res) => {
   try {
     const template = await EmailTemplate.findById(req.params.id);
     if (!template) {
@@ -270,7 +270,7 @@ export const deleteEmailTemplate = async (req, res) => {
 // @desc    Get advanced admin reports
 // @route   GET /api/admin/reports
 // @access  Private/Admin
-export const getAdminReports = async (req, res) => {
+const getAdminReports = async (req, res) => {
   try {
     // 1. Total Enrollments
     const totalEnrollments = await Enrollment.countDocuments();
@@ -344,7 +344,7 @@ export const getAdminReports = async (req, res) => {
 // @desc    Upload platform logo
 // @route   POST /api/admin/upload/logo
 // @access  Private/Admin
-export const uploadLogoFile = async (req, res) => {
+const uploadLogoFile = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded. Please attach an image.' });
@@ -375,11 +375,26 @@ export const uploadLogoFile = async (req, res) => {
 // @desc    Get the current logo URL from settings
 // @route   GET /api/admin/logo
 // @access  Private/Admin
-export const getLogoUrl = async (req, res) => {
+const getLogoUrl = async (req, res) => {
   try {
     const settings = await SystemSetting.findOne({});
     res.json({ logoUrl: settings?.logoUrl || '' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+module.exports = {
+  getSystemLogs,
+  getPlatformAnalytics,
+  getSystemSettings,
+  updateSystemSettings,
+  createSystemBroadcast,
+  getEmailTemplates,
+  createEmailTemplate,
+  updateEmailTemplate,
+  deleteEmailTemplate,
+  getAdminReports,
+  uploadLogoFile,
+  getLogoUrl
 };

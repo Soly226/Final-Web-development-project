@@ -17,21 +17,21 @@
 
 **Q3: How does HTTPS work on localhost, and how did you implement it?**
 - **A**: We generated self-signed TLS certificates programmatically using the `selfsigned` library. The script `certs/generate-certs.js` creates a 2048-bit RSA private key (`key.pem`) and a certificate (`cert.pem`).
-- In `server.js`, we import Node's native `https` module. If the certificates exist on disk, we create an HTTPS server on port `5443` in parallel to the HTTP server:
+- In `server.js`, we import Node's native `https` module. On server startup, it automatically checks if the certificates are present (generating them dynamically if they are missing) and launches the primary server directly over HTTPS on port `5000`:
   ```javascript
-  https.createServer(sslOptions, app).listen(5443);
+  https.createServer(sslOptions, app).listen(PORT);
   ```
-- The frontend `apiClient.js` dynamically checks if the browser is using HTTPS and connects to `https://localhost:5443` or `http://localhost:5000` accordingly.
+- The frontend `vite.config.js` loads these certificates to run over HTTPS on port `5173`. The Axios API client (`apiClient.js`) is configured to connect to `https://localhost:5000` by default.
 
 ---
 
 ## Section B — File Uploads & Static Assets
 
-**Q4: How did you implement logo uploading, and what prevents users from uploading malware?**
-- **A**: We configured a Multer storage middleware (`uploadMiddleware.js`) which restricts uploads. It verifies:
-  1. **File Type**: Restricts files to image mime-types (`image/*`).
-  2. **File Size**: Rejects uploads exceeding 2MB.
-- Files are saved to `backend/uploads/` with a hashed filename to prevent namespace collisions. The file path is saved in `SystemSetting.logoUrl` and served via static middleware:
+**Q4: How did you implement file uploading, and what prevents users from uploading malware?**
+- **A**: We configured Multer storage middlewares (`uploadMiddleware.js`) which restrict uploads based on user roles and contexts:
+  1. **Logos & Avatars**: Restricts files to image mime-types (`image/*`) and limits sizes (2MB for logos, 5MB for avatars).
+  2. **Assignment Submissions**: Restricts file formats to specific extensions (`.pdf`, `.zip`, `.doc`, `.docx`, and standard images) and enforces a 10MB size limit.
+- All files are stored with unique timestamped filenames to prevent namespace collisions. Submissions are saved to `backend/uploads/submissions/` and logo assets are served statically:
   ```javascript
   app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
   ```

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const enrollmentSchema = new mongoose.Schema({
   enrollment_id: { type: String, unique: true, required: true },
@@ -12,4 +12,4 @@ const enrollmentSchema = new mongoose.Schema({
 });
 
 const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
-export default Enrollment;
+module.exports = Enrollment;

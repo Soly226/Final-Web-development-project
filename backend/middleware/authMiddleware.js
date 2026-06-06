@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken';
-import Admin from '../models/Admin.js';
-import Instructor from '../models/Instructor.js';
-import Student from '../models/Student.js';
+const jwt = require('jsonwebtoken');
+const Admin = require('../models/Admin');
+const Instructor = require('../models/Instructor');
+const Student = require('../models/Student');
 
-export const protect = async (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
 
   // 1. Prefer httpOnly cookie (XSS-safe)
@@ -28,7 +28,7 @@ export const protect = async (req, res, next) => {
     let user = null;
     if (decoded.role === 'admin') {
       user = await Admin.findById(decoded.id).select('-password');
-    } else if (decoded.role === 'instructor') {
+    } else if (decoded.role === 'instructor' || decoded.role === 'head_of_department') {
       user = await Instructor.findById(decoded.id).select('-password');
     } else {
       user = await Student.findById(decoded.id).select('-password');
@@ -47,7 +47,7 @@ export const protect = async (req, res, next) => {
   }
 };
 
-export const admin = (req, res, next) => {
+const admin = (req, res, next) => {
   if (req.user && req.user.role === 'admin') {
     next();
   } else {
@@ -55,3 +55,16 @@ export const admin = (req, res, next) => {
   }
 };
 
+const studentOnly = (req, res, next) => {
+  if (req.user && req.user.role === 'student') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access denied: Students only' });
+  }
+};
+
+module.exports = {
+  protect,
+  admin,
+  studentOnly
+};

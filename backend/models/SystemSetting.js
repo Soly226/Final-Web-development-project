@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const systemSettingSchema = new mongoose.Schema({
   platformName: { type: String, default: 'EduCore LMS' },
@@ -14,4 +14,4 @@ const systemSettingSchema = new mongoose.Schema({
 });
 
 const SystemSetting = mongoose.model('SystemSetting', systemSettingSchema);
-export default SystemSetting;
+module.exports = SystemSetting;

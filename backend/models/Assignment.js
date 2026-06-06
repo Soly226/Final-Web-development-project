@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const assignmentSchema = new mongoose.Schema({
   assignment_id: { type: String, unique: true, required: true },
@@ -8,8 +8,9 @@ const assignmentSchema = new mongoose.Schema({
   description: { type: String, required: true },
   deadline: { type: Date, required: true },
   total_marks: { type: Number, required: true },
+  status: { type: String, enum: ['Open', 'Closed'], default: 'Open' },
   created_at: { type: Date, default: Date.now }
 });
 
 const Assignment = mongoose.model('Assignment', assignmentSchema);
-export default Assignment;
+module.exports = Assignment;

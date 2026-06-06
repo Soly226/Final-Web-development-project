@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const systemLogSchema = new mongoose.Schema({
   level: {
@@ -25,4 +25,4 @@ const systemLogSchema = new mongoose.Schema({
 
 const SystemLog = mongoose.model('SystemLog', systemLogSchema);
 
-export default SystemLog;
+module.exports = SystemLog;

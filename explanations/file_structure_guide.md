@@ -59,7 +59,9 @@ Use this guide to look up the exact files, functions, and internal file layouts.
 #### [`authMiddleware.js`](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/authMiddleware.js) (Token verification)
 - **Top**: Imports JWT, Mongoose, and Admin model.
 - **Middle**: `protect(req, res, next)`: Reads `req.cookies.jwt` first (falls back to Authorization header), verifies, retrieves user, and attaches to `req.user`.
-- **Bottom**: `admin(req, res, next)`: Verifies role is `admin`.
+- **Bottom**: 
+  - `admin(req, res, next)`: Verifies role is `admin`.
+  - `studentOnly(req, res, next)`: Verifies role is `student`.
 
 #### [`validationMiddleware.js`](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/validationMiddleware.js) (Input Sanitizers)
 - **Top**: Imports `express-validator` elements, defines the `validateRequest` response collector.
@@ -74,7 +76,10 @@ Use this guide to look up the exact files, functions, and internal file layouts.
 #### [`uploadMiddleware.js`](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/uploadMiddleware.js) (File Upload config)
 - **Top**: Imports Multer, Path, FS.
 - **Middle**: Defines `storage` (destined to `uploads/` with hashed filenames) and file validation filters.
-- **Bottom**: Exports `uploadLogo = multer({ ... }).single('logo')`.
+- **Bottom**: Exports:
+  - `uploadLogo`: Multer single upload instance for logo.
+  - `uploadAvatar`: Multer single upload instance for profileImage.
+  - `uploadAssignment`: Multer single upload instance for student assignment submissions (saves to `uploads/submissions/` supporting PDF, ZIP, DOC, DOCX, and images up to 10MB).
 
 ---
 

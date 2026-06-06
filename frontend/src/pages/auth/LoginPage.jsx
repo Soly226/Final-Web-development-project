@@ -16,6 +16,7 @@ const LoginPage = () => {
       // Redirect based on role
       if (user.role === 'admin') navigate('/admin');
       else if (user.role === 'instructor') navigate('/instructor');
+      else if (user.role === 'head_of_department') navigate('/department-head');
       else navigate('/student');
     } catch (err) {
       console.error('Login failed:', err);

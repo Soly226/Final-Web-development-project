@@ -1,13 +1,5 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-/**
- * Notification Model
- *
- * Uses Mongoose's `refPath` dynamic referencing to support the `user` field
- * referencing any of the three user types (Student, Instructor, Admin).
- *
- * Author integration: adapted from Basel's baselbranch implementation.
- */
 const notificationSchema = new mongoose.Schema(
   {
     user: {
@@ -42,4 +34,4 @@ const notificationSchema = new mongoose.Schema(
 );
 
 const Notification = mongoose.model('Notification', notificationSchema);
-export default Notification;
+module.exports = Notification;

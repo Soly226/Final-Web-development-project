@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const quizSubmissionSchema = new mongoose.Schema({
   submission_id: { type: String, unique: true, required: true },
@@ -10,4 +10,4 @@ const quizSubmissionSchema = new mongoose.Schema({
 });
 
 const QuizSubmission = mongoose.model('QuizSubmission', quizSubmissionSchema);
-export default QuizSubmission;
+module.exports = QuizSubmission;

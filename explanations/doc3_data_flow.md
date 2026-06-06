@@ -38,7 +38,7 @@ We transitioned from the insecure local-storage token pattern to a secure, state
 3. **HTTP Client Call**:
    - Instead of a raw Axios instance, we call `apiClient.post('/api/auth/login', { email, password })`.
    - `apiClient.js` is pre-configured with `withCredentials: true`, which tells the browser to store cookies returned by the server.
-   - Dynamic Base URL resolves to `https://localhost:5443` (if TLS is active) or `http://localhost:5000`.
+   - Dynamic Base URL defaults to `https://localhost:5000` (SSL/HTTPS port).
 
 **Backend Receives `POST /api/auth/login`**:
 - Router routes to `authController.loginUser(req, res)`:
@@ -75,11 +75,11 @@ We transitioned from the insecure local-storage token pattern to a secure, state
 
 ### 1.2 Cookie Propagation on Protected Routes
 
-Every API call to `/api/admin/*` or `/api/courses/*` uses `apiClient`.
+Every API call to `/api/admin/*`, `/api/student/*`, or `/api/courses/*` uses `apiClient`.
 
 ```javascript
-// In any admin page component:
-const { data } = await apiClient.get('/api/admin/logs');
+// In any page component:
+const { data } = await apiClient.get('/api/student/assignments');
 // Because withCredentials: true is configured, the browser automatically attaches
 // the 'jwt' cookie in the request headers behind the scenes.
 ```
@@ -87,8 +87,8 @@ const { data } = await apiClient.get('/api/admin/logs');
 **Backend Intercepts with `protect` Middleware (`authMiddleware.js`)**:
 - Extracts token: `req.cookies.jwt`
 - Decodes it: `jwt.verify(token, process.env.JWT_SECRET)`
-- Retrieves user record: `req.user = await Admin.findById(decoded.id).select('-password')`
-- Runs `admin(req, res, next)` to verify `req.user.role === 'admin'`.
+- Retrieves user record: `req.user = await Admin.findById(decoded.id).select('-password')` (or `Student` / `Instructor`)
+- Runs role-level middleware (e.g. `admin(req, res, next)` to verify `req.user.role === 'admin'`, or `studentOnly(req, res, next)` to verify `req.user.role === 'student'`).
 - Passes execution to the controller function if authorized.
 
 ---
@@ -128,7 +128,39 @@ const { data } = await apiClient.get('/api/admin/logs');
    - Returns the updated setting document containing `{ logoUrl: "/uploads/xyz.jpg" }`.
 5. **Static File Serving**:
    - `server.js` serves files statically: `app.use('/uploads', express.static(path.join(__dirname, 'uploads')))`
-   - Frontend reads the returned `logoUrl` and renders: `<img src={`http://localhost:5000${settings.logoUrl}`} />`.
+   - Frontend reads the returned `logoUrl` and renders: `<img src={`https://localhost:5000${settings.logoUrl}`} />`.
+
+---
+
+### 2.2 Assignment Submission File Flow
+
+**Component:** `AssignmentDetails.jsx`
+
+```
+[File Select / Drag & Drop] → [FormData Object] → [apiClient.post]
+                                                       │
+[State: Status Updated]     ← [res.data.submission]  ← [Database Save] ← [Multer Middleware]
+```
+
+1. **Frontend Selection**:
+   - The student selects or drops a file in the drag-and-drop zone.
+2. **Form Submission**:
+   - Compiles the payload as a `FormData` object:
+     ```javascript
+     const formData = new FormData();
+     formData.append('uploaded_file', file); // Matches backend Multer field
+     ```
+   - Sends it via `apiClient.post(`/api/student/assignments/${assignmentId}/submit`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })`.
+3. **Backend Upload Stream**:
+   - Handled by `uploadAssignment` middleware in [uploadMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/uploadMiddleware.js).
+   - Validates file format (PDF, ZIP, DOC, DOCX, image) and limits size <= 10MB.
+   - Saves file to `backend/uploads/submissions/` with a timestamped safe filename.
+4. **Backend Controller**:
+   - `submitAssignment(req, res)` extracts `req.file.filename`.
+   - Creates or updates `AssignmentSubmission` mapping `uploaded_file` to the file path and registers the submission timestamp.
+   - Returns the saved submission document.
+5. **Frontend Update**:
+   - Receives submission details, triggers toast notification success alert, and updates UI status to "Submitted".
 
 ---
 

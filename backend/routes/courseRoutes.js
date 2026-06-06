@@ -1,5 +1,5 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   getCourses,
   getCourseById,
   createCourse,
@@ -8,8 +8,8 @@ import {
   addPrerequisite,
   enrollStudent,
   assignInstructor
-} from '../controllers/courseController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+} = require('../controllers/courseController');
+const { protect, admin } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -26,4 +26,4 @@ router.post('/:id/prerequisites', protect, admin, addPrerequisite);
 router.post('/:id/enroll', protect, admin, enrollStudent);
 router.post('/:id/assign-instructor', protect, admin, assignInstructor);
 
-export default router;
+module.exports = router;

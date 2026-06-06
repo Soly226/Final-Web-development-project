@@ -1,7 +1,7 @@
-import { body, param, validationResult } from 'express-validator';
+const { body, param, validationResult } = require('express-validator');
 
 // Middleware to check validation results and return formatting errors if any
-export const validateRequest = (req, res, next) => {
+const validateRequest = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ 
@@ -16,9 +16,10 @@ export const validateRequest = (req, res, next) => {
 };
 
 // Authentication Validations
-export const registerValidationRules = [
+const registerValidationRules = [
   body('name')
     .trim()
+    .escape()
     .notEmpty().withMessage('Name is required')
     .isString().withMessage('Name must be a string')
     .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
@@ -36,7 +37,7 @@ export const registerValidationRules = [
     .isIn(['admin', 'instructor', 'student']).withMessage('Role must be admin, instructor, or student')
 ];
 
-export const loginValidationRules = [
+const loginValidationRules = [
   body('email')
     .trim()
     .notEmpty().withMessage('Email is required')
@@ -47,7 +48,7 @@ export const loginValidationRules = [
 ];
 
 // Admin System Settings Validations
-export const updateSettingsValidationRules = [
+const updateSettingsValidationRules = [
   body('platformName')
     .optional()
     .trim()
@@ -77,7 +78,7 @@ export const updateSettingsValidationRules = [
 ];
 
 // Admin Broadcast Validations
-export const createBroadcastValidationRules = [
+const createBroadcastValidationRules = [
   body('title')
     .trim()
     .notEmpty().withMessage('Broadcast title is required')
@@ -95,7 +96,7 @@ export const createBroadcastValidationRules = [
 ];
 
 // Admin Email Template Validations
-export const createEmailTemplateValidationRules = [
+const createEmailTemplateValidationRules = [
   body('name')
     .trim()
     .notEmpty().withMessage('Template name is required')
@@ -114,7 +115,7 @@ export const createEmailTemplateValidationRules = [
     .isArray().withMessage('Variables must be an array of strings')
 ];
 
-export const updateEmailTemplateValidationRules = [
+const updateEmailTemplateValidationRules = [
   param('id')
     .isMongoId().withMessage('Invalid template ID format'),
   body('subject')
@@ -130,13 +131,15 @@ export const updateEmailTemplateValidationRules = [
 ];
 
 // User Management Validations
-export const createStudentValidationRules = [
+const createStudentValidationRules = [
   body('full_name')
     .trim()
+    .escape()
     .notEmpty().withMessage('Full name is required')
     .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
   body('username')
     .trim()
+    .escape()
     .notEmpty().withMessage('Username is required')
     .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters'),
   body('email')
@@ -157,13 +160,15 @@ export const createStudentValidationRules = [
     .isString().withMessage('Level must be a string')
 ];
 
-export const createInstructorValidationRules = [
+const createInstructorValidationRules = [
   body('full_name')
     .trim()
+    .escape()
     .notEmpty().withMessage('Full name is required')
     .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
   body('username')
     .trim()
+    .escape()
     .notEmpty().withMessage('Username is required')
     .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters'),
   body('email')
@@ -184,13 +189,15 @@ export const createInstructorValidationRules = [
     .isIn(['instructor', 'head_of_department']).withMessage('Role must be instructor or head_of_department')
 ];
 
-export const createAdminValidationRules = [
+const createAdminValidationRules = [
   body('full_name')
     .trim()
+    .escape()
     .notEmpty().withMessage('Full name is required')
     .isLength({ min: 2, max: 50 }).withMessage('Name must be between 2 and 50 characters'),
   body('username')
     .trim()
+    .escape()
     .notEmpty().withMessage('Username is required')
     .isLength({ min: 3, max: 20 }).withMessage('Username must be between 3 and 20 characters'),
   body('email')
@@ -205,4 +212,17 @@ export const createAdminValidationRules = [
     .optional()
     .isArray().withMessage('Permissions must be an array of strings')
 ];
+
+module.exports = {
+  validateRequest,
+  registerValidationRules,
+  loginValidationRules,
+  updateSettingsValidationRules,
+  createBroadcastValidationRules,
+  createEmailTemplateValidationRules,
+  updateEmailTemplateValidationRules,
+  createStudentValidationRules,
+  createInstructorValidationRules,
+  createAdminValidationRules
+};
 

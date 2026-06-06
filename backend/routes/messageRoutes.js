@@ -1,9 +1,9 @@
-import express from 'express';
-import Message from '../models/Message.js';
-import Student from '../models/Student.js';
-import Instructor from '../models/Instructor.js';
-import Notification from '../models/Notification.js';
-import { protect } from '../middleware/authMiddleware.js';
+const express = require('express');
+const Message = require('../models/Message');
+const Student = require('../models/Student');
+const Instructor = require('../models/Instructor');
+const Notification = require('../models/Notification');
+const { protect } = require('../middleware/authMiddleware');
 
 /**
  * Message Routes
@@ -29,7 +29,7 @@ const router = express.Router();
 // Helper: derive the model name from the user's role on the JWT
 const roleToModel = (role) => {
   if (role === 'admin') return 'Admin';
-  if (role === 'instructor') return 'Instructor';
+  if (role === 'instructor' || role === 'head_of_department') return 'Instructor';
   return 'Student';
 };
 
@@ -199,4 +199,4 @@ router.delete('/:id', protect, blockAdmin, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

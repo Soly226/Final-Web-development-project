@@ -1,10 +1,6 @@
-import selfsigned from 'selfsigned';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const selfsigned = require('selfsigned');
+const fs = require('fs');
+const path = require('path');
 
 const certsDir = __dirname;
 
@@ -43,10 +39,17 @@ const opts = {
 };
 
 console.log('Generating self-signed SSL certificates for localhost...');
-// In newer versions of selfsigned, generate is asynchronous and returns a promise
-const pems = await selfsigned.generate(attrs, opts);
 
-fs.writeFileSync(path.join(certsDir, 'key.pem'), pems.private);
-fs.writeFileSync(path.join(certsDir, 'cert.pem'), pems.cert);
+async function run() {
+  try {
+    const pems = await selfsigned.generate(attrs, opts);
+    fs.writeFileSync(path.join(certsDir, 'key.pem'), pems.private);
+    fs.writeFileSync(path.join(certsDir, 'cert.pem'), pems.cert);
+    console.log('SSL Certificates generated successfully inside backend/certs/');
+  } catch (err) {
+    console.error('Failed to generate SSL certificates:', err);
+    process.exit(1);
+  }
+}
 
-console.log('SSL Certificates generated successfully inside backend/certs/');
+run();

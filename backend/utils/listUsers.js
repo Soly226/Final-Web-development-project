@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import Student from '../models/Student.js';
-import Instructor from '../models/Instructor.js';
-import Admin from '../models/Admin.js';
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const Student = require('../models/Student');
+const Instructor = require('../models/Instructor');
+const Admin = require('../models/Admin');
 
 dotenv.config();
 

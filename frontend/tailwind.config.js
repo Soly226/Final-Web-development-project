@@ -10,7 +10,20 @@ export default {
         "primary": "#5048e5",
         "background-light": "#f6f6f8",
         "background-dark": "#121121",
-        "slate-850": "#1e293b", // Custom dark slate
+        // Custom slate shades
+        "slate-150": "#edf0f5",
+        "slate-250": "#dde3ec",
+        "slate-450": "#94a3b8",
+        "slate-550": "#64748b",
+        "slate-650": "#475569",
+        "slate-850": "#1e2a3d",
+        "slate-950": "#0b1120",
+        // Custom indigo shades
+        "indigo-550": "#5b5bff",
+        "indigo-650": "#4f46e5",
+        "indigo-750": "#4338ca",
+        "indigo-755": "#3d33c0",
+        "indigo-850": "#312e81",
       },
       fontFamily: {
         "display": ["Inter", "sans-serif"],
@@ -29,13 +42,18 @@ export default {
           "100%": { transform: "translateX(0)", opacity: "1" },
         },
         "slide-up": {
-          "0%": { transform: "translate(-50%, 20px)", opacity: "0" },
-          "100%": { transform: "translate(-50%, 0)", opacity: "1" },
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
         },
       },
       animation: {
         "slide-in-right": "slide-in-right 0.3s ease-out",
         "slide-up": "slide-up 0.3s ease-out",
+        "fade-in": "fade-in 0.25s ease-out",
       },
     },
   },

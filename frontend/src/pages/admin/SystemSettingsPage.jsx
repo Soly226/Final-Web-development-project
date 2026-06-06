@@ -6,6 +6,7 @@ import Input from '../../components/ui/Input';
 import { useAuth } from '../../context/AuthContext';
 import apiClient from '../../lib/apiClient';
 import { twMerge } from 'tailwind-merge';
+import { useSettings } from '../../context/SettingsContext';
 
 const API_BASE = '/api';
 
@@ -119,6 +120,7 @@ const validate = (form) => {
 
 const SystemSettingsPage = () => {
   const { user } = useAuth();
+  const { t, theme, setTheme, language, setLanguage } = useSettings();
   const logoInputRef = useRef(null);
 
   const [loading, setLoading]   = useState(true);
@@ -271,7 +273,7 @@ const SystemSettingsPage = () => {
   // ── Skeleton ─────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <AdminLayout title="System Configuration">
+      <AdminLayout title={t('sysConfig')}>
         <div className="p-5 max-w-4xl mx-auto space-y-8 animate-pulse">
           {[1, 2, 3].map(i => (
             <div key={i} className="h-40 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
@@ -284,7 +286,7 @@ const SystemSettingsPage = () => {
   // ── Error State ──────────────────────────────────────────────────────────
   if (error) {
     return (
-      <AdminLayout title="System Configuration">
+      <AdminLayout title={t('sysConfig')}>
         <div className="p-5 max-w-4xl mx-auto">
           <ErrorState message={error} onRetry={fetchSettings} />
         </div>
@@ -294,7 +296,7 @@ const SystemSettingsPage = () => {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <AdminLayout title="System Configuration">
+    <AdminLayout title={t('sysConfig')}>
       {toast && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
 
       <form onSubmit={handleSave}>
@@ -452,6 +454,77 @@ const SystemSettingsPage = () => {
                   className={twMerge('bg-white/5 border-white/10', fieldErrors.smtpPort && 'border-rose-500')}
                 />
                 <FieldError message={fieldErrors.smtpPort} />
+              </div>
+            </div>
+          </SettingsSection>
+
+          {/* App Preferences */}
+          <SettingsSection title={t('appPreferences')} icon="settings">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Theme Preferences */}
+              <div className="flex flex-col gap-2">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-350 uppercase tracking-wider">
+                  {t('theme')}
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setTheme('light')}
+                    className={`flex-1 py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
+                      theme === 'light'
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                        : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-750 dark:text-slate-300'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">light_mode</span>
+                    {t('lightMode')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTheme('dark')}
+                    className={`flex-1 py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
+                      theme === 'dark'
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                        : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-750 dark:text-slate-300'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">dark_mode</span>
+                    {t('darkMode')}
+                  </button>
+                </div>
+              </div>
+
+              {/* Language Preferences */}
+              <div className="flex flex-col gap-2">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-350 uppercase tracking-wider">
+                  {t('language')}
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setLanguage('en')}
+                    className={`flex-1 py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
+                      language === 'en'
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                        : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-750 dark:text-slate-300'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">language</span>
+                    {t('english')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLanguage('ar')}
+                    className={`flex-1 py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all ${
+                      language === 'ar'
+                        ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                        : 'bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-slate-750 dark:text-slate-300'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">language</span>
+                    {t('arabic')}
+                  </button>
+                </div>
               </div>
             </div>
           </SettingsSection>

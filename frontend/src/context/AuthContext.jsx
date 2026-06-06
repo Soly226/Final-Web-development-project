@@ -6,8 +6,14 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   // Only store non-sensitive user info — token lives in httpOnly cookie
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('user');
+      return saved && saved !== 'undefined' ? JSON.parse(saved) : null;
+    } catch (err) {
+      console.error('Failed to parse user session', err);
+      localStorage.removeItem('user');
+      return null;
+    }
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

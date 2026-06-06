@@ -1,7 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import apiClient from '../../lib/apiClient';
 import { twMerge } from 'tailwind-merge';
+import Skeleton from '../../components/ui/Skeleton';
+import StudentLayout from '../../layouts/StudentLayout';
+import InstructorLayout from '../../layouts/InstructorLayout';
+import HODLayout from '../../layouts/HODLayout';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -75,14 +81,14 @@ const EmptyState = ({ icon, title, subtitle }) => (
 );
 
 const LoadingSkeleton = () => (
-  <div className="space-y-3 animate-pulse p-4">
+  <div className="space-y-3 p-4">
     {[...Array(5)].map((_, i) => (
-      <div key={i} className="flex gap-3 p-4 rounded-2xl bg-white/5">
-        <div className="w-10 h-10 rounded-xl bg-white/10 flex-shrink-0" />
+      <div key={i} className="flex gap-3 p-4 rounded-2xl bg-white/3 border border-white/5">
+        <Skeleton className="w-10 h-10 rounded-xl flex-shrink-0" />
         <div className="flex-1 space-y-2 pt-1">
-          <div className="h-3.5 bg-white/10 rounded-full w-2/5" />
-          <div className="h-2.5 bg-white/10 rounded-full w-3/4" />
-          <div className="h-2 bg-white/10 rounded-full w-1/4" />
+          <Skeleton className="h-3.5 rounded-full w-2/5" />
+          <Skeleton className="h-2.5 rounded-full w-3/4" />
+          <Skeleton className="h-2 rounded-full w-1/4" />
         </div>
       </div>
     ))}
@@ -91,11 +97,12 @@ const LoadingSkeleton = () => (
 
 // ─── Compose Modal ───────────────────────────────────────────────────────────
 
-const ComposeModal = ({ onClose, onSent }) => {
-  const [query, setQuery] = useState('');
+const ComposeModal = ({ onClose, onSent, initialRecipient }) => {
+  const { showToast } = useToast();
+  const [query, setQuery] = useState(initialRecipient ? initialRecipient.full_name : '');
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
-  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [selectedRecipient, setSelectedRecipient] = useState(initialRecipient || null);
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
   const [sending, setSending] = useState(false);
@@ -156,6 +163,7 @@ const ComposeModal = ({ onClose, onSent }) => {
         subject: subject.trim(),
         content: content.trim(),
       });
+      showToast('Message sent successfully!', 'success');
       onSent();
       onClose();
     } catch (err) {
@@ -460,6 +468,8 @@ const AnnouncementCard = ({ ann }) => {
 
 export default function MessagesInboxPage() {
   const { user } = useAuth();
+  const { showToast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [activeTab, setActiveTab] = useState('inbox');
   const [inbox, setInbox] = useState([]);
@@ -469,6 +479,12 @@ export default function MessagesInboxPage() {
   const [error, setError] = useState('');
   const [showCompose, setShowCompose] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (searchParams.get('to')) {
+      setShowCompose(true);
+    }
+  }, [searchParams]);
 
   // ── Fetch all data ──────────────────────────────────────────────────────
   const fetchAll = useCallback(async () => {
@@ -507,8 +523,11 @@ export default function MessagesInboxPage() {
       await apiClient.delete(`/api/messages/${id}`);
       setInbox((prev) => prev.filter((m) => m._id !== id));
       setSent((prev) => prev.filter((m) => m._id !== id));
-    } catch { /* silent */ }
-  }, []);
+      showToast('Message deleted successfully', 'success');
+    } catch {
+      showToast('Failed to delete message. Please try again.', 'error');
+    }
+  }, [showToast]);
 
   // ── Filtered lists ───────────────────────────────────────────────────────
   const filteredInbox = inbox.filter((m) => {
@@ -563,18 +582,24 @@ export default function MessagesInboxPage() {
     filteredAnnouncements;
 
   // ── Render ───────────────────────────────────────────────────────────────
-  return (
-    <div className="relative min-h-screen bg-background-dark text-white font-display overflow-x-hidden">
-      {/* Decorative blobs */}
-      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-accent/10 blur-[100px] rounded-full" />
-      </div>
-
+  const content = (
+    <div className="max-w-2xl mx-auto px-4 pb-24 pt-2">
       {/* Compose modal */}
       {showCompose && (
         <ComposeModal
-          onClose={() => setShowCompose(false)}
+          initialRecipient={
+            searchParams.get('to') && searchParams.get('role') && searchParams.get('name')
+              ? {
+                  _id: searchParams.get('to'),
+                  role: searchParams.get('role'),
+                  full_name: searchParams.get('name'),
+                }
+              : null
+          }
+          onClose={() => {
+            setShowCompose(false);
+            setSearchParams({});
+          }}
           onSent={() => {
             fetchAll();
             setActiveTab('sent');
@@ -582,158 +607,166 @@ export default function MessagesInboxPage() {
         />
       )}
 
-      <div className="max-w-2xl mx-auto px-4 pb-24 pt-6">
+      {/* ── Page Header ──────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">Messages</h1>
+          <p className="text-sm text-slate-400 font-medium mt-0.5">
+            {unreadCount > 0
+              ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`
+              : 'All caught up'}
+          </p>
+        </div>
+        <button
+          id="compose-message-btn"
+          onClick={() => setShowCompose(true)}
+          className="flex items-center gap-2 bg-primary hover:bg-accent text-white font-bold px-5 py-2.5 rounded-2xl shadow-lg shadow-primary/30 transition-all active:scale-95 text-sm"
+        >
+          <span className="material-symbols-outlined text-sm">edit_square</span>
+          Compose
+        </button>
+      </div>
 
-        {/* ── Page Header ──────────────────────────────────────────────── */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight">Messages</h1>
-            <p className="text-sm text-slate-400 font-medium mt-0.5">
-              {unreadCount > 0
-                ? `${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`
-                : 'All caught up'}
-            </p>
-          </div>
+      {/* ── Search ───────────────────────────────────────────────────── */}
+      <div className="relative mb-5">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
+          <span className="material-symbols-outlined text-lg">search</span>
+        </div>
+        <input
+          type="text"
+          placeholder="Search messages…"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-850 focus:ring-2 focus:ring-primary/40 rounded-2xl pl-11 pr-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-500 outline-none transition-colors"
+        />
+        {searchQuery && (
           <button
-            id="compose-message-btn"
-            onClick={() => setShowCompose(true)}
-            className="flex items-center gap-2 bg-primary hover:bg-accent text-white font-bold px-5 py-2.5 rounded-2xl shadow-lg shadow-primary/30 transition-all active:scale-95 text-sm"
+            onClick={() => setSearchQuery('')}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
           >
-            <span className="material-symbols-outlined text-sm">edit_square</span>
-            Compose
+            <span className="material-symbols-outlined text-lg">close</span>
           </button>
-        </div>
-
-        {/* ── Search ───────────────────────────────────────────────────── */}
-        <div className="relative mb-5">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">
-            <span className="material-symbols-outlined text-lg">search</span>
-          </div>
-          <input
-            type="text"
-            placeholder="Search messages…"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 focus:border-primary/40 rounded-2xl pl-11 pr-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
-            >
-              <span className="material-symbols-outlined text-lg">close</span>
-            </button>
-          )}
-        </div>
-
-        {/* ── Tab Bar ──────────────────────────────────────────────────── */}
-        <div className="flex bg-white/5 border border-white/10 rounded-2xl p-1 mb-5 gap-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              id={`tab-${tab.id}`}
-              onClick={() => setActiveTab(tab.id)}
-              className={twMerge(
-                'flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold transition-all duration-200',
-                activeTab === tab.id
-                  ? 'bg-white/10 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              )}
-            >
-              <span className={twMerge(
-                'material-symbols-outlined text-base',
-                activeTab === tab.id && tab.id === 'announcements' ? 'font-variation-fill text-amber-400' : ''
-              )}>
-                {tab.icon}
-              </span>
-              <span className="hidden sm:inline">{tab.label}</span>
-              {tab.count && (
-                <span className={twMerge('text-[10px] px-1.5 py-0.5 rounded-full font-black', tab.countColor)}>
-                  {tab.count}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* ── Content ──────────────────────────────────────────────────── */}
-        <div className="bg-white/3 border border-white/8 rounded-3xl overflow-hidden">
-          {/* Error state */}
-          {error && (
-            <div className="flex flex-col items-center justify-center p-12 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mb-4">
-                <span className="material-symbols-outlined text-2xl">error_outline</span>
-              </div>
-              <p className="text-sm font-bold text-slate-300 mb-1">Failed to load</p>
-              <p className="text-xs text-slate-500 mb-5">{error}</p>
-              <button
-                onClick={fetchAll}
-                className="flex items-center gap-2 text-sm font-bold text-primary hover:text-accent px-5 py-2.5 bg-primary/10 hover:bg-primary/20 rounded-xl transition-all"
-              >
-                <span className="material-symbols-outlined text-sm">refresh</span>
-                Retry
-              </button>
-            </div>
-          )}
-
-          {/* Loading */}
-          {!error && loading && <LoadingSkeleton />}
-
-          {/* Messages list */}
-          {!error && !loading && (
-            <>
-              {currentList.length === 0 ? (
-                activeTab === 'inbox' ? (
-                  <EmptyState
-                    icon="inbox"
-                    title="No messages yet"
-                    subtitle={searchQuery ? `No results for "${searchQuery}"` : 'When someone sends you a message, it will appear here.'}
-                  />
-                ) : activeTab === 'sent' ? (
-                  <EmptyState
-                    icon="send"
-                    title="No sent messages"
-                    subtitle={searchQuery ? `No results for "${searchQuery}"` : 'Messages you send will appear here.'}
-                  />
-                ) : (
-                  <EmptyState
-                    icon="campaign"
-                    title="No announcements"
-                    subtitle="System announcements from administrators will appear here."
-                  />
-                )
-              ) : (
-                <div className="p-3 space-y-2">
-                  {activeTab === 'announcements'
-                    ? filteredAnnouncements.map((ann) => (
-                        <AnnouncementCard key={ann._id} ann={ann} />
-                      ))
-                    : currentList.map((msg) => (
-                        <MessageCard
-                          key={msg._id}
-                          msg={msg}
-                          type={activeTab}
-                          onMarkRead={handleMarkRead}
-                          onDelete={handleDelete}
-                        />
-                      ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        {/* ── Stats footer ─────────────────────────────────────────────── */}
-        {!loading && !error && (
-          <div className="flex items-center justify-center gap-6 mt-5 text-[11px] text-slate-600 font-medium">
-            <span>{inbox.length} received</span>
-            <span className="w-1 h-1 bg-slate-700 rounded-full" />
-            <span>{sent.length} sent</span>
-            <span className="w-1 h-1 bg-slate-700 rounded-full" />
-            <span>{announcements.length} announcements</span>
-          </div>
         )}
       </div>
+
+      {/* ── Tab Bar ──────────────────────────────────────────────────── */}
+      <div className="flex bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-1 mb-5 gap-1">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            id={`tab-${tab.id}`}
+            onClick={() => setActiveTab(tab.id)}
+            className={twMerge(
+              'flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold transition-all duration-200',
+              activeTab === tab.id
+                ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+            )}
+          >
+            <span className={twMerge(
+              'material-symbols-outlined text-base',
+              activeTab === tab.id && tab.id === 'announcements' ? 'font-variation-fill text-amber-400' : ''
+            )}>
+              {tab.icon}
+            </span>
+            <span className="hidden sm:inline">{tab.label}</span>
+            {tab.count && (
+              <span className={twMerge('text-[10px] px-1.5 py-0.5 rounded-full font-black', tab.countColor)}>
+                {tab.count}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Content ──────────────────────────────────────────────────── */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-205 dark:border-white/8 rounded-3xl overflow-hidden shadow-sm">
+        {/* Error state */}
+        {error && (
+          <div className="flex flex-col items-center justify-center p-12 text-center">
+            <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mb-4">
+              <span className="material-symbols-outlined text-2xl">error_outline</span>
+            </div>
+            <p className="text-sm font-bold text-slate-300 mb-1">Failed to load</p>
+            <p className="text-xs text-slate-500 mb-5">{error}</p>
+            <button
+              onClick={fetchAll}
+              className="flex items-center gap-2 text-sm font-bold text-primary hover:text-accent px-5 py-2.5 bg-primary/10 hover:bg-primary/20 rounded-xl transition-all"
+            >
+              <span className="material-symbols-outlined text-sm">refresh</span>
+              Retry
+            </button>
+          </div>
+        )}
+
+        {/* Loading */}
+        {!error && loading && <LoadingSkeleton />}
+
+        {/* Messages list */}
+        {!error && !loading && (
+          <>
+            {currentList.length === 0 ? (
+              activeTab === 'inbox' ? (
+                <EmptyState
+                  icon="inbox"
+                  title="No messages yet"
+                  subtitle={searchQuery ? `No results for "${searchQuery}"` : 'When someone sends you a message, it will appear here.'}
+                />
+              ) : activeTab === 'sent' ? (
+                <EmptyState
+                  icon="send"
+                  title="No sent messages"
+                  subtitle={searchQuery ? `No results for "${searchQuery}"` : 'Messages you send will appear here.'}
+                />
+              ) : (
+                <EmptyState
+                  icon="campaign"
+                  title="No announcements"
+                  subtitle="System announcements from administrators will appear here."
+                />
+              )
+            ) : (
+              <div className="p-3 space-y-2">
+                {activeTab === 'announcements'
+                  ? filteredAnnouncements.map((ann) => (
+                      <AnnouncementCard key={ann._id} ann={ann} />
+                    ))
+                  : currentList.map((msg) => (
+                      <MessageCard
+                        key={msg._id}
+                        msg={msg}
+                        type={activeTab}
+                        onMarkRead={handleMarkRead}
+                        onDelete={handleDelete}
+                      />
+                    ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* ── Stats footer ─────────────────────────────────────────────── */}
+      {!loading && !error && (
+        <div className="flex items-center justify-center gap-6 mt-5 text-[11px] text-slate-500 font-semibold">
+          <span>{inbox.length} received</span>
+          <span className="w-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full" />
+          <span>{sent.length} sent</span>
+          <span className="w-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full" />
+          <span>{announcements.length} announcements</span>
+        </div>
+      )}
     </div>
   );
+
+  if (user?.role === 'student') {
+    return <StudentLayout title="Messages">{content}</StudentLayout>;
+  }
+  if (user?.role === 'instructor') {
+    return <InstructorLayout title="Messages">{content}</InstructorLayout>;
+  }
+  if (user?.role === 'head_of_department') {
+    return <HODLayout title="Messages">{content}</HODLayout>;
+  }
+  return <div className="p-4">{content}</div>;
 }

@@ -2,19 +2,21 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { useSettings } from '../context/SettingsContext';
 
 const AdminLayout = ({ children, title }) => {
   const { logout } = useAuth();
+  const { t } = useSettings();
   const location = useLocation();
 
   const navItems = [
-    { icon: 'dashboard', label: 'Home', path: '/admin', active: location.pathname === '/admin' },
-    { icon: 'group', label: 'Users', path: '/admin/users', active: location.pathname === '/admin/users' },
-    { icon: 'menu_book', label: 'Courses', path: '/admin/courses', active: location.pathname === '/admin/courses' },
-    { icon: 'analytics', label: 'Reports', path: '/admin/reports', active: location.pathname === '/admin/reports' },
-    { icon: 'mail', label: 'Templates', path: '/admin/templates', active: location.pathname === '/admin/templates' },
-    { icon: 'description', label: 'Logs', path: '/admin/logs', active: location.pathname === '/admin/logs' },
-    { icon: 'settings', label: 'Settings', path: '/admin/settings', active: location.pathname === '/admin/settings' },
+    { icon: 'dashboard', label: t('home'), path: '/admin', active: location.pathname === '/admin' },
+    { icon: 'group', label: t('users'), path: '/admin/users', active: location.pathname === '/admin/users' },
+    { icon: 'menu_book', label: t('courses'), path: '/admin/courses', active: location.pathname === '/admin/courses' },
+    { icon: 'analytics', label: t('reports'), path: '/admin/reports', active: location.pathname === '/admin/reports' },
+    { icon: 'mail', label: t('templates'), path: '/admin/templates', active: location.pathname === '/admin/templates' },
+    { icon: 'description', label: t('logs'), path: '/admin/logs', active: location.pathname === '/admin/logs' },
+    { icon: 'settings', label: t('settings'), path: '/admin/settings', active: location.pathname === '/admin/settings' },
   ];
 
   return (
@@ -31,7 +33,7 @@ const AdminLayout = ({ children, title }) => {
           <button className="p-2.5 hover:bg-primary/10 text-slate-600 dark:text-slate-400 hover:text-primary rounded-xl transition-all">
             <span className="material-symbols-outlined font-variation-bold">menu</span>
           </button>
-          <h1 className="text-md font-bold tracking-tight text-slate-900 dark:text-white uppercase tracking-widest text-xs opacity-80">{title || 'EduCore LMS'}</h1>
+          <h1 className="text-md font-bold tracking-tight text-slate-900 dark:text-white uppercase tracking-widest text-xs opacity-80">{title || t('platformName')}</h1>
         </div>
         <div className="flex items-center gap-4">
           <button className="relative p-2 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">

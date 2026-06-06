@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const assignmentSubmissionSchema = new mongoose.Schema({
   submission_id: { type: String, unique: true, required: true },
@@ -11,4 +11,4 @@ const assignmentSubmissionSchema = new mongoose.Schema({
 });
 
 const AssignmentSubmission = mongoose.model('AssignmentSubmission', assignmentSubmissionSchema);
-export default AssignmentSubmission;
+module.exports = AssignmentSubmission;

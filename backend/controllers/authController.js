@@ -1,8 +1,8 @@
-import Admin from '../models/Admin.js';
-import Instructor from '../models/Instructor.js';
-import Student from '../models/Student.js';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+const Admin = require('../models/Admin');
+const Instructor = require('../models/Instructor');
+const Student = require('../models/Student');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
@@ -23,7 +23,7 @@ const setCookieToken = (res, token) => {
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
-export const registerUser = async (req, res) => {
+const registerUser = async (req, res) => {
   const { name, email, password, role, ...otherData } = req.body;
 
   try {
@@ -66,7 +66,7 @@ export const registerUser = async (req, res) => {
 // @desc    Auth user & get token
 // @route   POST /api/auth/login
 // @access  Public
-export const loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -75,7 +75,8 @@ export const loginUser = async (req, res) => {
 
     if (!user) {
       user = await Instructor.findOne({ email });
-      role = 'instructor';
+      // Respect HOD vs instructor role stored on the model
+      role = user ? (user.role || 'instructor') : 'instructor';
     }
 
     if (!user) {
@@ -111,7 +112,7 @@ export const loginUser = async (req, res) => {
 // @desc    Logout user — clears httpOnly JWT cookie server-side
 // @route   POST /api/auth/logout
 // @access  Public
-export const logoutUser = (req, res) => {
+const logoutUser = (req, res) => {
   res.clearCookie('jwt', {
     httpOnly: true,
     sameSite: 'strict',
@@ -120,3 +121,44 @@ export const logoutUser = (req, res) => {
   res.json({ message: 'Logged out successfully' });
 };
 
+// @desc    Get current user profile (session verification)
+// @route   GET /api/auth/me
+// @access  Private
+const checkSession = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      return res.status(401).json({ message: 'Not authorized, no token' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let user;
+    if (decoded.role === 'admin') {
+      user = await Admin.findById(decoded.id).select('-password');
+    } else if (decoded.role === 'instructor' || decoded.role === 'head_of_department') {
+      user = await Instructor.findById(decoded.id).select('-password');
+    } else {
+      user = await Student.findById(decoded.id).select('-password');
+    }
+
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    res.json({
+      _id: user._id,
+      name: user.full_name,
+      email: user.email,
+      role: decoded.role,
+    });
+  } catch (error) {
+    res.status(401).json({ message: 'Not authorized, token validation failed' });
+  }
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  logoutUser,
+  checkSession
+};

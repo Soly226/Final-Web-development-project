@@ -1,6 +1,6 @@
-import express from 'express';
-import Announcement from '../models/Announcement.js';
-import { protect } from '../middleware/authMiddleware.js';
+const express = require('express');
+const Announcement = require('../models/Announcement');
+const { protect } = require('../middleware/authMiddleware');
 
 /**
  * Announcement Routes (Student/Instructor read access)
@@ -39,4 +39,4 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

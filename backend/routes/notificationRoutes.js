@@ -1,6 +1,6 @@
-import express from 'express';
-import Notification from '../models/Notification.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+const express = require('express');
+const Notification = require('../models/Notification');
+const { protect, admin } = require('../middleware/authMiddleware');
 
 /**
  * Notification Routes
@@ -20,7 +20,7 @@ const router = express.Router();
 // Helper: derive the model name from the user's role on the JWT
 const roleToModel = (role) => {
   if (role === 'admin') return 'Admin';
-  if (role === 'instructor') return 'Instructor';
+  if (role === 'instructor' || role === 'head_of_department') return 'Instructor';
   return 'Student';
 };
 
@@ -116,4 +116,4 @@ router.delete('/:id', protect, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

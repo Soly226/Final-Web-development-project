@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const coursePrerequisiteSchema = new mongoose.Schema({
   prerequisite_id: { type: String, unique: true, required: true },
@@ -7,4 +7,4 @@ const coursePrerequisiteSchema = new mongoose.Schema({
 });
 
 const CoursePrerequisite = mongoose.model('CoursePrerequisite', coursePrerequisiteSchema);
-export default CoursePrerequisite;
+module.exports = CoursePrerequisite;

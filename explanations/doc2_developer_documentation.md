@@ -24,8 +24,8 @@
 ```
 web_project/
 ├── backend/
-│   ├── server.js                 ← Express entry point (HTTP:5000 / HTTPS:5443)
-│   ├── .env                      ← Secret variables (PORT, MONGODB_URI, JWT_SECRET)
+│   ├── server.js                 ← Express entry point (HTTPS:5000)
+│   ├── .env                      ← Secret variables (PORT, MONGODB_URI, JWT_SECRET, FRONTEND_URL)
 │   ├── certs/
 │   │   ├── generate-certs.js     ← TLS certificate generator script
 │   │   ├── key.pem               ← SSL Private Key (Generated)
@@ -69,7 +69,7 @@ web_project/
 - Registers `cookieParser()` to read secure incoming cookie headers.
 - Serves the `uploads/` folder as a static route: `app.use('/uploads', express.static(...))`.
 - Binds routes: `/api/auth`, `/api/admin`, `/api/courses`.
-- Connects to MongoDB, starts HTTP server on `PORT` (5000), and if TLS certs are present in `certs/`, boots up an HTTPS Server on `HTTPS_PORT` (5443).
+- Connects to MongoDB, automatically checks for/generates self-signed SSL certificates in `certs/` on boot if missing, and starts the primary server over HTTPS on `PORT` (5000).
 
 ### 3.2 `authMiddleware.js` — Role and Session Guard
 - **`protect(req, res, next)`**:
@@ -78,6 +78,8 @@ web_project/
   - Attaches the decoded user document to `req.user`.
 - **`admin(req, res, next)`**:
   - Verifies that `req.user.role === 'admin'`.
+- **`studentOnly(req, res, next)`**:
+  - Verifies that `req.user.role === 'student'`.
 
 ### 3.3 `authController.js` — Authentication Controllers
 - **`setCookieToken(res, token)`**:
@@ -109,7 +111,7 @@ web_project/
 
 ### 4.1 `apiClient.js` — Shared HTTP Client
 - Centrally configures `withCredentials: true` to tell the browser to automatically include the HttpOnly cookie in request headers.
-- Resolves URL dynamically to port `5443` if the browser is using HTTPS, otherwise falls back to `5000`.
+- Defaults backend base URL to `https://localhost:5000` to interact with the HTTPS backend server.
 
 ### 4.2 `AuthContext.jsx` — State Controller
 - Manages user login/registration. Stores user meta objects (name, email, role) in `localStorage` for page reload persistence.
