@@ -1,90 +1,117 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InstructorLayout from '../../layouts/InstructorLayout';
+import Topbar from '../../components/Topbar';
 import Card from '../../components/ui/Card';
+import Input from '../../components/ui/Input';
+import Button from '../../components/ui/Button';
+import { useToast } from '../../context/ToastContext';
 
 const CreateCourseStep1 = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
+  const [formData, setFormData] = useState({
+    title: '',
+    category: 'Technology',
+    level: 'Beginner',
+    description: ''
+  });
 
-  const handleNext = (e) => {
-    e.preventDefault();
+  const handleChange = (field) => (event) => {
+    setFormData((prev) => ({ ...prev, [field]: event.target.value }));
+  };
+
+  const handleNextStep = () => {
+    if (!formData.title.trim()) {
+      showToast('Course title is required and cannot be empty.', 'error');
+      return;
+    }
     navigate('/instructor/create/step2');
   };
 
   return (
-    <InstructorLayout title="Create Course - Step 1">
-      <div className="p-5 flex flex-col gap-6 max-w-3xl mx-auto">
-        <div className="text-center mb-4">
-          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">Course Details</h2>
-          <p className="text-slate-500 text-sm mt-1">Let's start with the basics of your new course.</p>
-        </div>
+    <div className="min-h-screen bg-background-light dark:bg-background-dark">
+      <Topbar title="Create New Course" />
 
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <div className="w-10 h-1 rounded-full bg-amber-500"></div>
-          <div className="w-10 h-1 rounded-full bg-slate-200 dark:bg-slate-700"></div>
-        </div>
+      <main className="p-4 md:p-6 lg:p-8">
+        <div className="max-w-3xl mx-auto space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="px-4 py-2 rounded-xl bg-primary/10 text-primary text-sm font-bold">
+                1. Basic info
+              </div>
+              <div className="text-slate-300">&gt;</div>
+              <div className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-sm font-semibold">
+                2. Schedule
+              </div>
+            </div>
 
-        <Card className="p-6">
-          <form onSubmit={handleNext} className="flex flex-col gap-5">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Course Title</label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. Introduction to Machine Learning"
-                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition-colors"
+            <Card className="p-6 md:p-8 space-y-5">
+              <Input
+                id="course-title"
+                label="Course title"
+                placeholder="e.g. Introduction to Web Development"
+                value={formData.title}
+                onChange={handleChange('title')}
               />
-            </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Course Description</label>
-              <textarea
-                required
-                rows="4"
-                placeholder="What will students learn in this course?"
-                className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition-colors resize-none"
-              ></textarea>
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label htmlFor="category" className="block text-slate-700 dark:text-slate-300 text-sm font-medium">
+                    Category
+                  </label>
+                  <select
+                    id="category"
+                    value={formData.category}
+                    onChange={handleChange('category')}
+                    className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                  >
+                    <option>Technology</option>
+                    <option>Science</option>
+                    <option>Business</option>
+                    <option>Arts</option>
+                  </select>
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Category</label>
-                <select className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition-colors">
-                  <option className="bg-white dark:bg-slate-900">Computer Science</option>
-                  <option className="bg-white dark:bg-slate-900">Data Science</option>
-                  <option className="bg-white dark:bg-slate-900">Business</option>
-                  <option className="bg-white dark:bg-slate-900">Design</option>
-                </select>
+                <div className="space-y-1.5">
+                  <label htmlFor="level" className="block text-slate-700 dark:text-slate-300 text-sm font-medium">
+                    Level
+                  </label>
+                  <select
+                    id="level"
+                    value={formData.level}
+                    onChange={handleChange('level')}
+                    className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
+                  >
+                    <option>Beginner</option>
+                    <option>Intermediate</option>
+                    <option>Advanced</option>
+                  </select>
+                </div>
               </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Level</label>
-                <select className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-amber-500 transition-colors">
-                  <option className="bg-white dark:bg-slate-900">Beginner</option>
-                  <option className="bg-white dark:bg-slate-900">Intermediate</option>
-                  <option className="bg-white dark:bg-slate-900">Advanced</option>
-                </select>
-              </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Course Thumbnail</label>
-              <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:border-amber-500 hover:bg-amber-500/5 transition-all cursor-pointer">
-                <span className="material-symbols-outlined text-4xl text-slate-400 mb-2">cloud_upload</span>
-                <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Click to upload an image</p>
-                <p className="text-xs text-slate-400 mt-1">PNG, JPG up to 5MB</p>
+              <div className="space-y-1.5">
+                <label htmlFor="description" className="block text-slate-700 dark:text-slate-300 text-sm font-medium">
+                  Short description
+                </label>
+                <textarea
+                  id="description"
+                  rows={5}
+                  placeholder="What will students learn in this course?"
+                  value={formData.description}
+                  onChange={handleChange('description')}
+                  className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-y"
+                />
               </div>
-            </div>
 
-            <div className="flex justify-end mt-4">
-              <button type="submit" className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-amber-500/30 transition-all active:scale-95 flex items-center gap-2">
-                Continue to Syllabus
-                <span className="material-symbols-outlined text-sm">arrow_forward</span>
-              </button>
-            </div>
-          </form>
-        </Card>
-      </div>
-    </InstructorLayout>
+              <div className="flex justify-between items-center pt-2">
+                <Button variant="secondary" onClick={() => navigate('/instructor')}>
+                  Cancel
+                </Button>
+                <Button onClick={handleNextStep}>Next step -&gt;</Button>
+              </div>
+            </Card>
+          </div>
+        </main>
+    </div>
   );
 };
 

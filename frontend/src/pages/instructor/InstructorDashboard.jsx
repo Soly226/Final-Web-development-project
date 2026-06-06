@@ -1,5 +1,6 @@
 import React from 'react';
-import InstructorLayout from '../../layouts/InstructorLayout';
+import Sidebar from '../../components/Sidebar';
+import Topbar from '../../components/Topbar';
 import Card from '../../components/ui/Card';
 import { twMerge } from 'tailwind-merge';
 import { useAuth } from '../../context/AuthContext';
@@ -21,9 +22,23 @@ const InstructorDashboard = () => {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
 
+  const sidebarLinks = [
+    { label: 'Dashboard', to: '/instructor', icon: 'dashboard' },
+    { label: 'Create Course', to: '/instructor/create', icon: 'add_circle' },
+    { label: 'Analytics', to: '/instructor/analytics', icon: 'analytics' },
+    { label: 'Assignments', to: '/instructor/assignments', icon: 'assignment' },
+    { label: 'Roster', to: '/instructor/roster', icon: 'group' }
+  ];
+
   return (
-    <InstructorLayout title="Dashboard">
-      <div className="p-5 flex flex-col gap-6 max-w-5xl mx-auto">
+    <div className="min-h-screen bg-background-light dark:bg-background-dark">
+      <Topbar title="Instructor Dashboard" />
+
+      <div className="flex flex-col md:flex-row">
+        <Sidebar links={sidebarLinks} />
+
+        <main className="flex-1 p-4 md:p-6 lg:p-8">
+          <div className="max-w-5xl mx-auto space-y-6">
         <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 to-orange-500 p-6 text-white shadow-xl shadow-amber-500/20">
           <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-white/10 rounded-full blur-2xl pointer-events-none" />
@@ -110,7 +125,9 @@ const InstructorDashboard = () => {
           </div>
         </section>
       </div>
-    </InstructorLayout>
+    </main>
+  </div>
+</div>
   );
 };
 
