@@ -838,4 +838,12 @@ This section provides a highly detailed walkthrough of the syntax, logic, and co
   - `<Routes>` & `<Route>` - Declares client-side paths mapped to pages.
   - `<Route element={<ProtectedRoute allowedRoles={['admin']} />}>` - Checks the user's role before rendering the sub-routes (e.g., `/admin`, `/admin/users`, `/admin/settings`). If unauthorized, it redirects to the `/unauthorized` view.
 
+### 13. `frontend/src/styles/index.css` (External Global Stylesheet)
+- **Purpose**: Defines application-wide visual baselines, custom transitions, scrollbars, and configures Tailwind CSS v4 class-based dark mode variants.
+- **Key Syntax & Functions**:
+  - `@import "tailwindcss";` - Imports the default utility classes, variables, and directives of the Tailwind CSS framework.
+  - `@custom-variant dark (&:where(.dark, .dark *));` - Defines a custom Tailwind CSS v4 compile-time variant. This maps `dark:` classes to look for the presence of the `.dark` class selector on the root `<html>` element rather than querying the system's media preference, enabling manual toggles.
+  - Global base rules (e.g., resetting background colors, configuring body typography, and applying transition timings on color changes).
+
+
 
