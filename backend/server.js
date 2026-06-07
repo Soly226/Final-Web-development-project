@@ -90,39 +90,49 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(async () => {
     console.log('Connected to MongoDB');
     
-    // Auto-generate SSL certificates if missing
-    const certsDir = path.join(__dirname, 'certs');
-    const keyPath = path.join(certsDir, 'key.pem');
-    const certPath = path.join(certsDir, 'cert.pem');
+    // Check if we are running in a production environment or on Railway
+    const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT_NAME || process.env.RAILWAY_STATIC_URL;
 
-    if (!fs.existsSync(certsDir)) {
-      fs.mkdirSync(certsDir, { recursive: true });
-    }
-
-    if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
-      console.log('SSL certificates not found. Generating self-signed SSL certificates...');
-      try {
-        await generateCertificates(certsDir);
-        console.log('SSL Certificates generated successfully.');
-      } catch (err) {
-        console.error('Error generating self-signed certificates:', err);
-      }
-    }
-
-    // Start HTTPS Server
-    if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
-      const sslOptions = {
-        key: fs.readFileSync(keyPath),
-        cert: fs.readFileSync(certPath)
-      };
-      https.createServer(sslOptions, app).listen(PORT, () => {
-        console.log(`HTTPS Server is running on port ${PORT}`);
+    if (isProduction) {
+      // In production, platforms like Railway handle SSL termination, so we use a standard HTTP server
+      app.listen(PORT, () => {
+        console.log(`HTTP Server is running on port ${PORT}`);
       });
     } else {
-      console.error('SSL Certificates not found. Starting HTTP fallback server...');
-      app.listen(PORT, () => {
-        console.log(`Fallback HTTP Server is running on port ${PORT}`);
-      });
+      // Auto-generate SSL certificates if missing for local development
+      const certsDir = path.join(__dirname, 'certs');
+      const keyPath = path.join(certsDir, 'key.pem');
+      const certPath = path.join(certsDir, 'cert.pem');
+
+      if (!fs.existsSync(certsDir)) {
+        fs.mkdirSync(certsDir, { recursive: true });
+      }
+
+      if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
+        console.log('SSL certificates not found. Generating self-signed SSL certificates...');
+        try {
+          await generateCertificates(certsDir);
+          console.log('SSL Certificates generated successfully.');
+        } catch (err) {
+          console.error('Error generating self-signed certificates:', err);
+        }
+      }
+
+      // Start HTTPS Server
+      if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
+        const sslOptions = {
+          key: fs.readFileSync(keyPath),
+          cert: fs.readFileSync(certPath)
+        };
+        https.createServer(sslOptions, app).listen(PORT, () => {
+          console.log(`HTTPS Server is running on port ${PORT}`);
+        });
+      } else {
+        console.error('SSL Certificates not found. Starting HTTP fallback server...');
+        app.listen(PORT, () => {
+          console.log(`Fallback HTTP Server is running on port ${PORT}`);
+        });
+      }
     }
   })
   .catch((err) => {
