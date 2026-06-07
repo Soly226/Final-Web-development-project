@@ -347,8 +347,26 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
   - `registerUser`: Decides which user model to query based on `role` (Admin, Instructor, Student), checks for duplicates, hashes the password using `bcryptjs`, saves the record, generates a JWT, and sets it in the cookie.
   - `loginUser`: Locates the user by email, compares the password with `bcrypt.compare()`, generates a JWT, sets the cookie, and returns the basic user profile object.
   - `checkSession` (`GET /api/auth/me`): Verifies the logged-in user by decoding the JWT from their cookies, returning active profile data.
-- **Design Patterns**:
-  - Token Placement: Uses a helper function `setCookieToken` to write the JWT directly into an `httpOnly` cookie. This makes it impossible for client-side scripts to steal the token.
+- **Design Patterns & JWT Generation**:
+  - **Token Signing**: Utilizes `generateToken` helper function to sign a payload (user ID and role) using `jwt.sign` with a 1-day expiration time (`expiresIn: '1d'`) and the secret key `process.env.JWT_SECRET`:
+    ```javascript
+    const generateToken = (id, role) => {
+      return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+        expiresIn: '1d',
+      });
+    };
+    ```
+  - **Secure Token Cookie Injection**: Uses the helper `setCookieToken` to write the signed JWT into a client cookie named `jwt`. It applies strict flags (`httpOnly` to prevent XSS read access, `sameSite: 'strict'` to prevent CSRF exploits, and `secure` in production):
+    ```javascript
+    const setCookieToken = (res, token) => {
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
+      });
+    };
+    ```
 
 ### 📄 `backend/controllers/adminController.js`
 
