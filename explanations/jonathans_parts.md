@@ -370,6 +370,38 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
       1. **Initials Generation**: If no initials are provided, it splits `full_name` by spaces, extracts the first letter of each word, joins them, converts them to uppercase, and slices the output to a maximum of 2 characters (e.g., `"John Doe"` becomes `"JD"`).
       2. **Automatic Bcrypt Hashing**: It checks if the password field has been modified using `this.isModified('password')`. If the password hasn't changed (such as when updating an email), it skips hashing to prevent locking the user out. Otherwise, it hashes the plain-text password with `bcrypt.genSalt(10)` and secures it before writing to MongoDB.
 
+## 🔀 2.5 Backend Route Definitions
+
+### 📄 `backend/routes/authRoutes.js`
+
+- **Purpose**: Establishes endpoints for user onboarding, session verification, and logouts.
+- **Plain English Logic**:
+  - Instantiates `authLimiter` to restrict IP requests to 100 requests per 15 minutes, protecting `/register` and `/login` from brute-force scripts.
+  - Exposes:
+    - `POST /register`: Creates a new profile after running `registerValidationRules` and `validateRequest`.
+    - `POST /login`: Validates inputs via `loginValidationRules` and logs the user in.
+    - `POST /logout`: Clears the secure `jwt` session cookie on the client browser.
+    - `GET /me`: Verifies the active session and returns the logged-in user's profile metadata.
+
+### 📄 `backend/routes/adminRoutes.js`
+
+- **Purpose**: Defines administrative control paths for system settings, log auditing, analytics, and user governance.
+- **Plain English Logic**:
+  - Automatically runs the global `protect` (session verify) and `admin` (role guard) middlewares, blocking any non-admin users from accessing these endpoints.
+  - Exposes routes for:
+    - Log auditing (`GET /logs`) and system-wide aggregated analytics (`GET /analytics`).
+    - Modifying global system configurations (`GET/PUT /settings`) and creating broadcast banners (`POST /broadcast`).
+    - CRUD operations on email templates (`/email-templates`).
+    - User Governance operations: listing all accounts (`GET /users`), creating students/instructors/admins, and updating or deactivating users.
+    - Logo Upload: `POST /upload/logo` runs the `uploadLogo` Multer middleware before calling the controller to save the branding path.
+
+### 📄 `backend/routes/userRoutes.js`
+
+- **Purpose**: Exposes endpoints for general user actions (like updating profile pictures).
+- **Plain English Logic**:
+  - Runs the `protect` session validation middleware.
+  - Exposes `PUT /profile/avatar` which uses the `uploadAvatar` Multer middleware (restricting files to images under 5MB) and updates the matching database document (`Student`, `Instructor`, or `Admin`) with the path to the saved avatar image.
+
 ---
 
 ## 🎨 3. Frontend Contexts, Pages, & UI Utilities
