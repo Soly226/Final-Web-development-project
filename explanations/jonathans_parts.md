@@ -403,6 +403,38 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
 - **Plain English Logic**:
   - Renders a blank CSS-based layout utilizing an animation class (`animate-pulse`) to show a pulsing grey template block while actual content is being fetched.
 
+### 📄 `frontend/src/components/ui/` (`Button.jsx`, `Card.jsx`, `Input.jsx`)
+
+- **Purpose**: Base elements defining your system design tokens on the frontend.
+- **Plain English Logic**:
+  - **Button**: A reusable utility wrapper that supports style themes (primary background colors, borders) and disabled states.
+  - **Card**: Standardized layout box that implements dark transparency backing (`bg-slate-900/50`) and glass border transitions.
+  - **Input**: Configures forms inputs with custom labels, focus effects, and validation alert border styles.
+
+### 📄 `frontend/src/components/ProtectedRoute.jsx`
+
+- **Purpose**: Guards frontend paths by validating user credentials and roles.
+- **Plain English Logic**:
+  - Calls `useAuth()` to check if the user is authenticated. If the user object is missing, it cancels loading and forces a redirect to the `/login` route.
+  - If the user role is active but not listed in the route's `allowedRoles` array (e.g. a student navigating to `/admin/settings`), it redirects them to `/unauthorized`.
+  - Otherwise, it renders `<Outlet />` allowing the browser to proceed to the targeted child page view.
+
+### 📄 `frontend/src/pages/auth/` (`LoginPage.jsx`, `RegisterPage.jsx`)
+
+- **Purpose**: Provides registration and credential forms for user onboarding.
+- **Plain English Logic**:
+  - Forms check input rules (empty fields, short passwords) locally.
+  - Submits registration and login credentials payloads via Axios to the backend `/api/auth/` controllers.
+  - Integrates with the global Toast system to flash notifications upon success or error, and updates the shared authentication context.
+
+### 📄 `frontend/src/pages/LandingPage.jsx`
+
+- **Purpose**: Serves as the landing presentation portal of the platform.
+- **Plain English Logic**:
+  - Displays features, stats, and testimonials.
+  - Implements a custom `useCounter` React hook: when the user scrolls past 80% of the screen height, it triggers an animation that counts up the stats values (e.g., *12,840+ Active Students*) dynamically over 2 seconds.
+  - Uses CSS media queries and backdrop-blur styling to serve responsive grid lists.
+
 ### 📄 `frontend/src/pages/admin/SystemSettingsPage.jsx`
 
 - **Purpose**: Renders the form for administrators to edit global configurations, SMTP credentials, and upload a custom logo.
