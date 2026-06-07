@@ -285,6 +285,18 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
   - Uses `express-validator` rules. For registrations, it verifies the email format, ensures the password is at least 6 characters, and uses `.trim().escape()` to strip out HTML tags or script injection strings.
   - If validation checks fail, `validateRequest` intercepts the flow and immediately returns an HTTP `400 Bad Request` containing an array of validation error messages.
 
+### 📄 `backend/middleware/uploadMiddleware.js`
+
+- **Purpose**: Configures file storage and type filtering rules using `multer` for all file upload endpoints in the system.
+- **Plain English Logic**:
+  - Automatically creates destination folders (`uploads/`, `uploads/submissions/`, and `uploads/materials/`) if they do not exist using `fs.mkdirSync`.
+  - Configures unique, collision-proof file renaming by prefixing file types (e.g., `logo-`, `submission-`, `material-`) and appending `Date.now()` and their lowercase extension names.
+  - Registers 4 distinct middleware configurations to enforce safety constraints:
+    1. **`uploadLogo`**: Restricts size to **2MB** and requires image formats (`image/*`). Used in `adminRoutes.js` for custom school branding logo updates.
+    2. **`uploadAvatar`**: Restricts size to **5MB** and requires image formats (`image/*`). Used in `userRoutes.js` for profile picture updates.
+    3. **`uploadAssignment`**: Restricts size to **10MB** and accepts PDF, ZIP, DOC, DOCX, and images. Used in `studentRoutes.js` for submitting homework deliverables.
+    4. **`uploadFile`**: Restricts size to **100MB** and accepts PDF, MP4, DOC, DOCX, PPT, and PPTX. Used in `instructorRoutes.js` for uploading syllabus materials and lecture videos.
+
 ### 📄 `backend/server.js` (Security Portions)
 
 - **Purpose**: Serves as the global server entry point, registering middlewares and custom security response headers.
