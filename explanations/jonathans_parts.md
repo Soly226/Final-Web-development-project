@@ -147,7 +147,7 @@ Here is how data flows through your key features:
 - **Double-Submit Cookie CSRF Mechanism**: Traditional cookie auth is vulnerable to CSRF attacks (where a malicious site triggers requests on behalf of a logged-in user). To solve this, we generate a random CSRF token on the backend, store it in a non-httpOnly cookie, and require the frontend Axios client to read that cookie and manually inject the `X-CSRF-Token` header. The backend validates both values. Since malicious external scripts cannot read cookies due to SameSite policies, they cannot forge the matching header!
 - **Cascading Transactions (Rollback Safety)**: To protect data integrity, when user deactivations are triggered inside `userManagementController.js`, the code runs rollback actions if child updates fail. For instance, when deactivating a Student, it soft-deactivates the user document and updates all of their active Enrollments to `inactive`. If the enrollment update fails, it rolls back the student's status back to active to prevent half-written states.
 
-### 🎙️ E. Top 7 Questions Your Professor Might Ask
+### 🎙️ E. Top 8 Questions Your Professor Might Ask
 
 1. **"Why did you use HTTPOnly cookies for the JWT instead of storing it in localStorage?"**
    - _Answer_: Storing JWTs in `localStorage` makes them accessible to JavaScript. If our site gets infected with an XSS (Cross-Site Scripting) script, a hacker can read the storage and hijack the session. HTTPOnly cookies are hidden from JavaScript, preventing theft.
@@ -163,6 +163,9 @@ Here is how data flows through your key features:
    - _Answer_: In Tailwind v4, JS configurations like `darkMode: 'class'` are no longer supported. To enable class-based dark mode, we defined a custom CSS variant selector `@custom-variant dark (&:where(.dark, .dark *));` in our `index.css` file. For Arabic support, our custom `SettingsContext` dynamically sets `document.documentElement.dir = 'rtl'` and `document.documentElement.lang = 'ar'` when the user chooses Arabic. This automatically flips the flex/grid layout orientations in the browser.
 7. **"How does the local HTTPS configuration work, and why did you implement it?"**
    - _Answer_: To secure data transport in local development (supporting the HTTPS bonus), we configure both frontend and backend to run on HTTPS. The backend checks for keys under `certs/` and uses the pure JS `selfsigned` library to auto-generate them asynchronously on startup if missing. Express starts on HTTPS port 5000 using Node's `https` module. Vite reads these certificates to start on `https://localhost:5173`. Developers must trust the certificate for both ports in their browser so Axios calls aren't blocked.
+8. **"Can an admin change the Head of Department (HOD) role, or is it out of system scope?"**
+   - _Answer_: Appointing an HOD is fully in scope: during instructor creation in the User Governance panel, the Admin can choose between standard 'Instructor' and 'Head of Department' types. However, directly editing/toggling an active user's role after creation is deliberately restricted. This prevents leaving a department without a head (orphaned departments) and avoids database reference conflicts. To change HODs, the Admin deactivates the former HOD and creates a new HOD for that department.
+
 
 ---
 
