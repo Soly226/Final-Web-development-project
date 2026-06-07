@@ -2,8 +2,6 @@ const selfsigned = require('selfsigned');
 const fs = require('fs');
 const path = require('path');
 
-const certsDir = __dirname;
-
 const attrs = [{ name: 'commonName', value: 'localhost' }];
 const opts = {
   keySize: 2048,
@@ -38,18 +36,22 @@ const opts = {
   ],
 };
 
-console.log('Generating self-signed SSL certificates for localhost...');
-
-async function run() {
-  try {
-    const pems = await selfsigned.generate(attrs, opts);
-    fs.writeFileSync(path.join(certsDir, 'key.pem'), pems.private);
-    fs.writeFileSync(path.join(certsDir, 'cert.pem'), pems.cert);
-    console.log('SSL Certificates generated successfully inside backend/certs/');
-  } catch (err) {
-    console.error('Failed to generate SSL certificates:', err);
-    process.exit(1);
-  }
+async function generateCertificates(certsDir) {
+  const pems = await selfsigned.generate(attrs, opts);
+  fs.writeFileSync(path.join(certsDir, 'key.pem'), pems.private);
+  fs.writeFileSync(path.join(certsDir, 'cert.pem'), pems.cert);
 }
 
-run();
+module.exports = generateCertificates;
+
+// Execute directly if run via CLI
+if (require.main === module) {
+  console.log('Generating self-signed SSL certificates for localhost...');
+  generateCertificates(__dirname)
+    .then(() => console.log('SSL Certificates generated successfully inside backend/certs/'))
+    .catch((err) => {
+      console.error('Failed to generate SSL certificates:', err);
+      process.exit(1);
+    });
+}
+

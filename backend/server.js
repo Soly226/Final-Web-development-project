@@ -21,6 +21,7 @@ const hodRoutes = require('./routes/hodRoutes');
 
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const { setCsrfCookie, verifyCsrf } = require('./middleware/csrfMiddleware');
+const generateCertificates = require('./certs/generate-certs');
 
 dotenv.config();
 
@@ -91,43 +92,7 @@ mongoose.connect(process.env.MONGODB_URI)
     if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
       console.log('SSL certificates not found. Generating self-signed SSL certificates...');
       try {
-        const selfsigned = require('selfsigned');
-        const attrs = [{ name: 'commonName', value: 'localhost' }];
-        const opts = {
-          keySize: 2048,
-          days: 365,
-          algorithm: 'sha256',
-          extensions: [
-            {
-              name: 'basicConstraints',
-              cA: true,
-            },
-            {
-              name: 'keyUsage',
-              keyCertSign: true,
-              digitalSignature: true,
-              nonRepudiation: true,
-              keyEncipherment: true,
-              dataEncipherment: true,
-            },
-            {
-              name: 'subjectAltName',
-              altNames: [
-                {
-                  type: 2, // DNS
-                  value: 'localhost',
-                },
-                {
-                  type: 7, // IP
-                  ip: '127.0.0.1',
-                },
-              ],
-            },
-          ],
-        };
-        const pems = await selfsigned.generate(attrs, opts);
-        fs.writeFileSync(keyPath, pems.private);
-        fs.writeFileSync(certPath, pems.cert);
+        await generateCertificates(certsDir);
         console.log('SSL Certificates generated successfully.');
       } catch (err) {
         console.error('Error generating self-signed certificates:', err);

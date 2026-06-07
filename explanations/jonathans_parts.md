@@ -8,12 +8,12 @@ This document explains what Jonathan's parts of the application do and how they 
 
 - **What it does**: Handles how users log in, register accounts, and log out securely.
 - **Key Files**:
-  - [authController.js](file:///c:/Users/Dell/Desktop/web_project/backend/controllers/authController.js) (Login/Registration/Session check logic using `jsonwebtoken` and `bcryptjs` — updated to support HOD profile lookups)
-  - [authRoutes.js](file:///c:/Users/Dell/Desktop/web_project/backend/routes/authRoutes.js) (Auth routing URLs and rate limiter configuration)
-  - [userRoutes.js](file:///c:/Users/Dell/Desktop/web_project/backend/routes/userRoutes.js) (User profile upload routing)
-  - [authMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/authMiddleware.js) (JWT validation and role guards like `studentOnly` and HOD support checks)
-  - [csrfMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/csrfMiddleware.js) (CSRF Cookie/Header verification)
-  - [rateLimitMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/rateLimitMiddleware.js) (Auth endpoint request throttle)
+  - `authController.js` (Login/Registration/Session check logic using `jsonwebtoken` and `bcryptjs` — updated to support HOD profile lookups)
+  - `authRoutes.js` (Auth routing URLs and rate limiter configuration)
+  - `userRoutes.js` (User profile upload routing)
+  - `authMiddleware.js` (JWT validation and role guards like `studentOnly` and HOD support checks)
+  - `csrfMiddleware.js` (CSRF Cookie/Header verification)
+  - `rateLimitMiddleware.js` (Auth endpoint request throttle)
 - **How it works**:
   - When you log in, the server generates a token (JWT) and places it into an `httpOnly` secure cookie. The browser hides this token from JavaScript, making it safe from hackers trying to steal it (XSS protection).
   - **Active Session Validation**: Added an active session validation endpoint (`GET /api/auth/me`) so that the frontend can check if the user is still logged in without forcing a password entry.
@@ -26,8 +26,8 @@ This document explains what Jonathan's parts of the application do and how they 
 
 - **What it does**: Inspects incoming API parameters to verify their types and clean text inputs of malicious script tags.
 - **Key Files**:
-  - [validationMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/validationMiddleware.js) (Express-validator input check schemas)
-  - [server.js](file:///c:/Users/Dell/Desktop/web_project/backend/server.js) (Registers custom security response headers)
+  - `validationMiddleware.js` (Express-validator input check schemas)
+  - `server.js` (Registers custom security response headers)
 - **How it works**:
   - **Input Validation**: Added automatic character escaping (`escape()`) to all register and user creation strings to prevent Cross-Site Scripting (XSS) script injections in the database.
   - **Security Headers**: Enforced custom HTTP security headers (`X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, and custom Referrer Policies) to protect against Clickjacking and MIME-type sniffing.
@@ -36,13 +36,13 @@ This document explains what Jonathan's parts of the application do and how they 
 
 - **What it does**: Allows the platform administrator to manage global site configurations, update SMTP settings for sending emails, and upload the school logo. Provides common UI states.
 - **Key Files**:
-  - [SystemSettingsPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/SystemSettingsPage.jsx) (Branding and settings form)
-  - [adminController.js](file:///c:/Users/Dell/Desktop/web_project/backend/controllers/adminController.js) (Saves settings and handles uploads)
-  - [Skeleton.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/components/ui/Skeleton.jsx) (Common UI loading states)
-  - [ToastContext.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/context/ToastContext.jsx) (Centralized Toast notification manager)
-  - [App.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/App.jsx) (Enables global Toast notifications wrapper)
-  - [apiClient.js](file:///c:/Users/Dell/Desktop/web_project/frontend/src/lib/apiClient.js) (Automated CSRF request headers interceptor and path utility helper)
-  - [Sidebar.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/components/Sidebar.jsx) (Sidebar navigation layout shared component with logout trigger and hover micro-animations)
+  - `SystemSettingsPage.jsx` (Branding and settings form)
+  - `adminController.js` (Saves settings and handles uploads)
+  - `Skeleton.jsx` (Common UI loading states)
+  - `ToastContext.jsx` (Centralized Toast notification manager)
+  - `App.jsx` (Enables global Toast notifications wrapper)
+  - `apiClient.js` (Automated CSRF request headers interceptor and path utility helper)
+  - `Sidebar.jsx` (Sidebar navigation layout shared component with logout trigger and hover micro-animations)
 - **How it works**:
   - The admin uploads a file which is processed by the backend and saved to a static directory. Configuration settings are saved directly to MongoDB.
   - **Skeleton Loaders**: Created a global shimmering `<Skeleton />` component to show professional content loading placeholders instead of generic text.
@@ -53,18 +53,18 @@ This document explains what Jonathan's parts of the application do and how they 
 
 - **What it does**: Shows system health metrics and keeps a running audit trail of system events.
 - **Key Files**:
-  - [AdminDashboard.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/AdminDashboard.jsx) (Stats cards and visual metrics)
-  - [SystemLogsPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/SystemLogsPage.jsx) (Audit logs viewer)
-  - [AdminReportsPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/AdminReportsPage.jsx) (Calculates enrollment trends and average grades)
+  - `AdminDashboard.jsx` (Stats cards and visual metrics)
+  - `SystemLogsPage.jsx` (Audit logs viewer)
+  - `AdminReportsPage.jsx` (Calculates enrollment trends and average grades)
 
 ## 🌍 5. Global Localizations & Theme Prefs (Arabic/English & Light/Dark Modes)
 
 - **What it does**: Provides system-wide localization (switching layout direction between English LTR and Arabic RTL) and light/dark theme preference selections, with settings persisted in local storage.
 - **Key Files**:
-  - [SettingsContext.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/context/SettingsContext.jsx) (Global settings provider, DOM class/direction injector, and translation lookups)
-  - [translations.js](file:///c:/Users/Dell/Desktop/web_project/frontend/src/lib/translations.js) (Arabic/English localized strings dictionaries)
-  - [index.css](file:///c:/Users/Dell/Desktop/web_project/frontend/src/styles/index.css) (Overrode Tailwind v4 media dark queries to class-based mode)
-  - [App.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/App.jsx) (Registers SettingsProvider layout context)
+  - `SettingsContext.jsx` (Global settings provider, DOM class/direction injector, and translation lookups)
+  - `translations.js` (Arabic/English localized strings dictionaries)
+  - `index.css` (Overrode Tailwind v4 media dark queries to class-based mode)
+  - `App.jsx` (Registers SettingsProvider layout context)
 - **How it works**:
   - **Class-Based Theme Control**: When the user toggles the theme, the context applies the `.dark` class to the root `<html>` node. To support manual class-based toggling under Tailwind CSS v4, we registered a custom variant definition in the CSS entry point:
     ```css
@@ -78,12 +78,12 @@ This document explains what Jonathan's parts of the application do and how they 
 
 - **What it does**: Automatically generates local SSL certificates on the fly and boots both the frontend dev server and the backend Express REST API over secure HTTPS.
 - **Key Files**:
-  - [server.js](file:///c:/Users/Dell/Desktop/web_project/backend/server.js) (Auto-generates certificates at startup if missing, initiates `https.createServer(sslOptions, app)`)
-  - [generate-certs.js](file:///c:/Users/Dell/Desktop/web_project/backend/certs/generate-certs.js) (Independent, portable certificate script using pure JS/WebCrypto `selfsigned`)
-  - [vite.config.js](file:///c:/Users/Dell/Desktop/web_project/frontend/vite.config.js) (Vite server configurations to pull keys and boot on HTTPS)
-  - [apiClient.js](file:///c:/Users/Dell/Desktop/web_project/frontend/src/lib/apiClient.js) (Updates fallbacks to use `https://localhost:5000` default)
+  - `server.js` (Auto-generates certificates at startup if missing, initiates `https.createServer(sslOptions, app)`)
+  - `generate-certs.js` (Independent, portable certificate script using pure JS/WebCrypto `selfsigned`)
+  - `vite.config.js` (Vite server configurations to pull keys and boot on HTTPS)
+  - `apiClient.js` (Updates fallbacks to use `https://localhost:5000` default)
 - **How it works**:
-  - **Auto-Bootstrapping Certificates**: When Node starts the backend, `server.js` checks if the `certs/` directory exists and whether `key.pem` and `cert.pem` are present. If missing, it uses the `selfsigned` library to generate a new 2048-bit keypair and a self-signed Root CA certificate asynchronously.
+  - **Auto-Bootstrapping Certificates**: When Node starts the backend, `server.js` checks if the `certs/` directory exists and whether `key.pem` and `cert.pem` are present. If missing, it imports and calls the generation function from `generate-certs.js` to asynchronously generate a new 2048-bit keypair and a self-signed Root CA certificate.
   - **Server SSL Booting**: Once the certificates are validated, Express is mounted to a standard Node `https` server instead of the raw `http` listener, serving all endpoints on HTTPS port `5000`.
   - **Client-Side SSL Integration**: Vite reads the generated certificate from the shared `backend/certs/` folder, enabling it to boot the local client server on `https://localhost:5173` with a graceful HTTP fallback if the keys are missing.
   - **Developer Browser Trust Requirement**: Since certificates are self-signed, developers must trust the certificates in the browser for both the frontend (`https://localhost:5173`) and the backend API (`https://localhost:5000`) to enable secure communication.
@@ -98,11 +98,11 @@ This section acts as a study guide to help you master your specific modules and 
 
 If the professor asks you about a specific feature, here is the traversal path you can explain:
 
-1. **Frontend View**: Go to [frontend/src/pages/admin/](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin) or [App.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/App.jsx) to trace active router URLs.
+1. **Frontend View**: Go to `frontend/src/pages/admin/` or `App.jsx` to trace active router URLs.
 2. **API Client Request**: Look in the component for `apiClient.get(...)` or `apiClient.post(...)` to find the exact endpoint URL (e.g., `/api/auth/me` or `/api/admin/settings`).
-3. **Backend Route**: Open [backend/routes/](file:///c:/Users/Dell/Desktop/web_project/backend/routes) and find the matching file (e.g., [authRoutes.js](file:///c:/Users/Dell/Desktop/web_project/backend/routes/authRoutes.js) or [adminRoutes.js](file:///c:/Users/Dell/Desktop/web_project/backend/routes/adminRoutes.js)) to see which controllers handle it.
-4. **Backend Controller**: Open [backend/controllers/](file:///c:/Users/Dell/Desktop/web_project/backend/controllers) and read the controller function (e.g., `loginUser` or `updateSystemSettings`).
-5. **Database Model**: Check [backend/models/](file:///c:/Users/Dell/Desktop/web_project/backend/models) for the Mongoose schema (e.g., [Admin.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/Admin.js), [SystemSetting.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/SystemSetting.js)) to explain how the fields are structured in MongoDB.
+3. **Backend Route**: Open `backend/routes/` and find the matching file (e.g., `authRoutes.js` or `adminRoutes.js`) to see which controllers handle it.
+4. **Backend Controller**: Open `backend/controllers/` and read the controller function (e.g., `loginUser` or `updateSystemSettings`).
+5. **Database Model**: Check `backend/models/` for the Mongoose schema (e.g., `Admin.js`, `SystemSetting.js`) to explain how the fields are structured in MongoDB.
 
 ### 🗺️ B. Detailed Feature Maps (Your Part vs. Other Parts)
 
@@ -111,8 +111,8 @@ Use the table below to quickly verify if an item is under **your ownership**. If
 | System Domain                | 🔐 YOUR Part (Jonathan)                                                                                                                                                                                                                                                   | ❌ NOT Your Part (Colleagues)                                                    |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | **Authentication**           | JWT creation, Secure HTTPOnly cookie setup, Session validations (`GET /api/auth/me` — supports HOD validation checks).                                                                                                                                                    | Student/Instructor model routing logic (handled by Yassin).                      |
-| **Security Middlewares**     | CSRF Double-Submit token check ([csrfMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/csrfMiddleware.js)), Auth rate limiters ([rateLimitMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/rateLimitMiddleware.js)), and Role verification guards like `studentOnly` and `head_of_department` checks in ([authMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/authMiddleware.js)). | General token decryption wrapper (`authMiddleware.js` - shared).                 |
-| **Input Sanitization**       | `express-validator` setup inside validation middleware ([validationMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/validationMiddleware.js)), String escaping.                                                                                | Routing validations for courses/materials (handled by course owners).            |
+| **Security Middlewares**     | CSRF Double-Submit token check (`csrfMiddleware.js`), Auth rate limiters (`rateLimitMiddleware.js`), and Role verification guards like `studentOnly` and `head_of_department` checks in (`authMiddleware.js`). | General token decryption wrapper (`authMiddleware.js` - shared).                 |
+| **Input Sanitization**       | `express-validator` setup inside validation middleware (`validationMiddleware.js`), String escaping.                                                                                | Routing validations for courses/materials (handled by course owners).            |
 | **Admin Configurations**     | Global system configuration (`SystemSettingsPage`), SMTP email template editors, file uploading logic.                                                                                                                                                                    | Roster management / User creation panel (handled by Yassin).                     |
 | **Common UI Elements**       | Global `<ToastProvider />` and central alert contexts, `<Skeleton />` loaders, and Sidebar layout upgrades (logout trigger integration and active link shadowing / scaling animations).                                                                                   | Custom page styles, dashboard views for students (Magdy) & instructors (Seliem). |
 | **Analytics & System Audit** | Platform statistics overview (`AdminDashboard.jsx`), audit log database logs (`SystemLogsPage.jsx`).                                                                                                                                                                      | Roster lists, course lists, discussion boards, message forms (Basel).            |
@@ -145,7 +145,7 @@ Here is how data flows through your key features:
 
 - **Schema Decoupling**: We use separate collections for `Admin`, `Instructor`, and `Student`. This keeps data cleaner since each user role has distinct metadata (e.g., student GPA, instructor departments).
 - **Double-Submit Cookie CSRF Mechanism**: Traditional cookie auth is vulnerable to CSRF attacks (where a malicious site triggers requests on behalf of a logged-in user). To solve this, we generate a random CSRF token on the backend, store it in a non-httpOnly cookie, and require the frontend Axios client to read that cookie and manually inject the `X-CSRF-Token` header. The backend validates both values. Since malicious external scripts cannot read cookies due to SameSite policies, they cannot forge the matching header!
-- **Cascading Transactions (Rollback Safety)**: To protect data integrity, when user deactivations are triggered inside [userManagementController.js](file:///c:/Users/Dell/Desktop/web_project/backend/controllers/userManagementController.js), the code runs rollback actions if child updates fail. For instance, when deactivating a Student, it soft-deactivates the user document and updates all of their active Enrollments to `inactive`. If the enrollment update fails, it rolls back the student's status back to active to prevent half-written states.
+- **Cascading Transactions (Rollback Safety)**: To protect data integrity, when user deactivations are triggered inside `userManagementController.js`, the code runs rollback actions if child updates fail. For instance, when deactivating a Student, it soft-deactivates the user document and updates all of their active Enrollments to `inactive`. If the enrollment update fails, it rolls back the student's status back to active to prevent half-written states.
 
 ### 🎙️ E. Top 7 Questions Your Professor Might Ask
 
@@ -171,39 +171,39 @@ Here is how data flows through your key features:
 The following files are owned/authored by Jonathan:
 
 - **Backend Controllers & Routes** (Structured using CommonJS `require` imports and `module.exports`):
-  - [authController.js](file:///c:/Users/Dell/Desktop/web_project/backend/controllers/authController.js)
-  - [adminController.js](file:///c:/Users/Dell/Desktop/web_project/backend/controllers/adminController.js)
-  - [authRoutes.js](file:///c:/Users/Dell/Desktop/web_project/backend/routes/authRoutes.js)
-  - [adminRoutes.js](file:///c:/Users/Dell/Desktop/web_project/backend/routes/adminRoutes.js)
-  - [userRoutes.js](file:///c:/Users/Dell/Desktop/web_project/backend/routes/userRoutes.js)
+  - `authController.js`
+  - `adminController.js`
+  - `authRoutes.js`
+  - `adminRoutes.js`
+  - `userRoutes.js`
 - **Backend Middleware**:
-  - [authMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/authMiddleware.js) (Shared access check, plus `studentOnly` and HOD guards)
-  - [csrfMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/csrfMiddleware.js)
-  - [rateLimitMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/rateLimitMiddleware.js)
-  - [validationMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/validationMiddleware.js)
-  - [uploadMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/uploadMiddleware.js) (Shared file upload configurations, including assignment files and Seliem's material upload configuration)
+  - `authMiddleware.js` (Shared access check, plus `studentOnly` and HOD guards)
+  - `csrfMiddleware.js`
+  - `rateLimitMiddleware.js`
+  - `validationMiddleware.js`
+  - `uploadMiddleware.js` (Shared file upload configurations, including assignment files and Seliem's material upload configuration)
 - **Backend Models**:
-  - [Admin.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/Admin.js)
-  - [SystemLog.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/SystemLog.js)
-  - [SystemSetting.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/SystemSetting.js)
-  - [EmailTemplate.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/EmailTemplate.js)
+  - `Admin.js`
+  - `SystemLog.js`
+  - `SystemSetting.js`
+  - `EmailTemplate.js`
 - **Frontend Pages & Contexts** (Vite JSX/JS compiled files using ES Modules standard for client-side bundle efficiency):
-  - [ToastContext.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/context/ToastContext.jsx)
-  - [SettingsContext.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/context/SettingsContext.jsx) (Global settings provider, DOM class/direction selector, and translations hook helper)
-  - [translations.js](file:///c:/Users/Dell/Desktop/web_project/frontend/src/lib/translations.js) (Arabic/English localized strings dictionaries)
-  - [apiClient.js](file:///c:/Users/Dell/Desktop/web_project/frontend/src/lib/apiClient.js)
-  - [AdminDashboard.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/AdminDashboard.jsx)
-  - [SystemLogsPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/SystemLogsPage.jsx)
-  - [SystemSettingsPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/SystemSettingsPage.jsx)
-  - [EmailTemplatesPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/EmailTemplatesPage.jsx)
-  - [AdminReportsPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/AdminReportsPage.jsx)
-  - [CourseManagementPage.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/pages/admin/CourseManagementPage.jsx)
-  - [Skeleton.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/components/ui/Skeleton.jsx)
+  - `ToastContext.jsx`
+  - `SettingsContext.jsx` (Global settings provider, DOM class/direction selector, and translations hook helper)
+  - `translations.js` (Arabic/English localized strings dictionaries)
+  - `apiClient.js`
+  - `AdminDashboard.jsx`
+  - `SystemLogsPage.jsx`
+  - `SystemSettingsPage.jsx`
+  - `EmailTemplatesPage.jsx`
+  - `AdminReportsPage.jsx`
+  - `CourseManagementPage.jsx`
+  - `Skeleton.jsx`
 - **SSL Certificates & Configuration**:
-  - [generate-certs.js](file:///c:/Users/Dell/Desktop/web_project/backend/certs/generate-certs.js)
-  - [vite.config.js](file:///c:/Users/Dell/Desktop/web_project/frontend/vite.config.js)
+  - `generate-certs.js`
+  - `vite.config.js`
 - **Core Server Config**:
-  - [server.js](file:///c:/Users/Dell/Desktop/web_project/backend/server.js) (Shared security configurations and middleware registrations)
+  - `server.js` (Shared security configurations and middleware registrations)
 
 ---
 
@@ -270,7 +270,8 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
 - **Purpose**: Safeguards authentication endpoints from brute-force password attacks by throttling requests.
 - **Plain English Logic**:
   - Maintains an in-memory `Map` (`ipRequestCounts`) tracking the active request timestamps for caller IP addresses.
-  - When a request arrives, it checks if the IP is already logged. If it is, it filters out timestamps older than the specified window. If the IP exceeds the threshold (`maxRequests` set to 100 per 15 minutes), it rejects the request with an HTTP `429 Too Many Requests` error. Otherwise, it pushes the current timestamp and proceeds.
+  - When a request arrives, it checks if the IP is already logged. If it is, it filters out timestamps older than the specified window. If the IP request count exceeds the threshold `maxRequests`, it rejects the request with an HTTP `429 Too Many Requests` error. Otherwise, it pushes the current timestamp and proceeds.
+  - **Where the limits are set**: The middleware itself is generic and accepts parameter configurations. The specific limit of **100 requests per 15 minutes** is configured and passed to the middleware during instantiation inside `backend/routes/authRoutes.js`, where `windowMs` is set to `15 * 60 * 1000` (15 minutes) and `maxRequests` is set to `100`.
 - **Complex / Viva-Critical Flag**:
   - Memory Leak Risk: In production, using a local memory map `ipRequestCounts` can lead to memory exhaustion under distributed attacks. In a production system, this should be replaced with a distributed cache like Redis. Be ready to explain this to the professor.
 
@@ -322,6 +323,9 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
   - `SystemLog`: Stores informational, warning, or error logs for audit trails.
   - `EmailTemplate`: Stores subject lines and body HTML markup for system notifications.
   - `Admin`: Structures system administrator credentials and permissions.
+    * **Pre-Save Middleware (`adminSchema.pre('save')`)**: Before an Admin document is saved to MongoDB (both on creation and modification), this pre-save hook runs automatically to perform two secure processes:
+      1. **Initials Generation**: If no initials are provided, it splits `full_name` by spaces, extracts the first letter of each word, joins them, converts them to uppercase, and slices the output to a maximum of 2 characters (e.g., `"John Doe"` becomes `"JD"`).
+      2. **Automatic Bcrypt Hashing**: It checks if the password field has been modified using `this.isModified('password')`. If the password hasn't changed (such as when updating an email), it skips hashing to prevent locking the user out. Otherwise, it hashes the plain-text password with `bcrypt.genSalt(10)` and secures it before writing to MongoDB.
 
 ---
 
@@ -330,16 +334,25 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
 ### 📄 `frontend/src/lib/apiClient.js`
 
 - **Purpose**: Sets up a pre-configured Axios instance to communicate with the backend, automatically sending credentials and attaching CSRF tokens.
+- **What Axios is & What it does**: Axios is a promise-based HTTP client library that makes asynchronous REST API calls (GET, POST, PUT, DELETE) from the React application to the Express backend. It handles JSON serialization/deserialization automatically and supports global interceptors to preprocess requests.
 - **Plain English Logic**:
-  - Configures `withCredentials: true` globally so the browser automatically sends JWT session cookies with every request.
-  - Attaches a request interceptor that searches `document.cookie` for the `csrf-token` key. If found, it appends it as the `X-CSRF-Token` header.
+  - **`withCredentials: true` Configuration**: This option is passed to `axios.create()`. It is crucial because the frontend (`port 5173`) and backend (`port 5000`) run on different ports (cross-origin). By default, browsers strip cookies on cross-origin requests. Setting `withCredentials: true` instructs the browser to automatically include the secure `httpOnly` JWT session cookie on every outgoing API request and allows setting it on response.
+  - **CSRF Request Interceptor**: Automatically parses the browser's cookies for a `csrf-token` value and injects it as an `X-CSRF-Token` header on mutating write requests (`POST`, `PUT`, `DELETE`).
 
 ### 📄 `frontend/src/context/ToastContext.jsx`
 
 - **Purpose**: Manages global toast alerts across the application.
 - **Plain English Logic**:
-  - Exposes a `ToastContext.Provider` wrapping the application. It maintains an array of active alerts in state.
-  - Exposes the `showToast(message, type)` function. It adds a new alert object to the list, which is automatically removed after 3 seconds.
+  - **Context Creation & Hook**: Creates `ToastContext` and exposes the `useToast` custom hook which checks if it's being used within the `ToastProvider` context, throwing an error if accessed outside it.
+  - **State Management**: The `ToastProvider` keeps an array of active toasts in a state variable (`toasts`).
+  - **Adding Toasts**: The `showToast` function is memoized via `useCallback` to prevent unnecessary renders. It generates a unique ID using `Date.now()` combined with a base-36 random string and appends the new toast object to the state with its message and type (defaults to `'success'`).
+  - **Removing Toasts**: The `removeToast` function is also memoized and filters out the dismissed toast by its ID.
+  - **Global Stacked Container**: Renders a fixed container at the bottom-right of the screen (`fixed bottom-8 right-8 z-[200]`). It uses `pointer-events-none` so mouse clicks can pass through the layout to underlying pages, but the individual toast items use `pointer-events-auto` so users can interact with them or click the close buttons.
+  - **Self-Dismissal & Cleanup**: The `ToastItem` component triggers a 3.5-second (3500ms) auto-dismiss timeout inside a `useEffect` hook. If a toast is manually closed or unmounted early, it clears the timeout (`clearTimeout`) to avoid memory leaks.
+  - **Dynamic Styling & Icons**: Combines baseline glassmorphism/fade-in animation classes using `twMerge` with type-specific styling:
+    - **Success**: Emerald green background (`bg-emerald-500/90 border-emerald-400/30`) with a `check_circle` icon.
+    - **Error**: Rose red background (`bg-rose-500/90 border-rose-400/30`) with an `error` icon.
+    - Includes a manual dismiss button utilizing a `close` Material Symbols icon.
 
 ### 📄 `frontend/src/components/ui/Skeleton.jsx`
 
@@ -369,6 +382,12 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
 3. **Double-Submit Cookie CSRF Defense**
    - _What it is_: Storing a CSRF token in a non-httpOnly cookie and requiring the client to read it and send it in a custom header.
    - _Why we use it_: Since cookies are automatically sent with requests, a malicious site could trick a user's browser into sending a request to our backend. Since malicious sites cannot read our cookies due to browser security restrictions, they cannot send the matching header. The server rejects any state-changing request that doesn't have matching cookie and header tokens.
+4. **RESTful APIs & Centralized Axios Client Integration**
+   - _What it is_: Communicating over standard HTTP methods (GET, POST, PUT, DELETE) representing stateless resources, coupled with a central Axios client (`apiClient.js`) that wraps requests, manages cookies, and configures headers globally.
+   - _Why we use it_: It decouples the React frontend from the Express backend, allowing clean, modular APIs. By centralizing the Axios instance, we can configure global request/response behaviors (like automatically injecting CSRF headers via interceptors, setting the base URL, and setting `withCredentials: true` so HTTPOnly JWT session cookies are handled securely without boilerplate code in every component).
+5. **Asynchronous JavaScript (Async/Await & Promises)**
+   - _What it is_: JavaScript's programming pattern to declare non-blocking, asynchronous handlers (using `async` functions and the `await` keyword) that manage delayed execution states (Promises).
+   - _Why we use it_: Database calls like MongoDB queries (`findOne`, `create`, `save`) are delayed network operations. By using `async`/`await`, we stop this specific controller route execution thread while waiting for the database, without blocking or freezing the single-threaded Node.js event loop. This allows the backend to remain highly responsive and serve multiple concurrent users.
 
 ---
 
@@ -379,6 +398,7 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
 - **Salt Rounds**: The hashing complexity setting for `bcrypt`. We use 10 rounds, which balances password security with server processing speed.
 - **Multer**: A Node middleware for parsing `multipart/form-data` requests, primarily used for file uploads.
 - **Pulse Animation**: A CSS transition effect (`animate-pulse`) that creates a shimmering loading skeleton.
+- **Dotenv**: A utility module that loads environment variables from a local `.env` file into Node's global `process.env` namespace at runtime, separating configuration secrets from logic.
 
 ---
 
@@ -483,6 +503,10 @@ Show Rate Limiting   Show Stats Cards     Upload Logo Asset   Show Log Audit Tra
 
 - **Answer**: The Axios interceptor parses `document.cookie` for the `csrf-token` key. If found, it automatically attaches it as the `X-CSRF-Token` header on all outgoing state-changing requests, making security handling transparent to the user.
 
+### Question 4: "Why does the application follow the MVC pattern without having a 'views' folder on the backend?"
+
+- **Answer**: The project uses a **decoupled (or headless) MVC architecture**. The **Model** (Mongoose schemas) and **Controller** (Express routes and controllers) reside on the backend, while the **View** is completely offloaded to the frontend client as a React Single Page Application (SPA). Instead of the backend rendering templates (like EJS or Pug) and serving static HTML pages, it exposes a stateless REST API that sends structured JSON data. The React frontend consumes this data and dynamically renders the views in the client's browser, providing a modern, responsive user experience and a clean separation of concerns.
+
 ---
 
 ## 📈 Technical Details to Highlight
@@ -501,7 +525,7 @@ This section documents key architectural choices made during development to just
 
 Even though security tokens (like `JWT_SECRET`) and configuration keys are only defined in the local `.env` file, they are easily read and referenced by every module inside the backend. This is made possible by the following mechanisms:
 
-- **Centralized Initialization**: At the absolute entry point of the server (`backend/server.js`), the `dotenv` module is imported and configured immediately:
+- **Centralized Initialization**: At the absolute entry point of the server (`backend/server.js`), the `dotenv` module (a zero-dependency package that reads configurations from a local `.env` file) is imported and configured immediately:
   ```javascript
   const dotenv = require("dotenv");
   dotenv.config();
@@ -642,7 +666,7 @@ If you are running the project for the first time and need to populate local col
 
 ## 🤝 Shared Parts & App.jsx Mapping
 
-This section outlines which portions of the frontend routing configuration ([App.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/App.jsx)) belong to Jonathan, and details the shared files that link Jonathan's infrastructure with the rest of the team's modules.
+This section outlines which portions of the frontend routing configuration (`App.jsx`) belong to Jonathan, and details the shared files that link Jonathan's infrastructure with the rest of the team's modules.
 
 ### 🗺️ Jonathan's Parts in App.jsx
 
@@ -667,14 +691,14 @@ Inside `App.jsx`, Jonathan is responsible for the overall app wrapper, session c
 ### 🔗 Shared Parts
 
 These files are shared code infrastructure owned by Jonathan but utilized by the entire team:
-- **[server.js](file:///c:/Users/Dell/Desktop/web_project/backend/server.js)**: The main entry point of the Express API. It registers shared security headers and mounts route prefixes for Seliem's courses, Basel's messages, Magdy's student views, and Yassin's roster endpoints. Note that HOD routes (`/api/instructor/department`) are registered before standard instructor routes to preserve Express route matching precedence.
-- **[App.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/App.jsx)**: The central React Router file. Used by everyone to map their page URLs to React components. Includes routing configuration for the HOD portal (`/department-head`).
-- **[apiClient.js](file:///c:/Users/Dell/Desktop/web_project/frontend/src/lib/apiClient.js)**: The Axios wrapper. Used by all frontend pages to talk to the backend, automatically appending JWT cookies and CSRF headers. Expanded to include the `getFileUrl` helper path formatting export.
-- **[authMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/authMiddleware.js)**: Used by all backend routers to decode tokens, extract the authenticated caller's role, and enforce role-based access control. Updated to support HOD role checks.
-- **[uploadMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/uploadMiddleware.js)**: Shared file upload service built on `multer` that handles file system uploads. Updated to contain Seliem's `uploadFile` configuration, enabling 100MB lecture file uploads to `/uploads/materials/`.
-- **[validationMiddleware.js](file:///c:/Users/Dell/Desktop/web_project/backend/middleware/validationMiddleware.js)**: Holds parameter validation definitions for admin options, user creations, and course registrations.
-- **[Sidebar.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/components/Sidebar.jsx)**: Shared navigation component upgraded with active route shadows, icon scaling animations, and an auth-hooked logout container.
-- **User Models ([Student.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/Student.js), [Instructor.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/Instructor.js), [Admin.js](file:///c:/Users/Dell/Desktop/web_project/backend/models/Admin.js))**: Shared collections that hold user profiles. They are shared because Seliem, Magdy, and Yassin query and display student/instructor profiles, emails, and avatars (which now use the new `profileImage` and `initials` fields). HOD profile configurations are read from and updated to the `Instructor` collection.
+- **`server.js`**: The main entry point of the Express API. It registers shared security headers and mounts route prefixes for Seliem's courses, Basel's messages, Magdy's student views, and Yassin's roster endpoints. Note that HOD routes (`/api/instructor/department`) are registered before standard instructor routes to preserve Express route matching precedence.
+- **`App.jsx`**: The central React Router file. Used by everyone to map their page URLs to React components. Includes routing configuration for the HOD portal (`/department-head`).
+- **`apiClient.js`**: The Axios wrapper. Used by all frontend pages to talk to the backend, automatically appending JWT cookies and CSRF headers. Expanded to include the `getFileUrl` helper path formatting export.
+- **`authMiddleware.js`**: Used by all backend routers to decode tokens, extract the authenticated caller's role, and enforce role-based access control. Updated to support HOD role checks.
+- **`uploadMiddleware.js`**: Shared file upload service built on `multer` that handles file system uploads. Updated to contain Seliem's `uploadFile` configuration, enabling 100MB lecture file uploads to `/uploads/materials/`.
+- **`validationMiddleware.js`**: Holds parameter validation definitions for admin options, user creations, and course registrations.
+- **`Sidebar.jsx`**: Shared navigation component upgraded with active route shadows, icon scaling animations, and an auth-hooked logout container.
+- **User Models (`Student.js`, `Instructor.js`, `Admin.js`)**: Shared collections that hold user profiles. They are shared because Seliem, Magdy, and Yassin query and display student/instructor profiles, emails, and avatars (which now use the new `profileImage` and `initials` fields). HOD profile configurations are read from and updated to the `Instructor` collection.
 
 ---
 
@@ -702,8 +726,8 @@ This section details the architectural debate regarding module systems within th
 * **Compatibility with Middleware**: Traditional Express middlewares and database drivers are fully matured under the CommonJS ecosystem, providing a stable foundation.
 
 #### C. The Certificate Generator Conversion (`generate-certs.js`)
-* **The Case**: The certificate generator script [generate-certs.js](file:///c:/Users/Dell/Desktop/web_project/backend/certs/generate-certs.js) has been rewritten in pure CommonJS to align with the backend's module standard.
-* **Benefits**: It wraps the asynchronous `selfsigned` generation inside a standard async function, removing module-type mismatch warnings and allowing execution directly via `node certs/generate-certs.js`.
+* **The Case**: The certificate generator script `generate-certs.js` has been rewritten in pure CommonJS to align with the backend's module standard and refactored to export its generation logic.
+* **Benefits**: It wraps the asynchronous `selfsigned` generation inside a standard async function, removing module-type mismatch warnings and allowing execution directly via `node certs/generate-certs.js`. It is also imported directly by `server.js` to generate certificates on startup, resolving duplicate code redundancies and keeping the SSL implementation clean and DRY.
 
 ---
 
@@ -787,11 +811,45 @@ This section provides a highly detailed walkthrough of the syntax, logic, and co
 - **Purpose**: Manages system configurations (settings singleton), updates SMTP templates, fetches analytics metrics, and handles administrative image uploads.
 - **Key Syntax & Functions**:
   - `SystemSetting.findOneAndUpdate({}, req.body, { upsert: true, new: true });` - Ensures a single global system settings document exists (singleton). If empty, `{ upsert: true }` inserts the payload; otherwise, it updates the existing configurations.
-  - `const uploadLogoFile = (req, res) => { ... }` - Processes file uploads parsed by `Multer` (`req.file`). It updates the system's `logoUrl` setting in MongoDB to `/uploads/${req.file.filename}` and returns the updated document.
+  - `const uploadLogoFile = (req, res) => { ... }` - Handles persisting the uploaded logo path.
+    * **What Multer does here**: Standard Node/Express APIs cannot parse incoming `multipart/form-data` (binary file streams) automatically. `multer` acts as a middleware that intercepts the request, processes the binary file payload, saves it to the `backend/uploads/` directory, and binds a `file` object to Node's `req` object containing file metadata (such as `filename` and `path`).
+    * **Multer Configuration (`uploadMiddleware.js`)**:
+      ```javascript
+      const storage = multer.diskStorage({
+        destination: (_req, _file, cb) => cb(null, uploadDir),
+        filename: (_req, file, cb) => {
+          const ext = path.extname(file.originalname).toLowerCase();
+          cb(null, `logo-${Date.now()}${ext}`);
+        }
+      });
+      const uploadLogo = multer({
+        storage,
+        limits: { fileSize: 2 * 1024 * 1024 } // Enforces 2MB size limit
+      }).single('logo'); // Expects the file binary under the 'logo' form field
+      ```
+    * **Controller Handler (`adminController.js`)**:
+      ```javascript
+      const uploadLogoFile = async (req, res) => {
+        try {
+          if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded. Please attach an image.' });
+          }
+          const logoUrl = `/uploads/${req.file.filename}`; // Generates public path
+          let settings = await SystemSetting.findOne({});
+          if (!settings) settings = new SystemSetting({});
+          settings.logoUrl = logoUrl;
+          await settings.save(); // Saves logo path to global system settings
+          res.json({ logoUrl, message: 'Logo uploaded successfully' });
+        } catch (error) {
+          res.status(500).json({ message: error.message });
+        }
+      };
+      ```
   - `const stats = await Promise.all([ Student.countDocuments(), ... ]);` - Resolves document counters in parallel using database aggregation queries, improving API response times.
 
 ### 7. `frontend/vite.config.js` & `backend/certs/generate-certs.js` (SSL & Local HTTPS Config)
 - **Purpose**: Configures the local development servers to operate exclusively over secure TLS channels.
+- **DRY Refactoring**: In addition to operating as a CLI utility, the certificate generation logic in `generate-certs.js` is imported and called directly by `server.js` at startup to create certificates if missing, resolving duplicate code redundancies.
 - **Key Syntax & Functions**:
   - `selfsigned.generate(attrs, opts)` - Uses the pure JS WebCrypto API to dynamically generate local RSA SSL certificate keypairs (`key.pem`) and certificates (`cert.pem`) for `localhost` and `127.0.0.1`.
   - `server: { https: { key: fs.readFileSync(...), cert: fs.readFileSync(...) } }` - Binds Vite's local HTTP server to the certificates generated by the backend, launching the React app on `https://localhost:5173`.
@@ -821,7 +879,7 @@ This section provides a highly detailed walkthrough of the syntax, logic, and co
 - **Purpose**: Acts as the browser's entry point for loading the React SPA client in a Vite-based environment.
 - **Key Syntax & Functions**:
   - `<div id="root"></div>` - The critical mount point node where the React application tree binds and renders the virtual DOM.
-  - `<script type="module" src="/src/main.jsx"></script>` - Directs Vite to load [main.jsx](file:///c:/Users/Dell/Desktop/web_project/frontend/src/main.jsx) as a native ES Module, compiling JSX on-the-fly in development and bundling it in production.
+  - `<script type="module" src="/src/main.jsx"></script>` - Directs Vite to load `main.jsx` as a native ES Module, compiling JSX on-the-fly in development and bundling it in production.
   - `<meta name="viewport" content="width=device-width, initial-scale=1.0" />` - Standard viewport configuration, ensuring mobile responsive styles render accurately across all smartphone and tablet screens.
 
 ### 11. `frontend/src/main.jsx` (Application Bootstrap File)
@@ -844,6 +902,57 @@ This section provides a highly detailed walkthrough of the syntax, logic, and co
   - `@import "tailwindcss";` - Imports the default utility classes, variables, and directives of the Tailwind CSS framework.
   - `@custom-variant dark (&:where(.dark, .dark *));` - Defines a custom Tailwind CSS v4 compile-time variant. This maps `dark:` classes to look for the presence of the `.dark` class selector on the root `<html>` element rather than querying the system's media preference, enabling manual toggles.
   - Global base rules (e.g., resetting background colors, configuring body typography, and applying transition timings on color changes).
+
+---
+
+#### 🌐 RESTful APIs & Axios Client Integration Summary
+
+Below is a comprehensive guide to the RESTful architecture and Axios client integration implemented as part of Jonathan's modules.
+
+##### A. Backend RESTful API Inventory
+
+Jonathan's backend routing handles key application state configurations, authentication flows, and session validation:
+
+1. **Authentication Endpoints (`authRoutes.js`)**:
+   - `POST /api/auth/register` (Calls `registerUser` controller to validate and save new users)
+   - `POST /api/auth/login` (Calls `loginUser` controller with request throttling, setting the HTTPOnly JWT cookie)
+   - `POST /api/auth/logout` (Calls `logoutUser` controller to clear the JWT cookie and invalidate sessions)
+   - `GET /api/auth/me` (Calls `checkSession` controller to read and decrypt the cookie session data for profile verification)
+
+2. **System Administration Endpoints (`adminRoutes.js`)**:
+   - `GET /api/admin/logs` (Calls `getSystemLogs` to retrieve paginated database event records)
+   - `GET /api/admin/analytics` (Calls `getPlatformAnalytics` to aggregate system document counts)
+   - `GET /api/admin/settings` (Calls `getSystemSettings` to read global parameters)
+   - `PUT /api/admin/settings` (Calls `updateSystemSettings` to update configuration parameters)
+   - `POST /api/admin/broadcast` (Calls `createSystemBroadcast` to notify users)
+   - `GET /api/admin/email-templates` (Calls `getEmailTemplates` to query available structures)
+   - `POST /api/admin/email-templates` (Calls `createEmailTemplate` to add a notification structure)
+   - `PUT /api/admin/email-templates/:id` (Calls `updateEmailTemplate` to save changes)
+   - `DELETE /api/admin/email-templates/:id` (Calls `deleteEmailTemplate` to destroy a layout)
+   - `GET /api/admin/reports` (Calls `getAdminReports` to compute grade/enrollment trends)
+   - `POST /api/admin/upload/logo` (Calls `uploadLogoFile` to process binary logo assets with `multer`)
+   - `GET /api/admin/logo` (Calls `getLogoUrl` to fetch pathing for the logo template)
+
+##### B. Frontend Axios Client (`apiClient`) Calls
+
+The client-side React components utilize the centralized `apiClient` Axios instance to send and request state from these endpoints:
+
+1. **Dashboard Loading (`AdminDashboard.jsx`)**:
+   - `apiClient.get('/api/admin/analytics')` & `apiClient.get('/api/admin/logs')` within a `Promise.all` request inside `fetchData()` to populate overview charts and tables.
+2. **System Configurations (`SystemSettingsPage.jsx`)**:
+   - `apiClient.get('/api/admin/settings')` on component mount to retrieve initial field configurations.
+   - `apiClient.put('/api/admin/settings', form)` to update server-side text specifications.
+   - `apiClient.post('/api/admin/upload/logo', fd)` passing `FormData` with a custom `Content-Type: multipart/form-data` header to upload branding imagery.
+3. **Template Controls (`EmailTemplatesPage.jsx`)**:
+   - `apiClient.get('/api/admin/email-templates')` to list templates.
+   - `apiClient.post('/api/admin/email-templates', ...)` and `apiClient.put('/api/admin/email-templates/:id', ...)` to write structural modifications to template records.
+   - `apiClient.post('/api/admin/broadcast', ...)` to publish announcements.
+4. **Platform Analytics (`AdminReportsPage.jsx`)**:
+   - `apiClient.get('/api/admin/reports')` to fetch GPA ranges and student demographics metrics.
+5. **Session Context Management (`AuthContext.jsx`)**:
+   - `apiClient.post('/api/auth/login', { email, password })` to establish user session credentials.
+   - `apiClient.post('/api/auth/register', ...)` to persist new profiles.
+   - `apiClient.post('/api/auth/logout')` to notify the server to wipe security session cookies.
 
 
 
