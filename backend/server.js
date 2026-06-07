@@ -30,7 +30,17 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://localhost:5173',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigin = process.env.FRONTEND_URL || 'https://localhost:5173';
+    
+    if (origin === allowedOrigin || origin.endsWith('.vercel.app') || origin.includes('localhost')) {
+      return callback(null, true);
+    }
+    
+    return callback(new Error('CORS policy violation: Origin not allowed'));
+  },
   credentials: true,
 }));
 app.use(express.json());
