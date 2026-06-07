@@ -296,6 +296,34 @@ Here is the file-by-file breakdown of my parts of the codebase, explaining their
     2. **`uploadAvatar`**: Restricts size to **5MB** and requires image formats (`image/*`). Used in `userRoutes.js` for profile picture updates.
     3. **`uploadAssignment`**: Restricts size to **10MB** and accepts PDF, ZIP, DOC, DOCX, and images. Used in `studentRoutes.js` for submitting homework deliverables.
     4. **`uploadFile`**: Restricts size to **100MB** and accepts PDF, MP4, DOC, DOCX, PPT, and PPTX. Used in `instructorRoutes.js` for uploading syllabus materials and lecture videos.
+- **Syntax & Configuration Structure**:
+  ```javascript
+  // 1. Storage Configuration: Defines where and how files are saved
+  const storage = multer.diskStorage({
+    destination: (req, file, callback) => {
+      callback(null, 'path/to/folder'); // Sets target directory
+    },
+    filename: (req, file, callback) => {
+      callback(null, 'custom-filename.ext'); // Sets saved file name
+    }
+  });
+
+  // 2. File Filter: Restricts allowed file types
+  const fileFilter = (req, file, callback) => {
+    if (file.mimetype.startsWith('image/')) {
+      callback(null, true);  // Accept file
+    } else {
+      callback(new Error('Rejected!'), false); // Reject file
+    }
+  };
+
+  // 3. Multer Instance initialization with limits (e.g., 5MB limit)
+  const uploadAvatar = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // Enforces max file size limit
+  }).single('profileImage'); // Processes a single file from the field name 'profileImage'
+  ```
 
 ### 📄 `backend/server.js` (Security Portions)
 
