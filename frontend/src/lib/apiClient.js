@@ -10,6 +10,22 @@
  */
 import axios from 'axios';
 
+const getAuthToken = () => {
+  if (typeof window === 'undefined') return '';
+
+  const storedUser = localStorage.getItem('user');
+  if (storedUser && storedUser !== 'undefined') {
+    try {
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser?.token) return parsedUser.token;
+    } catch {
+      // Ignore parse failures and fall back to no bearer token.
+    }
+  }
+
+  return '';
+};
+
 // Helper to extract a cookie value by name on the client side
 const getCookie = (name) => {
   if (typeof document === 'undefined') return '';
@@ -24,6 +40,12 @@ const apiClient = axios.create({
 
 // Auto-attach X-CSRF-Token header on write/mutation requests
 apiClient.interceptors.request.use((config) => {
+  const authToken = getAuthToken();
+  if (authToken) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${authToken}`;
+  }
+
   const token = getCookie('csrf-token');
   if (token && ['post', 'put', 'delete', 'patch'].includes(config.method?.toLowerCase())) {
     config.headers['X-CSRF-Token'] = token;

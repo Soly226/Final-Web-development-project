@@ -4,7 +4,7 @@ import apiClient from '../lib/apiClient';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Only store non-sensitive user info — token lives in httpOnly cookie
+  // Store the safe user profile plus token so the app can fall back to bearer auth
   const [user, setUser] = useState(() => {
     try {
       const saved = localStorage.getItem('user');
@@ -23,8 +23,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const { data } = await apiClient.post('/api/auth/login', { email, password });
-      // data contains: { _id, name, email, role } — NO token field
-      // The JWT httpOnly cookie is set automatically by the browser from Set-Cookie header
+      // data contains: { _id, name, email, role, token }
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
       return data;
@@ -41,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const { data } = await apiClient.post('/api/auth/register', { name, email, password, role });
-      // Same as login — only safe user info is returned; JWT is in the cookie
+      // Same as login — safe user info plus token for bearer fallback
       setUser(data);
       localStorage.setItem('user', JSON.stringify(data));
       return data;

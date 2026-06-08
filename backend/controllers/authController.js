@@ -56,6 +56,7 @@ const registerUser = async (req, res) => {
         name: user.full_name,
         email: user.email,
         role: role || 'student',
+        token,
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -102,6 +103,7 @@ const loginUser = async (req, res) => {
         name: user.full_name,
         email: user.email,
         role: role,
+        token,
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
@@ -128,7 +130,7 @@ const logoutUser = (req, res) => {
 // @access  Private
 const checkSession = async (req, res) => {
   try {
-    const token = req.cookies.jwt;
+    const token = req.cookies?.jwt || (req.headers.authorization?.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null);
     if (!token) {
       return res.status(401).json({ message: 'Not authorized, no token' });
     }
