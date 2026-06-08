@@ -91,7 +91,15 @@ const AdminDashboard = () => {
       setRecentLogs(mappedLogs);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
-      setError('Failed to load system overview statistics. Please check your network connection.');
+      if (err?.response?.status === 401) {
+        setError('Your session is not available in this browser. Re-login and check that cookies are allowed.');
+      } else if (err?.response?.status === 403) {
+        setError('You are signed in, but this account does not have admin access.');
+      } else if (err?.request) {
+        setError('Could not reach the backend API. Check the deployed API URL or network connection.');
+      } else {
+        setError('Failed to load system overview statistics.');
+      }
     } finally {
       setLoading(false);
     }
