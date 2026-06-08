@@ -1,0 +1,81 @@
+@reference "../../index.css";
+
+.user-mgmt-container {
+    @apply p-5 flex flex-col gap-6 max-w-6xl mx-auto;
+}
+
+.user-mgmt-header {
+    @apply flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4;
+}
+
+.add-user-btn {
+    @apply bg-primary hover:bg-accent text-white font-bold py-2.5 px-5 rounded-xl shadow-lg shadow-primary/30 transition-all flex items-center gap-2 text-sm;
+}
+
+/* Filters */
+.filter-card {
+    @apply p-4 flex flex-col md:flex-row gap-4;
+}
+
+.search-input-wrapper {
+    @apply flex-1 relative;
+}
+
+.search-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-slate-400;
+}
+
+.mgmt-input {
+    @apply w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-colors;
+}
+
+.mgmt-select {
+    @apply w-full md:w-48 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary transition-colors;
+}
+
+/* Table */
+.table-container {
+    @apply glass rounded-2xl border border-white/20 dark:border-white/10 overflow-hidden shadow-sm;
+}
+
+.mgmt-table {
+    @apply w-full text-left border-collapse;
+}
+
+.mgmt-th {
+    @apply py-4 px-5 text-xs font-bold text-slate-500 uppercase tracking-wider;
+}
+
+.mgmt-td {
+    @apply py-3 px-5;
+}
+
+.user-avatar-small {
+    @apply w-9 h-9 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xs;
+}
+
+/* Badges */
+.role-badge {
+    @apply inline-block px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider;
+}
+
+.status-indicator {
+    @apply w-2 h-2 rounded-full;
+}
+
+/* Modal */
+.modal-overlay {
+    @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm;
+}
+
+.modal-content {
+    @apply bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-xl border border-slate-200 dark:border-white/10 overflow-hidden;
+}
+
+.modal-header {
+    @apply flex justify-between items-center p-5 border-b border-slate-100 dark:border-white/10;
+}
+
+.modal-body {
+    @apply p-5 flex flex-col gap-4;
+}
