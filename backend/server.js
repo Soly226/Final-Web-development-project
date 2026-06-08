@@ -29,19 +29,35 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
+// Configure CORS to accept the frontend origin(s).
+// Accept `FRONTEND_URL` or `FRONTEND_URLS` (comma-separated) from env,
+// and allow vercel.app subdomains and localhost for convenience.
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    
-    const allowedOrigin = process.env.FRONTEND_URL || 'https://localhost:5173';
-    
-    if (origin === allowedOrigin || origin.endsWith('.vercel.app') || origin.includes('localhost')) {
+
+    const envList = process.env.FRONTEND_URLS || process.env.FRONTEND_URL || '';
+    const allowedOrigins = envList.split(',').map(s => s.trim()).filter(Boolean);
+    // Ensure the deployed frontend is explicitly allowed
+    const defaultAllowed = ['https://edu-core-ruddy.vercel.app'];
+    defaultAllowed.forEach(u => { if (!allowedOrigins.includes(u)) allowedOrigins.push(u); });
+
+    // Allow explicit matches, any vercel.app subdomain, or localhost origins
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith('.vercel.app') ||
+      origin.includes('localhost')
+    ) {
       return callback(null, true);
     }
-    
+
+    console.warn('Blocked CORS origin:', origin);
     return callback(new Error('CORS policy violation: Origin not allowed'));
   },
   credentials: true,
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','X-CSRF-Token'],
+  optionsSuccessStatus: 200,
 }));
 app.use(express.json());
 app.use(cookieParser());
