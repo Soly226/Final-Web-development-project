@@ -43,9 +43,9 @@ const getSystemLogs = async (req, res) => {
 // @access  Private/Admin
 const getPlatformAnalytics = async (req, res) => {
   try {
-    const adminCount = await Admin.countDocuments();
-    const instructorCount = await Instructor.countDocuments();
-    const studentCount = await Student.countDocuments();
+    const adminCount = await Admin.countDocuments({ isActive: { $ne: false } });
+    const instructorCount = await Instructor.countDocuments({ isActive: { $ne: false } });
+    const studentCount = await Student.countDocuments({ isActive: { $ne: false } });
     const userCount = adminCount + instructorCount + studentCount;
     const courseCount = await Course.countDocuments();
 

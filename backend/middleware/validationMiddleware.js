@@ -34,7 +34,7 @@ const registerValidationRules = [
   body('role')
     .optional()
     .trim()
-    .isIn(['admin', 'instructor', 'student']).withMessage('Role must be admin, instructor, or student')
+    .isIn(['instructor', 'student']).withMessage('Role must be instructor or student')
 ];
 
 const loginValidationRules = [

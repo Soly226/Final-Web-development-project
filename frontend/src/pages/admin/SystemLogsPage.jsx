@@ -129,6 +129,32 @@ const SystemLogsPage = () => {
     return matchesSearch && matchesLevel && matchesCategory;
   });
 
+  const exportToCSV = () => {
+    if (filteredLogs.length === 0) {
+      showToast('No logs to export.', 'error');
+      return;
+    }
+    const headers = ['Timestamp', 'Level', 'Category', 'Event Message', 'User / Process'];
+    const rows = filteredLogs.map(log => [
+      `"${log.time.replace(/"/g, '""')}"`,
+      `"${log.level.replace(/"/g, '""')}"`,
+      `"${log.category.replace(/"/g, '""')}"`,
+      `"${log.message.replace(/"/g, '""')}"`,
+      `"${log.user.replace(/"/g, '""')}"`
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `system_logs_${Date.now()}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast(`Exported ${filteredLogs.length} logs to CSV!`, 'success');
+  };
+
   return (
     <AdminLayout title="System Audit Logs">
       {toast && <Toast message={toast.message} type={toast.type} onClose={closeToast} />}
@@ -173,7 +199,7 @@ const SystemLogsPage = () => {
               </select>
             </div>
           </div>
-          <Button className="w-full md:w-auto px-8" onClick={() => showToast(`Exported ${filteredLogs.length} logs to CSV!`, 'success')}>Export CSV</Button>
+          <Button className="w-full md:w-auto px-8" onClick={exportToCSV}>Export CSV</Button>
         </Card>
 
         <Card className="p-0 overflow-hidden border-white/5">

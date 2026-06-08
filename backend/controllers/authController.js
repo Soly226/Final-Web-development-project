@@ -27,20 +27,21 @@ const registerUser = async (req, res) => {
   const { name, email, password, role, ...otherData } = req.body;
 
   try {
-    let userExists = null;
+    const adminExists = await Admin.findOne({ email });
+    const instructorExists = await Instructor.findOne({ email });
+    const studentExists = await Student.findOne({ email });
+
+    if (adminExists || instructorExists || studentExists) {
+      return res.status(400).json({ message: 'user already exists' });
+    }
+
     let user = null;
 
     if (role === 'admin') {
-      userExists = await Admin.findOne({ email });
-      if (userExists) return res.status(400).json({ message: 'User already exists' });
-      user = await Admin.create({ full_name: name, username: name, admin_id: `ADM${Date.now()}`, email, password, ...otherData });
+      return res.status(400).json({ message: 'Admin registration is not allowed via this route' });
     } else if (role === 'instructor') {
-      userExists = await Instructor.findOne({ email });
-      if (userExists) return res.status(400).json({ message: 'User already exists' });
       user = await Instructor.create({ full_name: name, username: name, instructor_id: `INST${Date.now()}`, email, password, role: 'instructor', ...otherData });
     } else {
-      userExists = await Student.findOne({ email });
-      if (userExists) return res.status(400).json({ message: 'User already exists' });
       user = await Student.create({ full_name: name, username: name, student_id: `ST${Date.now()}`, email, password, ...otherData });
     }
 
@@ -84,7 +85,7 @@ const loginUser = async (req, res) => {
       role = 'student';
     }
 
-    if (!user) {
+    if (!user || user.isActive === false) {
        return res.status(401).json({ message: 'Invalid email or password' });
     }
 
@@ -141,8 +142,8 @@ const checkSession = async (req, res) => {
       user = await Student.findById(decoded.id).select('-password');
     }
 
-    if (!user) {
-      return res.status(401).json({ message: 'User not found' });
+    if (!user || user.isActive === false) {
+      return res.status(401).json({ message: 'User not found or deactivated' });
     }
 
     res.json({

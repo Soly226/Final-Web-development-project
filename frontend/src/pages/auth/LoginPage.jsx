@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useSettings } from '../../context/SettingsContext';
+import { getFileUrl } from '../../lib/apiClient';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login, loading, error } = useAuth();
+  const { logoUrl } = useSettings();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -28,8 +31,12 @@ const LoginPage = () => {
       <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-800">
         {/* Logo/Header Area */}
         <div className="p-8 pb-0 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-            <span className="material-symbols-outlined text-primary text-3xl">school</span>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4 overflow-hidden">
+            {logoUrl ? (
+              <img src={getFileUrl(logoUrl)} alt="Logo" className="w-full h-full object-cover" />
+            ) : (
+              <span className="material-symbols-outlined text-primary text-3xl">school</span>
+            )}
           </div>
           <h2 className="text-slate-900 dark:text-slate-100 text-2xl font-bold leading-tight tracking-tight">EduCore LMS</h2>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">Empowering the next generation of learners</p>

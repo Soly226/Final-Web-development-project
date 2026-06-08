@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { translations } from '../lib/translations';
+import apiClient from '../lib/apiClient';
 
 const SettingsContext = createContext();
 
@@ -11,6 +12,8 @@ export const SettingsProvider = ({ children }) => {
   const [language, setLanguageState] = useState(() => {
     return localStorage.getItem('educore_language') || 'en';
   });
+
+  const [logoUrl, setLogoUrl] = useState('');
 
   // Apply theme class to document element
   const applyTheme = (currentTheme) => {
@@ -35,6 +38,16 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     applyTheme(theme);
     applyLanguage(language);
+
+    const fetchLogo = async () => {
+      try {
+        const { data } = await apiClient.get('/api/logo');
+        if (data.logoUrl) setLogoUrl(data.logoUrl);
+      } catch (err) {
+        console.error('Failed to load branding logo:', err);
+      }
+    };
+    fetchLogo();
   }, []);
 
   const setTheme = (newTheme) => {
@@ -57,7 +70,7 @@ export const SettingsProvider = ({ children }) => {
   };
 
   return (
-    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t }}>
+    <SettingsContext.Provider value={{ theme, setTheme, language, setLanguage, t, logoUrl, setLogoUrl }}>
       {children}
     </SettingsContext.Provider>
   );

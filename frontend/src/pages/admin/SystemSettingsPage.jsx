@@ -4,7 +4,7 @@ import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import { useAuth } from '../../context/AuthContext';
-import apiClient from '../../lib/apiClient';
+import apiClient, { getFileUrl } from '../../lib/apiClient';
 import { twMerge } from 'tailwind-merge';
 import { useSettings } from '../../context/SettingsContext';
 
@@ -120,7 +120,7 @@ const validate = (form) => {
 
 const SystemSettingsPage = () => {
   const { user } = useAuth();
-  const { t, theme, setTheme, language, setLanguage } = useSettings();
+  const { t, theme, setTheme, language, setLanguage, setLogoUrl } = useSettings();
   const logoInputRef = useRef(null);
 
   const [loading, setLoading]   = useState(true);
@@ -232,6 +232,7 @@ const SystemSettingsPage = () => {
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
         setSavedLogoUrl(logoData.logoUrl);
+        setLogoUrl(logoData.logoUrl);
         setLogoFile(null);
       }
 
@@ -354,7 +355,7 @@ const SystemSettingsPage = () => {
                     {logoPreview ? (
                       <img src={logoPreview} alt="Logo preview" className="w-full h-full object-cover" />
                     ) : savedLogoUrl ? (
-                      <img src={`http://localhost:5000${savedLogoUrl}`} alt="Current logo" className="w-full h-full object-cover" />
+                      <img src={getFileUrl(savedLogoUrl)} alt="Current logo" className="w-full h-full object-cover" />
                     ) : (
                       <span className="material-symbols-outlined text-primary">school</span>
                     )}

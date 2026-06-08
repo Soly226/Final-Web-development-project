@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
+import { useSettings } from '../context/SettingsContext';
+import { getFileUrl } from '../lib/apiClient';
 
 /* ─────────────────────────────────────────────
    Static Feature / Testimonial / Stat Data
@@ -147,6 +149,7 @@ const TestimonialCard = ({ name, role, avatar, color, quote }) => (
 const LandingPage = () => {
   const [statsVisible, setStatsVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { logoUrl } = useSettings();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -170,8 +173,12 @@ const LandingPage = () => {
       )}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/30">
-              <span className="material-symbols-outlined text-white text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/30 overflow-hidden">
+              {logoUrl ? (
+                <img src={getFileUrl(logoUrl)} alt="Logo" className="w-full h-full object-cover" />
+              ) : (
+                <span className="material-symbols-outlined text-white text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+              )}
             </div>
             <span className="text-lg font-extrabold tracking-tight text-white">EduCore</span>
           </div>
@@ -363,8 +370,12 @@ const LandingPage = () => {
       <footer className="border-t border-white/10 px-6 py-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden">
+              {logoUrl ? (
+                <img src={getFileUrl(logoUrl)} alt="Logo" className="w-full h-full object-cover" />
+              ) : (
+                <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
+              )}
             </div>
             <span className="text-sm font-bold text-white">EduCore LMS</span>
           </div>

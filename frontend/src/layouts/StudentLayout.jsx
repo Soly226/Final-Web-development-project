@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { useAuth } from '../context/AuthContext';
-import apiClient from '../lib/apiClient';
+import apiClient, { getFileUrl } from '../lib/apiClient';
 import { useSettings } from '../context/SettingsContext';
 
 export default function StudentLayout({ children, title }) {
   const { logout, user } = useAuth();
-  const { t } = useSettings();
+  const { t, logoUrl } = useSettings();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -74,7 +74,11 @@ export default function StudentLayout({ children, title }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/dashboard" className="flex items-center gap-2 group">
-              <span className="material-symbols-outlined text-primary text-3xl transition-transform group-hover:scale-105">school</span>
+              {logoUrl ? (
+                <img src={getFileUrl(logoUrl)} alt="Logo" className="w-8 h-8 object-contain shrink-0 transition-transform group-hover:scale-105" />
+              ) : (
+                <span className="material-symbols-outlined text-primary text-3xl transition-transform group-hover:scale-105">school</span>
+              )}
               <h1 className="text-lg font-black tracking-tight text-slate-900 dark:text-white">
                 EduCore <span className="text-primary font-black">LMS</span>
               </h1>

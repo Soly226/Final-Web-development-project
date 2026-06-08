@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import apiClient from '../lib/apiClient';
+import apiClient, { getFileUrl } from '../lib/apiClient';
+import { useSettings } from '../context/SettingsContext';
 
 const Topbar = ({ title = 'EduCore LMS' }) => {
   const { user } = useAuth();
+  const { logoUrl } = useSettings();
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
 
@@ -34,7 +36,11 @@ const Topbar = ({ title = 'EduCore LMS' }) => {
   return (
     <header className="h-[72px] px-4 md:px-6 flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30">
       <div className="flex items-center gap-3">
-        <span className="material-symbols-outlined text-primary">school</span>
+        {logoUrl ? (
+          <img src={getFileUrl(logoUrl)} alt="Logo" className="w-8 h-8 object-contain shrink-0" />
+        ) : (
+          <span className="material-symbols-outlined text-primary">school</span>
+        )}
         <h1 className="text-sm md:text-base font-bold tracking-tight text-slate-900 dark:text-white">
           {title}
         </h1>

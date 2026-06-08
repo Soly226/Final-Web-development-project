@@ -18,8 +18,8 @@ const getStudents = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [students, total] = await Promise.all([
-      Student.find({}).select('-password').skip(skip).limit(limit),
-      Student.countDocuments()
+      Student.find({ isActive: { $ne: false } }).select('-password').skip(skip).limit(limit),
+      Student.countDocuments({ isActive: { $ne: false } })
     ]);
 
     res.json({
@@ -39,9 +39,11 @@ const createStudent = async (req, res) => {
 
   try {
     const studentExists = await Student.findOne({ $or: [{ email }, { username }] });
+    const instructorExists = await Instructor.findOne({ $or: [{ email }, { username }] });
+    const adminExists = await Admin.findOne({ $or: [{ email }, { username }] });
 
-    if (studentExists) {
-      return res.status(400).json({ message: 'Student already exists' });
+    if (studentExists || instructorExists || adminExists) {
+      return res.status(400).json({ message: 'user already exists' });
     }
 
     const student = await Student.create({
@@ -78,8 +80,8 @@ const getInstructors = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [instructors, total] = await Promise.all([
-      Instructor.find({}).select('-password').skip(skip).limit(limit),
-      Instructor.countDocuments()
+      Instructor.find({ isActive: { $ne: false } }).select('-password').skip(skip).limit(limit),
+      Instructor.countDocuments({ isActive: { $ne: false } })
     ]);
 
     res.json({
@@ -98,10 +100,12 @@ const createInstructor = async (req, res) => {
   const { full_name, username, email, password, department, role } = req.body;
 
   try {
+    const studentExists = await Student.findOne({ $or: [{ email }, { username }] });
     const instructorExists = await Instructor.findOne({ $or: [{ email }, { username }] });
+    const adminExists = await Admin.findOne({ $or: [{ email }, { username }] });
 
-    if (instructorExists) {
-      return res.status(400).json({ message: 'Instructor already exists' });
+    if (studentExists || instructorExists || adminExists) {
+      return res.status(400).json({ message: 'user already exists' });
     }
 
     const instructor = await Instructor.create({
@@ -138,8 +142,8 @@ const getAdmins = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [admins, total] = await Promise.all([
-      Admin.find({}).select('-password').skip(skip).limit(limit),
-      Admin.countDocuments()
+      Admin.find({ isActive: { $ne: false } }).select('-password').skip(skip).limit(limit),
+      Admin.countDocuments({ isActive: { $ne: false } })
     ]);
 
     res.json({
@@ -158,10 +162,12 @@ const createAdmin = async (req, res) => {
   const { full_name, username, email, password, permissions } = req.body;
 
   try {
+    const studentExists = await Student.findOne({ $or: [{ email }, { username }] });
+    const instructorExists = await Instructor.findOne({ $or: [{ email }, { username }] });
     const adminExists = await Admin.findOne({ $or: [{ email }, { username }] });
 
-    if (adminExists) {
-      return res.status(400).json({ message: 'Admin already exists' });
+    if (studentExists || instructorExists || adminExists) {
+      return res.status(400).json({ message: 'user already exists' });
     }
 
     const admin = await Admin.create({

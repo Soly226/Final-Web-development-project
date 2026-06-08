@@ -8,28 +8,31 @@ const Admin = require('../models/Admin');
 const getAggregatedUsers = async ({ search = '', role = 'All Roles', page = 1, limit = 10 }) => {
   const skip = (page - 1) * limit;
 
-  const searchQuery = search
-    ? {
-        $or: [
-          { full_name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-          { username: { $regex: search, $options: 'i' } }
-        ]
-      }
-    : {};
+  const baseQuery = {
+    isActive: { $ne: false },
+    ...(search
+      ? {
+          $or: [
+            { full_name: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { username: { $regex: search, $options: 'i' } }
+          ]
+        }
+      : {})
+  };
 
   let students = [];
   let instructors = [];
   let admins = [];
 
   if (role === 'All Roles' || role === 'Student') {
-    students = await Student.find(searchQuery).select('-password');
+    students = await Student.find(baseQuery).select('-password');
   }
   if (role === 'All Roles' || role === 'Instructor') {
-    instructors = await Instructor.find(searchQuery).select('-password');
+    instructors = await Instructor.find(baseQuery).select('-password');
   }
   if (role === 'All Roles' || role === 'Admin') {
-    admins = await Admin.find(searchQuery).select('-password');
+    admins = await Admin.find(baseQuery).select('-password');
   }
 
   const allUsers = [

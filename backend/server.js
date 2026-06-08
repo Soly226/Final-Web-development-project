@@ -53,6 +53,17 @@ app.use(verifyCsrf);
 // Serve uploaded files (logos, etc.) as static assets
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Public Logo Endpoint
+app.get('/api/logo', async (req, res) => {
+  try {
+    const SystemSetting = require('./models/SystemSetting');
+    const settings = await SystemSetting.findOne({});
+    res.json({ logoUrl: settings?.logoUrl || '' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);

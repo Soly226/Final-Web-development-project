@@ -3,10 +3,11 @@ import { useAuth } from '../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { useSettings } from '../context/SettingsContext';
+import { getFileUrl } from '../lib/apiClient';
 
 const AdminLayout = ({ children, title }) => {
   const { logout } = useAuth();
-  const { t } = useSettings();
+  const { t, logoUrl } = useSettings();
   const location = useLocation();
 
   const navItems = [
@@ -33,6 +34,11 @@ const AdminLayout = ({ children, title }) => {
           <button className="p-2.5 hover:bg-primary/10 text-slate-600 dark:text-slate-400 hover:text-primary rounded-xl transition-all">
             <span className="material-symbols-outlined font-variation-bold">menu</span>
           </button>
+          {logoUrl ? (
+            <img src={getFileUrl(logoUrl)} alt="Logo" className="w-8 h-8 object-contain shrink-0" />
+          ) : (
+            <span className="material-symbols-outlined text-primary text-3xl">school</span>
+          )}
           <h1 className="text-md font-bold tracking-tight text-slate-900 dark:text-white uppercase tracking-widest text-xs opacity-80">{title || t('platformName')}</h1>
         </div>
         <div className="flex items-center gap-4">
