@@ -12,10 +12,11 @@ const generateToken = (id, role) => {
 
 // Helper: set the JWT in a secure httpOnly cookie
 const setCookieToken = (res, token) => {
+  const isProduction = process.env.NODE_ENV === 'production';
   res.cookie('jwt', token, {
     httpOnly: true,          // Not accessible via document.cookie — blocks XSS
-    sameSite: 'strict',      // Only sent for same-site requests — blocks CSRF
-    secure: process.env.NODE_ENV === 'production', // HTTPS-only in production
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction, // HTTPS-only in production; required with SameSite=None
     maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
   });
 };
@@ -115,7 +116,7 @@ const loginUser = async (req, res) => {
 const logoutUser = (req, res) => {
   res.clearCookie('jwt', {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     secure: process.env.NODE_ENV === 'production',
   });
   res.json({ message: 'Logged out successfully' });
